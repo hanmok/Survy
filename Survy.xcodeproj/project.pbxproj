@@ -9,25 +9,67 @@
 /* Begin PBXBuildFile section */
 		9AE295D229D6F81400387883 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D129D6F81400387883 /* AppDelegate.swift */; };
 		9AE295D429D6F81400387883 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D329D6F81400387883 /* SceneDelegate.swift */; };
-		9AE295D629D6F81400387883 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D529D6F81400387883 /* ViewController.swift */; };
-		9AE295D929D6F81400387883 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AE295D729D6F81400387883 /* Main.storyboard */; };
+		9AE295D629D6F81400387883 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D529D6F81400387883 /* MainTabController.swift */; };
 		9AE295DB29D6F81600387883 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9AE295DA29D6F81600387883 /* Assets.xcassets */; };
 		9AE295DE29D6F81600387883 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9AE295DC29D6F81600387883 /* LaunchScreen.storyboard */; };
+		9AE295EA29D6FA4C00387883 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295E929D6FA4C00387883 /* HomeViewController.swift */; };
+		9AE295EC29D6FA5300387883 /* StoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295EB29D6FA5300387883 /* StoreViewController.swift */; };
+		9AE295EE29D6FA5C00387883 /* MyPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295ED29D6FA5C00387883 /* MyPageViewController.swift */; };
+		9AE295F129D6FB4A00387883 /* UIImageExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295F029D6FB4A00387883 /* UIImageExt+.swift */; };
+		9AE295F329D700B900387883 /* UIColorExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295F229D700B900387883 /* UIColorExt+.swift */; };
+		9AE295F629D702EF00387883 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9AE295F529D702EF00387883 /* SnapKit */; };
+		9AE295F829D706A200387883 /* UserDefaultsExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295F729D706A200387883 /* UserDefaultsExt+.swift */; };
+		9AE295FA29D7131C00387883 /* SurveyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295F929D7131C00387883 /* SurveyTableViewCell.swift */; };
+		9AE295FD29D713C100387883 /* Survey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295FC29D713C100387883 /* Survey.swift */; };
+		9AE295FF29D714E300387883 /* UITableViewCellExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295FE29D714E300387883 /* UITableViewCellExt+.swift */; };
+		9AE2960129D714F800387883 /* UICollectionViewCellExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE2960029D714F800387883 /* UICollectionViewCellExt+.swift */; };
+		9AE2960B29D7217100387883 /* SurvyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE2960A29D7217100387883 /* SurvyTests.swift */; };
+		9AE2961229D72B7D00387883 /* Todos in Resources */ = {isa = PBXBuildFile; fileRef = 9AE2961129D72B7D00387883 /* Todos */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		9AE2960C29D7217100387883 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9AE295C629D6F81400387883 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9AE295CD29D6F81400387883;
+			remoteInfo = Survy;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		9AE295CE29D6F81400387883 /* Survy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AE295D129D6F81400387883 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9AE295D329D6F81400387883 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		9AE295D529D6F81400387883 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		9AE295D829D6F81400387883 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		9AE295D529D6F81400387883 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		9AE295DA29D6F81600387883 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		9AE295DD29D6F81600387883 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9AE295DF29D6F81600387883 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9AE295E929D6FA4C00387883 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		9AE295EB29D6FA5300387883 /* StoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreViewController.swift; sourceTree = "<group>"; };
+		9AE295ED29D6FA5C00387883 /* MyPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyPageViewController.swift; sourceTree = "<group>"; };
+		9AE295F029D6FB4A00387883 /* UIImageExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageExt+.swift"; sourceTree = "<group>"; };
+		9AE295F229D700B900387883 /* UIColorExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColorExt+.swift"; sourceTree = "<group>"; };
+		9AE295F729D706A200387883 /* UserDefaultsExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaultsExt+.swift"; sourceTree = "<group>"; };
+		9AE295F929D7131C00387883 /* SurveyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyTableViewCell.swift; sourceTree = "<group>"; };
+		9AE295FC29D713C100387883 /* Survey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Survey.swift; sourceTree = "<group>"; };
+		9AE295FE29D714E300387883 /* UITableViewCellExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableViewCellExt+.swift"; sourceTree = "<group>"; };
+		9AE2960029D714F800387883 /* UICollectionViewCellExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionViewCellExt+.swift"; sourceTree = "<group>"; };
+		9AE2960829D7217100387883 /* SurvyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SurvyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9AE2960A29D7217100387883 /* SurvyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurvyTests.swift; sourceTree = "<group>"; };
+		9AE2961129D72B7D00387883 /* Todos */ = {isa = PBXFileReference; lastKnownFileType = text; path = Todos; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		9AE295CB29D6F81400387883 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AE295F629D702EF00387883 /* SnapKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AE2960529D7217100387883 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -41,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				9AE295D029D6F81400387883 /* Survy */,
+				9AE2960929D7217100387883 /* SurvyTests */,
 				9AE295CF29D6F81400387883 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				9AE295CE29D6F81400387883 /* Survy.app */,
+				9AE2960829D7217100387883 /* SurvyTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -56,15 +100,73 @@
 		9AE295D029D6F81400387883 /* Survy */ = {
 			isa = PBXGroup;
 			children = (
+				9AE295EF29D6FB3B00387883 /* Extensions */,
 				9AE295D129D6F81400387883 /* AppDelegate.swift */,
 				9AE295D329D6F81400387883 /* SceneDelegate.swift */,
-				9AE295D529D6F81400387883 /* ViewController.swift */,
-				9AE295D729D6F81400387883 /* Main.storyboard */,
+				9AE295FB29D713B900387883 /* Model */,
+				9AE295D529D6F81400387883 /* MainTabController.swift */,
 				9AE295DA29D6F81600387883 /* Assets.xcassets */,
+				9AE295E629D6F9FD00387883 /* Home */,
+				9AE295E729D6FA2C00387883 /* Store */,
+				9AE295E829D6FA3100387883 /* MyPage */,
 				9AE295DC29D6F81600387883 /* LaunchScreen.storyboard */,
 				9AE295DF29D6F81600387883 /* Info.plist */,
 			);
 			path = Survy;
+			sourceTree = "<group>";
+		};
+		9AE295E629D6F9FD00387883 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				9AE295E929D6FA4C00387883 /* HomeViewController.swift */,
+				9AE2961129D72B7D00387883 /* Todos */,
+				9AE295F929D7131C00387883 /* SurveyTableViewCell.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		9AE295E729D6FA2C00387883 /* Store */ = {
+			isa = PBXGroup;
+			children = (
+				9AE295EB29D6FA5300387883 /* StoreViewController.swift */,
+			);
+			path = Store;
+			sourceTree = "<group>";
+		};
+		9AE295E829D6FA3100387883 /* MyPage */ = {
+			isa = PBXGroup;
+			children = (
+				9AE295ED29D6FA5C00387883 /* MyPageViewController.swift */,
+			);
+			path = MyPage;
+			sourceTree = "<group>";
+		};
+		9AE295EF29D6FB3B00387883 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				9AE295F029D6FB4A00387883 /* UIImageExt+.swift */,
+				9AE295F229D700B900387883 /* UIColorExt+.swift */,
+				9AE295F729D706A200387883 /* UserDefaultsExt+.swift */,
+				9AE295FE29D714E300387883 /* UITableViewCellExt+.swift */,
+				9AE2960029D714F800387883 /* UICollectionViewCellExt+.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9AE295FB29D713B900387883 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9AE295FC29D713C100387883 /* Survey.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9AE2960929D7217100387883 /* SurvyTests */ = {
+			isa = PBXGroup;
+			children = (
+				9AE2960A29D7217100387883 /* SurvyTests.swift */,
+			);
+			path = SurvyTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,9 +185,30 @@
 			dependencies = (
 			);
 			name = Survy;
+			packageProductDependencies = (
+				9AE295F529D702EF00387883 /* SnapKit */,
+			);
 			productName = Survy;
 			productReference = 9AE295CE29D6F81400387883 /* Survy.app */;
 			productType = "com.apple.product-type.application";
+		};
+		9AE2960729D7217100387883 /* SurvyTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9AE2960E29D7217200387883 /* Build configuration list for PBXNativeTarget "SurvyTests" */;
+			buildPhases = (
+				9AE2960429D7217100387883 /* Sources */,
+				9AE2960529D7217100387883 /* Frameworks */,
+				9AE2960629D7217100387883 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9AE2960D29D7217100387883 /* PBXTargetDependency */,
+			);
+			name = SurvyTests;
+			productName = SurvyTests;
+			productReference = 9AE2960829D7217100387883 /* SurvyTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -100,6 +223,10 @@
 					9AE295CD29D6F81400387883 = {
 						CreatedOnToolsVersion = 14.2;
 					};
+					9AE2960729D7217100387883 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = 9AE295CD29D6F81400387883;
+					};
 				};
 			};
 			buildConfigurationList = 9AE295C929D6F81400387883 /* Build configuration list for PBXProject "Survy" */;
@@ -111,11 +238,15 @@
 				Base,
 			);
 			mainGroup = 9AE295C529D6F81400387883;
+			packageReferences = (
+				9AE295F429D702EF00387883 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 9AE295CF29D6F81400387883 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				9AE295CD29D6F81400387883 /* Survy */,
+				9AE2960729D7217100387883 /* SurvyTests */,
 			);
 		};
 /* End PBXProject section */
@@ -125,9 +256,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AE2961229D72B7D00387883 /* Todos in Resources */,
 				9AE295DE29D6F81600387883 /* LaunchScreen.storyboard in Resources */,
 				9AE295DB29D6F81600387883 /* Assets.xcassets in Resources */,
-				9AE295D929D6F81400387883 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AE2960629D7217100387883 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +276,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9AE295D629D6F81400387883 /* ViewController.swift in Sources */,
+				9AE295EC29D6FA5300387883 /* StoreViewController.swift in Sources */,
+				9AE295FA29D7131C00387883 /* SurveyTableViewCell.swift in Sources */,
+				9AE295EE29D6FA5C00387883 /* MyPageViewController.swift in Sources */,
+				9AE295D629D6F81400387883 /* MainTabController.swift in Sources */,
 				9AE295D229D6F81400387883 /* AppDelegate.swift in Sources */,
+				9AE2960129D714F800387883 /* UICollectionViewCellExt+.swift in Sources */,
+				9AE295F129D6FB4A00387883 /* UIImageExt+.swift in Sources */,
+				9AE295FD29D713C100387883 /* Survey.swift in Sources */,
+				9AE295F829D706A200387883 /* UserDefaultsExt+.swift in Sources */,
+				9AE295F329D700B900387883 /* UIColorExt+.swift in Sources */,
+				9AE295FF29D714E300387883 /* UITableViewCellExt+.swift in Sources */,
 				9AE295D429D6F81400387883 /* SceneDelegate.swift in Sources */,
+				9AE295EA29D6FA4C00387883 /* HomeViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9AE2960429D7217100387883 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9AE2960B29D7217100387883 /* SurvyTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXVariantGroup section */
-		9AE295D729D6F81400387883 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				9AE295D829D6F81400387883 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
+/* Begin PBXTargetDependency section */
+		9AE2960D29D7217100387883 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9AE295CD29D6F81400387883 /* Survy */;
+			targetProxy = 9AE2960C29D7217100387883 /* PBXContainerItemProxy */;
 		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
 		9AE295DC29D6F81600387883 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -292,9 +448,9 @@
 				INFOPLIST_FILE = Survy/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -320,9 +476,9 @@
 				INFOPLIST_FILE = Survy/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -333,6 +489,44 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		9AE2960F29D7217200387883 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F23GD77ZRK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "hanmok-main.SurvyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Survy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Survy";
+			};
+			name = Debug;
+		};
+		9AE2961029D7217200387883 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F23GD77ZRK;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "hanmok-main.SurvyTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Survy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Survy";
 			};
 			name = Release;
 		};
@@ -357,7 +551,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		9AE2960E29D7217200387883 /* Build configuration list for PBXNativeTarget "SurvyTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9AE2960F29D7217200387883 /* Debug */,
+				9AE2961029D7217200387883 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9AE295F429D702EF00387883 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9AE295F529D702EF00387883 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AE295F429D702EF00387883 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9AE295C629D6F81400387883 /* Project object */;
 }
