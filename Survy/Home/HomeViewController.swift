@@ -76,20 +76,20 @@ class HomeViewController: UIViewController {
         
         leftUnderlineView.snp.makeConstraints { make in
             make.leading.bottom.equalToSuperview()
-            make.height.equalTo(1)
+            make.height.equalTo(2)
             make.width.equalToSuperview().dividedBy(2)
         }
         
         rightUnderlineView.snp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview()
-            make.height.equalTo(1)
+            make.height.equalTo(2)
             make.width.equalToSuperview().dividedBy(2)
         }
         
         categoriesLabel.snp.makeConstraints { make in
             make.top.equalTo(upperContainer.snp.bottom).offset(15)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(40)
+            make.height.equalTo(60)
         }
         
         surveyTableView.snp.makeConstraints { make in
@@ -107,11 +107,12 @@ class HomeViewController: UIViewController {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         guard let text = numberFormatter.string(from: collectedMoney as NSNumber) else { return }
-        collectedRewardLabel.text = text + "P"
+
+        collectedRewardLabel.addImage(image: UIImage.coin, string: text, font: UIFont.systemFont(ofSize: collectedRewardLabel.font.pointSize, weight: .bold), color: UIColor.blueTextColor)
         
+        categoriesLabel.text = "Categories"
         
         // MARK: - Initial Setup for selected Upper Bar
-        
     }
     
     private func setupTargets() {
@@ -162,8 +163,8 @@ class HomeViewController: UIViewController {
         return view
     }()
     
-    private let collectedRewardLabel: UILabel = {
-        let label = UILabel()
+    private let collectedRewardLabel: PaddedLabel = {
+        let label = PaddedLabel()
         label.textAlignment = .right
         label.layer.cornerRadius = 14
         label.layer.borderWidth = 1
@@ -199,8 +200,11 @@ class HomeViewController: UIViewController {
         return button
     }()
     
+    // TODO: Make it CollectionView
+
     private let categoriesLabel: UILabel = {
         let label = UILabel()
+        label.backgroundColor = .magenta
         return label
     }()
     

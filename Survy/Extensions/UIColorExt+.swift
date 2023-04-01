@@ -41,7 +41,11 @@ extension UIColor {
     static let participantsColor = UIColor(hex6: 0x8F939F)
     static let dividerColor = UIColor(hex6: 0xDCDCDC)
     static let rewardColor = UIColor(hex6: 0xE7574F)
-    static let mainColor = UIColor(hex6: 0xE3EDFD)
+    
+//    static let mainColor = UIColor(hex6: 0xE3EDFF)
+    static let mainColor = UIColor(hex6: 0xB8D4FF)
+    
     static let mainBackgroundColor = UIColor(hex6: 0xECEDF3)
 //    static let dateLeft = UIColor(hex6: 0x8F939)
+    static let blueTextColor = UIColor(hex6: 0x3255ED)
 }

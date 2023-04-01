@@ -23,7 +23,6 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate {
         
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
-
     }
     
     func configureViewControllers() {
@@ -62,6 +61,7 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate {
 //        nav.tabBarItem.selectedImage = selectedImage.withTintColor(.orange, renderingMode: .alwaysOriginal)
         
 //        nav.navigationBar.tintColor = .magenta
+        
         return nav
     }
 }

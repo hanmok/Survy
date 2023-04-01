@@ -35,13 +35,15 @@ class SurveyTableViewCell: UITableViewCell {
         
         dateLeftLabel.text = "\(survey.dateLeft)일 남음"
         
-        let categoriesText = survey.categories.joined(separator: "•")
+        let categoriesText = survey.categories.joined(separator: " • ")
         categoryLabel.text = categoriesText
         
         let participants = survey.participants.map { String($0)}.joined(separator: " / ") + " 참여"
         participantsLabel.text = participants
         
-        rewardLabel.text = "\(survey.reward)P"
+        let rewardText = "\(survey.reward)P"
+        
+        rewardLabel.addImage(image: UIImage.coin, string: rewardText, font: UIFont.systemFont(ofSize: rewardLabel.font.pointSize))
         
         questionLabel.text = survey.question
         
@@ -59,7 +61,7 @@ class SurveyTableViewCell: UITableViewCell {
     private func setupLayout() {
         contentView.layer.cornerRadius = 16
         
-        [dateLeftLabel, categoryLabel, questionLabel, participantsLabel, rewardLabel, answerTextField, dividerView, coinImageView, testView, participateButton].forEach {
+        [dateLeftLabel, categoryLabel, questionLabel, participantsLabel, rewardLabel, answerTextField, dividerView, testView, participateButton].forEach {
             self.contentView.addSubview($0)
         }
         
@@ -71,6 +73,7 @@ class SurveyTableViewCell: UITableViewCell {
         categoryLabel.snp.makeConstraints { make in
             make.leading.equalTo(dateLeftLabel.snp.trailing).offset(10)
             make.centerY.equalTo(dateLeftLabel.snp.centerY)
+            
         }
         
         questionLabel.snp.makeConstraints { make in
@@ -90,36 +93,25 @@ class SurveyTableViewCell: UITableViewCell {
             make.centerY.equalTo(participantsLabel.snp.centerY)
         }
         
-        coinImageView.snp.makeConstraints { make in
-            make.leading.equalTo(dividerView.snp.trailing).offset(8)
-            make.width.height.equalTo(14)
-            make.centerY.equalTo(participantsLabel.snp.centerY)
-        }
-        
         rewardLabel.snp.makeConstraints { make in
-            make.leading.equalTo(coinImageView.snp.trailing).offset(7)
+            make.leading.equalTo(dividerView.snp.trailing).offset(8)
             make.centerY.equalTo(participantsLabel.snp.centerY)
         }
         
         participateButton.snp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview().inset(20)
-            make.height.equalTo(24)
+            make.height.equalTo(30)
         }
         
-//        testView.snp.makeConstraints { make in
-//            make.centerY.equalToSuperview()
-//            make.centerX.equalToSuperview()
-//            make.width.height.equalTo(30)
-//        }
+        participateButton.setTitleWithImage(image: UIImage.rightChevron, title: "참여하기")
+        participateButton.addInsets(top: 10.0, bottom: 10.0, left: 8.0, right: 8.0)
     }
     
     private let participateButton: UIButton = {
         let button = UIButton()
-        button.setTitle("참여하기 >", for: .normal)
         button.setTitleColor(.black, for: .normal)
-        
         button.layer.borderWidth = 1
-        button.layer.cornerRadius = 12
+        button.layer.cornerRadius = 15
         button.layer.borderColor = UIColor(white: 0.7, alpha: 1).cgColor
         button.backgroundColor = .white
         return button
@@ -129,12 +121,6 @@ class SurveyTableViewCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = .cyan
         return view
-    }()
-    
-    private let coinImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage.coin
-        return imageView
     }()
     
     private let dividerView: UIView = {
