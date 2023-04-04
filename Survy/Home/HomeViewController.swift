@@ -108,7 +108,10 @@ class HomeViewController: UIViewController {
         numberFormatter.numberStyle = .decimal
         guard let text = numberFormatter.string(from: collectedMoney as NSNumber) else { return }
 
-        collectedRewardLabel.addImage(image: UIImage.coin, string: text, font: UIFont.systemFont(ofSize: collectedRewardLabel.font.pointSize, weight: .bold), color: UIColor.blueTextColor)
+        collectedRewardLabel.addFrontImage(
+            image: UIImage.coin, string: text + "P",
+            font: UIFont.systemFont(ofSize: collectedRewardLabel.font.pointSize, weight: .bold),
+            color: UIColor.blueTextColor)
         
         categoriesLabel.text = "Categories"
         

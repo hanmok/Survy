@@ -19,12 +19,9 @@ import UIKit
 
 extension UILabel
 {
-    func addImage(image: UIImage, string: String, font: UIFont, color: UIColor = .black) {
+    func addFrontImage(image: UIImage, string: String, font: UIFont, color: UIColor = .black) {
         let attachment:NSTextAttachment = NSTextAttachment()
-//        attachment.image = UIImage(named: imageName)
         attachment.image = image
-
-//        let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
         
         let emptyString: NSMutableAttributedString = NSMutableAttributedString(string: "")
         
@@ -34,6 +31,20 @@ extension UILabel
         
         emptyString.append(attachmentString)
         emptyString.append(myString)
+
+        self.attributedText = emptyString
+    }
+    
+    func addFrontImage(image: UIImage, attrString: NSAttributedString) {
+        let attachment:NSTextAttachment = NSTextAttachment()
+        attachment.image = image
+        
+        let emptyString: NSMutableAttributedString = NSMutableAttributedString(string: "")
+        
+        let attachmentString: NSAttributedString = NSAttributedString(attachment: attachment)
+        
+        emptyString.append(attachmentString)
+        emptyString.append(attrString)
 
         self.attributedText = emptyString
     }

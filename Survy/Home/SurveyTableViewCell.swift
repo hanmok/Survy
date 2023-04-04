@@ -43,7 +43,7 @@ class SurveyTableViewCell: UITableViewCell {
         
         let rewardText = "\(survey.reward)P"
         
-        rewardLabel.addImage(image: UIImage.coin, string: rewardText, font: UIFont.systemFont(ofSize: rewardLabel.font.pointSize))
+        rewardLabel.addFrontImage(image: UIImage.coin, string: rewardText, font: UIFont.systemFont(ofSize: rewardLabel.font.pointSize))
         
         questionLabel.text = survey.question
         

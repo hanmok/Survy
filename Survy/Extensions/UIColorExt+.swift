@@ -48,4 +48,18 @@ extension UIColor {
     static let mainBackgroundColor = UIColor(hex6: 0xECEDF3)
 //    static let dateLeft = UIColor(hex6: 0x8F939)
     static let blueTextColor = UIColor(hex6: 0x3255ED)
+    
+    static let blurredTextColor = UIColor(hex6: 0x777777)
+    static let modifyingButtonColor = UIColor(hex6: 0xF2F2F2)
+    
+    static let separatorViewColor = UIColor(hex6: 0xF0F2F8)
+    
+    static let unfilledGageColor = UIColor(hex6: 0xF0F2F8)
+    
+    static let filledGageColor = UIColor(hex6: 0x3255ED)
+    
+    static let bigSeparatorViewColor = UIColor(hex6: 0xF6F7FD)
+    
+    static let logoutButtonBackground = UIColor(hex6: 0xF2F2F2)
+    static let logoutButtonText = UIColor(hex6: 0xA1A6B8)
 }

@@ -9,12 +9,17 @@ import UIKit
 
 class MainTabController: UITabBarController, UINavigationControllerDelegate {
 
+//    override func viewWillAppear(_ animated: Bool) {
+//        tabBarController?.selectedIndex = 2
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-//        view.backgroundColor = .magenta
         configureViewControllers()
+//        selectedIndex = 2
+        self.selectedIndex = 2
         
 //        let selectedColor   = UIColor(red: 246.0/255.0, green: 155.0/255.0, blue: 13.0/255.0, alpha: 1.0)
 //        let unselectedColor = UIColor(red: 16.0/255.0, green: 224.0/255.0, blue: 223.0/255.0, alpha: 1.0)

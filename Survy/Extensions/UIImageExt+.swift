@@ -15,6 +15,13 @@ extension UIImage {
     static let selectedMyPageIcon = UIImage(named: "selectedMyPageIcon2")!
     static let unselectedMyPageIcon = UIImage(named: "unselectedMyPageIcon2")!
     static let coin = UIImage(named: "coin")!
+    static let middleCoin = UIImage(named: "middleCoin")!
+    static let smallMidiumCoin = UIImage(named: "smallMidiumCoin")!
+    static let smallMidiumCoin2 = UIImage(named: "smallMidiumCoin2")!
+    static let bigCoin = UIImage(named: "bigCoin")!
     static let rightChevron = UIImage(systemName: "chevron.right")!
+    
+    static let profile = UIImage(named: "profile_image")!
+    static let medal = UIImage(named: "medal")!
 }
 
