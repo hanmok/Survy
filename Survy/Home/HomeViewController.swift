@@ -87,14 +87,17 @@ class HomeViewController: UIViewController {
         }
         
         categoriesLabel.snp.makeConstraints { make in
-            make.top.equalTo(upperContainer.snp.bottom).offset(15)
+//            make.top.equalTo(upperContainer.snp.bottom).offset(15)
+            make.top.equalTo(upperContainer.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(60)
         }
         
         surveyTableView.snp.makeConstraints { make in
-            make.top.equalTo(categoriesLabel.snp.bottom).offset(15)
-            make.leading.trailing.equalToSuperview().inset(20)
+//            make.top.equalTo(categoriesLabel.snp.bottom).offset(15)
+            make.top.equalTo(categoriesLabel.snp.bottom)
+//            make.leading.trailing.equalToSuperview().inset(20)
+            make.leading.trailing.equalToSuperview()
             make.height.equalTo(surveys.count * 200)
         }
         
@@ -228,6 +231,7 @@ class HomeViewController: UIViewController {
     
     private let surveyTableView: UITableView = {
         let tableView = UITableView()
+        
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         return tableView
@@ -239,8 +243,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
         cell.survey = surveys[indexPath.row]
+        
+//        let selectedView = UIView()
+//        selectedView.backgroundColor = UIColor.mainBackgroundColor
+//        cell.backgroundView = selectedView
+        
+//        cell.selectionStyle = UITableViewCell.SelectionStyle.gray
         return cell
     }
+    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 200

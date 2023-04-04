@@ -51,7 +51,14 @@ class SurveyTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let inset2 = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+        
+//        let selectedView = UIView()
+//        selectedView.backgroundColor = UIColor.clear
+//        backgroundView = selectedView
+        
+//        selectedBackgroundView
+//        let inset2 = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+        let inset2 = UIEdgeInsets(top: 12, left: 30, bottom: 12, right: 30)
         backgroundColor = UIColor(hex6: 0xECEDF3)
         contentView.frame = contentView.frame.inset(by: inset2)
         print("contentView height: \(contentView.frame.height)")
@@ -60,7 +67,7 @@ class SurveyTableViewCell: UITableViewCell {
     
     private func setupLayout() {
         contentView.layer.cornerRadius = 16
-        
+        contentView.addShadow(offset: CGSize(width: 5.0, height: 5.0))
         [dateLeftLabel, categoryLabel, questionLabel, participantsLabel, rewardLabel, answerTextField, dividerView, testView, participateButton].forEach {
             self.contentView.addSubview($0)
         }

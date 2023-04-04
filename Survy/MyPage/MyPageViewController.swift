@@ -167,7 +167,7 @@ class MyPageViewController: UIViewController {
         profileButton.setImage(UIImage.profile, for: .normal)
         
         // nickname
-        nicknameLabel.text = "오늘도 꾸준히 모으는 나무늘보"
+        nicknameLabel.text = "오늘도 꾸준히 재테크"
         detailInfoLabel.text = ["서울특별시", "사무", "기술직", "남성", "만 30세"].joined(separator: " • ")
         
         // 포인트
@@ -177,7 +177,6 @@ class MyPageViewController: UIViewController {
         
         pointLabel.addFrontImage(
             image: UIImage.coin, string: " \(text)P",
-//            font: UIFont.systemFont(ofSize: pointLabel.font.pointSize, weight: .bold),
             font: UIFont.systemFont(ofSize: 20, weight: .bold),
             color: UIColor.black)
         
