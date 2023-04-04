@@ -41,7 +41,7 @@ class HomeViewController: UIViewController {
 
         navigationController?.title = "홈"
         
-        [upperContainer, surveyTableView, categoriesLabel].forEach { self.view.addSubview($0) }
+        [upperContainer, surveyTableView, categoriesLabel, requestingButton].forEach { self.view.addSubview($0) }
         
         [collectedRewardLabel, leftUnderlineView, rightUnderlineView, indivisualTabButton, companyTabButton].forEach {
             self.upperContainer.addSubview($0)
@@ -115,6 +115,13 @@ class HomeViewController: UIViewController {
         
         categoriesLabel.text = "Categories"
         
+        requestingButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().inset(tabbarHeight + 30)
+            make.trailing.equalToSuperview().inset(30)
+            make.height.width.equalTo(70)
+        }
+        
+        requestingButton.addShadow(offset: CGSize(width: 5.0, height: 5.0), color: .gray, opacity: 0.8, radius: 5.0)
         // MARK: - Initial Setup for selected Upper Bar
     }
     
@@ -159,6 +166,14 @@ class HomeViewController: UIViewController {
         }
         
     }
+    
+    private let requestingButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.filledGageColor
+        button.setImage(UIImage.requesting_image, for: .normal)
+        button.layer.cornerRadius = 35
+        return button
+    }()
     
     private let upperContainer: UIView = {
         let view = UIView()

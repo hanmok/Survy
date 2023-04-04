@@ -23,5 +23,7 @@ extension UIImage {
     
     static let profile = UIImage(named: "profile_image")!
     static let medal = UIImage(named: "medal")!
+    
+    static let requesting_image = UIImage(named: "requesting_image3")!
 }
 

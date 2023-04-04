@@ -38,7 +38,7 @@ class SurveyTableViewCell: UITableViewCell {
         let categoriesText = survey.categories.joined(separator: " • ")
         categoryLabel.text = categoriesText
         
-        let participants = survey.participants.map { String($0)}.joined(separator: " / ") + " 참여"
+        let participants = survey.participants.map { String($0)}.joined(separator: " / ")
         participantsLabel.text = participants
         
         let rewardText = "\(survey.reward)P"
@@ -73,7 +73,6 @@ class SurveyTableViewCell: UITableViewCell {
         categoryLabel.snp.makeConstraints { make in
             make.leading.equalTo(dateLeftLabel.snp.trailing).offset(10)
             make.centerY.equalTo(dateLeftLabel.snp.centerY)
-            
         }
         
         questionLabel.snp.makeConstraints { make in
@@ -158,6 +157,7 @@ class SurveyTableViewCell: UITableViewCell {
     private let participantsLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.participantsColor
+        label.font = UIFont.systemFont(ofSize: 13)
         return label
     }()
     
