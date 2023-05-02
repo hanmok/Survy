@@ -8,6 +8,11 @@
 import UIKit
 import SnapKit
 
+//struct CategorySelection: Hashable {
+//    var name: String
+//    var isSelected: Bool
+//}
+
 class HomeViewController: UIViewController {
 
     let surveys: [Survey] = [
@@ -21,8 +26,11 @@ class HomeViewController: UIViewController {
     var surveysToShow = [Survey]()
     
     let collectedMoney = 56000
+    
     let categories = ["애견", "운동", "음식", "피부"]
-    var selectedCategories = Set<String>()
+    
+//    var selectedCategories = Set<String>()
+    var selectedCategories = Set(["애견", "운동", "음식", "피부"])
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,6 +44,8 @@ class HomeViewController: UIViewController {
         surveyTableView.register(SurveyTableViewCell.self, forCellReuseIdentifier: SurveyTableViewCell.reuseIdentifier)
         surveyTableView.delegate = self
         surveyTableView.dataSource = self
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: 50))
+        surveyTableView.tableFooterView = footerView
     }
     
     private func setupLayout() {
@@ -44,32 +54,37 @@ class HomeViewController: UIViewController {
         [
          collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView, requestingButton].forEach { self.view.addSubview($0) }
         
-        
         collectedRewardLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.height.equalTo(28)
-            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(-35)
         }
         
         categorySelectionButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+//            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth / 6)
-            make.height.equalTo(60)
+            make.height.equalTo(categoryHeight)
         }
         
         categoryCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
-//            make.leading.trailing.equalToSuperview()
+            make.centerY.equalTo(categorySelectionButton.snp.centerY)
             make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
             make.trailing.equalToSuperview()
-            make.height.equalTo(60)
+            make.height.equalTo(categorySelectionButton.snp.height)
+        }
+        
+        requestingButton.snp.makeConstraints { make in
+            make.bottom.equalToSuperview().offset(-tabbarHeight)
+            make.height.equalTo(50)
+            make.leading.trailing.equalToSuperview()
         }
         
         surveyTableView.snp.makeConstraints { make in
-            make.top.equalTo(categoryCollectionView.snp.bottom)
+            make.top.equalTo(categoryCollectionView.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(surveys.count * 200)
+            make.bottom.equalTo(requestingButton.snp.top)
         }
         
         let numberFormatter = NumberFormatter()
@@ -80,18 +95,6 @@ class HomeViewController: UIViewController {
             image: UIImage.coin, string: text + "P",
             font: UIFont.systemFont(ofSize: collectedRewardLabel.font.pointSize, weight: .bold),
             color: UIColor.blueTextColor)
-        
-//        categoriesLabel.text = "Categories"
-        
-        requestingButton.snp.makeConstraints { make in
-            make.bottom.equalToSuperview().offset(-tabbarHeight)
-            make.height.equalTo(50)
-            make.leading.trailing.equalToSuperview()
-        }
-        
-//        requestingButton.addShadow(offset: CGSize(width: 5.0, height: 5.0), color: .gray, opacity: 0.8, radius: 5.0)
-        
-        // MARK: - Initial Setup for selected Upper Bar
     }
     
     private let requestingButton: UIButton = {
@@ -134,12 +137,12 @@ class HomeViewController: UIViewController {
         return button
     }()
     
-    private let categoryCollectionView: UICollectionView = {
+    private let categoryHeight: CGFloat = 50
+    private lazy var categoryCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 12
-        layout.itemSize = CGSize(width: UIScreen.screenWidth / 6, height: 40)
-        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        layout.itemSize = CGSize(width: UIScreen.screenWidth / 6, height: categoryHeight)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         return collectionView
     }()
@@ -171,7 +174,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, UIColl
         let estimatedFrame3 = NSString(string: surveys[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
         // 12 + 10 + 12 + 20 + 12
         let spacings: CGFloat = 66
-        let sizes: CGFloat = 30 + 30 //
+        let sizes: CGFloat = 30
         let frameHeight = [estimatedFrame1, estimatedFrame2, estimatedFrame3].map { $0.height }.reduce(0, +)
         let heightSum = frameHeight + spacings + sizes
         return heightSum
@@ -199,11 +202,9 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
-        
+        // TODO: 이미 선택된 것들 고려하기.
         collectionViewCell.category = categories[indexPath.row]
         collectionViewCell.categoryCellDelegate = self
-        
-        
         
         return collectionViewCell
     }
@@ -212,7 +213,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 extension HomeViewController: CategoryCellDelegate {
     func categoryTapped(category: String, selected: Bool) {
         selectedCategories.toggle(category)
-        print("current selectedCategories: \(selectedCategories)")
         DispatchQueue.main.async {
             self.surveyTableView.reloadData()
         }
