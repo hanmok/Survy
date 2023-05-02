@@ -217,9 +217,9 @@ class MyPageViewController: UIViewController {
         button.setTitle("프로필 수정", for: .normal)
         button.setTitleColor(UIColor(white: 0.2, alpha: 1), for: .normal)
         button.backgroundColor = UIColor.blurredMainColor
-        button.layer.borderWidth = 1
+//        button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
-        button.layer.borderColor = UIColor.clear.cgColor
+//        button.layer.borderColor = UIColor.clear.cgColor
         button.clipsToBounds = true
         return button
     }()
@@ -255,9 +255,9 @@ class MyPageViewController: UIViewController {
     private let partialGageView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.filledGageColor
-        view.layer.borderColor = UIColor.clear.cgColor
+//        view.layer.borderColor = UIColor.clear.cgColor
         view.layer.cornerRadius = 3
-        view.layer.borderWidth = 1
+//        view.layer.borderWidth = 1
         view.clipsToBounds = true
         return view
     }()
@@ -265,9 +265,9 @@ class MyPageViewController: UIViewController {
     private let wholeGageView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.unfilledGageColor
-        view.layer.borderColor = UIColor.clear.cgColor
+//        view.layer.borderColor = UIColor.clear.cgColor
         view.layer.cornerRadius = 3
-        view.layer.borderWidth = 1
+//        view.layer.borderWidth = 1
         view.clipsToBounds = true
         return view
     }()
@@ -332,9 +332,9 @@ class MyPageViewController: UIViewController {
         button.setTitle("로그아웃", for: .normal)
         button.setTitleColor(UIColor.logoutButtonText, for: .normal)
         button.backgroundColor = UIColor.logoutButtonBackground
-        button.layer.borderWidth = 1
+//        button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
-        button.layer.borderColor = UIColor.clear.cgColor
+//        button.layer.borderColor = UIColor.clear.cgColor
         button.clipsToBounds = true
         return button
     }()

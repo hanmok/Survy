@@ -18,3 +18,13 @@ struct Question {
 }
 
 
+struct Section {
+    let id: Int
+    let surveyId: Int
+    let expectedTimeInSec: Int
+    let reward: Int
+    let title: String
+    let numOfQuestions: Int
+}
+
+

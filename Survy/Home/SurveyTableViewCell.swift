@@ -8,13 +8,29 @@
 import UIKit
 import SnapKit
 
-class SurveyTableViewCell: UITableViewCell {
 
+protocol SurveyTableViewDelegate {
+    func surveyTapped(_ cell: SurveyTableViewCell)
+}
+
+class SurveyTableViewCell: UITableViewCell {
+    
+    public var surveyDelegate: SurveyTableViewDelegate?
+    
     public var survey: Survey? {
         didSet {
             setupLayout()
             configureLayout()
+            setupTarget()
         }
+    }
+    
+    private func setupTarget() {
+        participateButton.addTarget(self, action: #selector(participatedTapped), for: .touchUpInside)
+    }
+    
+    @objc func participatedTapped() {
+        surveyDelegate?.surveyTapped(self)
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -27,7 +43,6 @@ class SurveyTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
     
     private func configureLayout() {
@@ -48,26 +63,16 @@ class SurveyTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-//        let selectedView = UIView()
-//        selectedView.backgroundColor = UIColor.clear
-//        backgroundView = selectedView
-        
-//        selectedBackgroundView
-//        let inset2 = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-        
-//        let inset2 = UIEdgeInsets(top: 12, left: 30, bottom: 12, right: 30)
         let inset2 = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
         backgroundColor = UIColor(hex6: 0xECEDF3)
         contentView.frame = contentView.frame.inset(by: inset2)
-//        print("contentView height: \(contentView.frame.height)")
         contentView.backgroundColor = .white
     }
     
     private func setupLayout() {
         contentView.layer.cornerRadius = 16
         contentView.addShadow(offset: CGSize(width: 5.0, height: 5.0))
-        [dateLeftLabel, categoryLabel, questionLabel, participantsLabel, rewardLabel, answerTextField, dividerView, testView, participateButton].forEach {
+        [categoryLabel, questionLabel, participantsLabel, rewardLabel, answerTextField, dividerView, testView, participateButton].forEach {
             self.contentView.addSubview($0)
         }
         
@@ -98,10 +103,8 @@ class SurveyTableViewCell: UITableViewCell {
         }
         
         participateButton.snp.makeConstraints { make in
-//            make.trailing.bottom.equalToSuperview().inset(20)
             make.trailing.equalToSuperview().inset(20)
             make.bottom.equalToSuperview().inset(20)
-//            make.top.equalTo(participantsLabel.snp.bottom).offset(20)
             make.height.equalTo(30)
         }
         
@@ -112,7 +115,7 @@ class SurveyTableViewCell: UITableViewCell {
     private let participateButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
-        button.layer.borderWidth = 1
+//        button.layer.borderWidth = 1
         button.layer.cornerRadius = 15
         button.layer.borderColor = UIColor(white: 0.7, alpha: 1).cgColor
         button.backgroundColor = .white
@@ -129,13 +132,6 @@ class SurveyTableViewCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = UIColor.dividerColor
         return view
-    }()
-    
-    private let dateLeftLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = UIColor.participantsColor
-        label.font = UIFont.systemFont(ofSize: 12)
-        return label
     }()
 
     private let categoryLabel: UILabel = {
@@ -173,7 +169,5 @@ class SurveyTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
 }

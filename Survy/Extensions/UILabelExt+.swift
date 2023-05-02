@@ -49,3 +49,30 @@ extension UILabel
         self.attributedText = emptyString
     }
 }
+
+
+extension UILabel {
+    
+    func addCharacterSpacing(_ spacing: Double = 0.5) {
+        let kernValue = self.font.pointSize * CGFloat(spacing)
+        guard let text = text, !text.isEmpty else { return }
+        let string = NSMutableAttributedString(string: text)
+//        string.addAttribute(NSAttributedString.Key.kern, value: kernValue, range: NSRange(location: 0, length: string.length - 1))
+        string.addAttribute(NSAttributedString.Key.kern, value: kernValue, range: NSRange(location: 0, length: string.length))
+        attributedText = string
+    }
+}
+
+
+extension UIButton {
+    func addCharacterSpacing(_ spacing: Double = 0.5) {
+        guard let titleLabel = self.titleLabel else { return }
+        let some = titleLabel.font
+        let kernValue = titleLabel.font.pointSize * CGFloat(spacing)
+        guard let text = self.currentTitle, !text.isEmpty else { return }
+        let string = NSMutableAttributedString(string: text)
+//        string.addAttribute(NSAttributedString.Key.kern, value: kernValue, range: NSRange(location: 0, length: string.length - 1))
+        string.addAttributes([.foregroundColor: UIColor.black, .kern: kernValue], range: NSRange(location: 0, length: string.length))
+        self.setAttributedTitle(string, for: .normal)
+    }
+}

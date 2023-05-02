@@ -12,6 +12,17 @@ import SnapKit
 
 class QuestionViewController: BaseViewController {
 
+    var question: Question
+    
+    init(question: Question) {
+        self.question = question
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     var percentage: CGFloat = 0.13
     var questionType: QuestionType?
     var selectableOptions: [SelectableOption]?
@@ -21,32 +32,35 @@ class QuestionViewController: BaseViewController {
 
         configureLayout()
         setupLayout()
-        
         callApi()
+        view.backgroundColor = .mainBackgroundColor
+        self.tabBarController?.tabBar.isHidden = true
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     func callApi() {
-        APIManager.shared.testCall()
+//        APIManager.shared.testCall()
     }
     
     private func configureLayout() {
-        guard let questionType = questionType else { return }
-        guard let selectableOptions = selectableOptions else { return }
+//        guard let questionType = questionType else { return }
+//        guard let selectableOptions = selectableOptions else { return }
         
+        questionLabel.text = "\(question.position). \(question.text)"
         // QuestionType 에 따라 갯수, 종류를 나누어야함.
-        switch questionType {
-        case .essay:
-            break
-        case .shortSentence:
-            break
-            
-        case .singleSelection:
-            break
-        case .muiltipleSelection:
-            break
-        case .multipleSentences:
-            break
-        }
+
+//        switch questionType {
+//        case .essay:
+//            break
+//        case .shortSentence:
+//            break
+//        case .singleSelection:
+//            break
+//        case .muiltipleSelection:
+//            break
+//        case .multipleSentences:
+//            break
+//        }
         
 //        optionStackView
     }
@@ -89,9 +103,11 @@ class QuestionViewController: BaseViewController {
         questionContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
             make.top.equalTo(progressContainerView.snp.bottom).offset(80)
+            make.height.equalTo(200)
         }
         
         questionLabel.snp.makeConstraints { make in
+//            make.top.leading.trailing.equalToSuperview().inset(12)
             make.top.leading.trailing.equalToSuperview().inset(12)
         }
         
@@ -142,11 +158,17 @@ class QuestionViewController: BaseViewController {
     
     private let questionContainerView: UIView = {
         let view = UIView()
+        view.backgroundColor = .white
+        view.layer.cornerRadius = 12
+        view.addShadow(offset: CGSize(width: 5.0, height: 5.0))
+//        view.clipsToBounds = true
         return view
     }()
     
     private let questionLabel: UILabel = {
         let label = UILabel()
+        label.textColor = .black
+        
         return label
     }()
     
@@ -161,6 +183,19 @@ class QuestionViewController: BaseViewController {
     private let nextButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.mainColor
+        button.setTitle("다음", for: .normal)
+        button.layer.cornerRadius = 7
+        button.clipsToBounds = true
+        button.addCharacterSpacing()
+//        button.addShadow(offset: CGSize(width: 0.5, height: 0.5), color: .black, opacity: 0.16, radius: 10)
+        button.addShadow(offset: CGSize(width: 5.0, height: 5.0))
         return button
     }()
+    
+    private let endButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("종료", for: .normal)
+        return button
+    }()
+    
 }

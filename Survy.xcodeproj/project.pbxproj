@@ -169,7 +169,6 @@
 				9AE295FB29D713B900387883 /* Model */,
 				9AE295D529D6F81400387883 /* MainTabController.swift */,
 				9AE295DA29D6F81600387883 /* Assets.xcassets */,
-				9A6113B629F515FF0051FF2B /* QuestionViewController.swift */,
 				9AE295E629D6F9FD00387883 /* Home */,
 				9AE295E729D6FA2C00387883 /* Store */,
 				9AE295E829D6FA3100387883 /* MyPage */,
@@ -185,6 +184,7 @@
 				9AE295E929D6FA4C00387883 /* HomeViewController.swift */,
 				9AE295F929D7131C00387883 /* SurveyTableViewCell.swift */,
 				9A6113D12A010B840051FF2B /* CategoryCollectionViewCell.swift */,
+				9A6113B629F515FF0051FF2B /* QuestionViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";

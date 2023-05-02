@@ -14,7 +14,11 @@ import SnapKit
 //}
 
 class HomeViewController: UIViewController {
+    
+    
 
+    let question = Question(id: 1, questionTypeId: 1, sectionId: 1, position: 1, text: "다이어트를 위해 약물을 복용해 본 적이 있나요?", expectedTimeInSec: 5, correctAnswer: nil)
+    
     let surveys: [Survey] = [
         Survey(id: 1, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
         
@@ -115,8 +119,8 @@ class HomeViewController: UIViewController {
         let label = PaddedLabel()
         label.textAlignment = .right
         label.layer.cornerRadius = 14
-        label.layer.borderWidth = 1
-        label.layer.borderColor = UIColor.clear.cgColor
+//        label.layer.borderWidth = 1
+//        label.layer.borderColor = UIColor.clear.cgColor
         label.clipsToBounds = true
         label.backgroundColor = UIColor.mainColor
         return label
@@ -160,6 +164,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, UIColl
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
         cell.survey = surveysToShow[indexPath.row]
+        cell.surveyDelegate = self
         return cell
     }
     
@@ -205,7 +210,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         // TODO: 이미 선택된 것들 고려하기.
         collectionViewCell.category = categories[indexPath.row]
         collectionViewCell.categoryCellDelegate = self
-        
         return collectionViewCell
     }
 }
@@ -216,5 +220,12 @@ extension HomeViewController: CategoryCellDelegate {
         DispatchQueue.main.async {
             self.surveyTableView.reloadData()
         }
+    }
+}
+
+extension HomeViewController: SurveyTableViewDelegate {
+    func surveyTapped(_ cell: SurveyTableViewCell) {
+        let questionViewController = QuestionViewController(question: question)
+        self.navigationController?.pushViewController(questionViewController, animated: true)
     }
 }
