@@ -215,8 +215,8 @@ class MyPageViewController: UIViewController {
     private let modifyingProfileButton: UIButton = {
         let button = UIButton()
         button.setTitle("프로필 수정", for: .normal)
-        button.setTitleColor(UIColor.logoutButtonText, for: .normal)
-        button.backgroundColor = UIColor.modifyingButtonColor
+        button.setTitleColor(UIColor(white: 0.2, alpha: 1), for: .normal)
+        button.backgroundColor = UIColor.blurredMainColor
         button.layer.borderWidth = 1
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.clear.cgColor
@@ -241,10 +241,8 @@ class MyPageViewController: UIViewController {
 //        view.layer.borderColor = UIColor.clear.cgColor
 ////        view.backgroundColor = UIColor(white: 0.8, alpha: 1)
 //        view.backgroundColor = .magenta
-        
         view.layer.cornerRadius = 10
         view.backgroundColor = .white
-        
 //        view.clipsToBounds = true
         return view
     }()

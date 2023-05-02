@@ -33,20 +33,17 @@ class SurveyTableViewCell: UITableViewCell {
     private func configureLayout() {
         guard let survey = survey else { return }
         
-        dateLeftLabel.text = "\(survey.dateLeft)일 남음"
-        
         let categoriesText = survey.categories.joined(separator: " • ")
         categoryLabel.text = categoriesText
         
         let participants = survey.participants.map { String($0)}.joined(separator: " / ")
         participantsLabel.text = participants
         
-        let rewardText = "\(survey.reward)P"
+        if let rewardText = survey.rewardString {
+            rewardLabel.addFrontImage(image: UIImage.coin, string: rewardText, font: UIFont.systemFont(ofSize: rewardLabel.font.pointSize))
+        }
         
-        rewardLabel.addFrontImage(image: UIImage.coin, string: rewardText, font: UIFont.systemFont(ofSize: rewardLabel.font.pointSize))
-        
-        questionLabel.text = survey.question
-        
+        questionLabel.text = survey.title
     }
     
     override func layoutSubviews() {
@@ -58,7 +55,9 @@ class SurveyTableViewCell: UITableViewCell {
         
 //        selectedBackgroundView
 //        let inset2 = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-        let inset2 = UIEdgeInsets(top: 12, left: 30, bottom: 12, right: 30)
+        
+//        let inset2 = UIEdgeInsets(top: 12, left: 30, bottom: 12, right: 30)
+        let inset2 = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
         backgroundColor = UIColor(hex6: 0xECEDF3)
         contentView.frame = contentView.frame.inset(by: inset2)
         print("contentView height: \(contentView.frame.height)")
@@ -72,19 +71,13 @@ class SurveyTableViewCell: UITableViewCell {
             self.contentView.addSubview($0)
         }
         
-        dateLeftLabel.snp.makeConstraints { make in
-            make.leading.top.equalToSuperview().inset(12)
-            make.height.equalTo(20)
-        }
-        
         categoryLabel.snp.makeConstraints { make in
-            make.leading.equalTo(dateLeftLabel.snp.trailing).offset(10)
-            make.centerY.equalTo(dateLeftLabel.snp.centerY)
+            make.leading.top.equalToSuperview().inset(12)
         }
         
         questionLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(12)
-            make.top.equalTo(dateLeftLabel.snp.bottom).offset(10)
+            make.top.equalTo(categoryLabel.snp.bottom).offset(10)
         }
         
         participantsLabel.snp.makeConstraints { make in
@@ -105,7 +98,10 @@ class SurveyTableViewCell: UITableViewCell {
         }
         
         participateButton.snp.makeConstraints { make in
-            make.trailing.bottom.equalToSuperview().inset(20)
+//            make.trailing.bottom.equalToSuperview().inset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(20)
+//            make.top.equalTo(participantsLabel.snp.bottom).offset(20)
             make.height.equalTo(30)
         }
         

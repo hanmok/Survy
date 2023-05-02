@@ -43,13 +43,19 @@ extension UIColor {
     static let rewardColor = UIColor(hex6: 0xE7574F)
     
 //    static let mainColor = UIColor(hex6: 0xE3EDFF)
+    
     static let mainColor = UIColor(hex6: 0xB8D4FF)
+    static let deeperMainColor = UIColor(hex6: 0x5094FD)
+    static let blurredMainColor = UIColor(hex6: 0xB8D4FF, alpha: 0.5)
     
     static let mainBackgroundColor = UIColor(hex6: 0xECEDF3)
+    
 //    static let dateLeft = UIColor(hex6: 0x8F939)
+    
     static let blueTextColor = UIColor(hex6: 0x3255ED)
     
     static let blurredTextColor = UIColor(hex6: 0x777777)
+    
     static let modifyingButtonColor = UIColor(hex6: 0xF2F2F2)
     
     static let separatorViewColor = UIColor(hex6: 0xF0F2F8)
@@ -61,5 +67,6 @@ extension UIColor {
     static let bigSeparatorViewColor = UIColor(hex6: 0xF6F7FD)
     
     static let logoutButtonBackground = UIColor(hex6: 0xF2F2F2)
+    
     static let logoutButtonText = UIColor(hex6: 0xA1A6B8)
 }

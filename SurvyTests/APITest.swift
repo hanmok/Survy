@@ -1,15 +1,16 @@
 //
-//  SurvyTests.swift
+//  APITest.swift
 //  SurvyTests
 //
-//  Created by Mac mini on 2023/03/31.
+//  Created by Mac mini on 2023/05/02.
 //
 
 import XCTest
 import Alamofire
+
 @testable import Survy
 
-final class SurvyTests: XCTestCase {
+final class APITest: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -29,19 +30,29 @@ final class SurvyTests: XCTestCase {
 
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
-        measure {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }
-    
-    func test_number_formatter() {
-        let collectedMoney = 56000
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .decimal
-        let text = numberFormatter.string(from: collectedMoney as NSNumber)
-        XCTAssertEqual(text, "56,000")
-    }
+
 }
 
-
-
+extension APITest {
+    func test_tags() {
+        let expectation = self.expectation(description: "api call testing")
+        
+        AF.request("https://dearsurvy.herokuapp.com/tags")
+            .responseDecodable(of: TagResponse.self) { response in
+                do {
+                    let resultValue = try response.result.get()
+                    print("fetched result: \(resultValue)")
+                    
+                    XCTAssertNotNil(resultValue)
+                    expectation.fulfill()
+                } catch let error {
+                    print("encountered error \(error.localizedDescription)")
+                }
+            }
+        waitForExpectations(timeout: 10)
+    }
+}

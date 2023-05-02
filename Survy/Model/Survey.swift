@@ -9,11 +9,27 @@ import Foundation
 
 
 struct Survey {
-    var dateLeft: Int
+    let id: Int
+    let numOfParticipation: Int
+    let participationGoal: Int
+    let ended_at: Date? = nil
+    let title: String
+    let rewardRange: [Int]
+    
+    // need to get from Survey-Tag API
     var categories: [String]
-    var question: String
-    var availableOptions: [String]?
-    var textFieldPlaceHolder: String?
-    var participants: [Int]
-    var reward: Int
+    
+    var participants: [Int] {
+        return [self.numOfParticipation, participationGoal]
+    }
+    
+    var rewardString: String? {
+        if rewardRange.count == 1 {
+            return "\(rewardRange.first!)"
+        }
+        if let min = rewardRange.min(),
+           let max = rewardRange.max() {
+            return "\(min) ~ \(max)"
+        } else { return nil }
+    }
 }
