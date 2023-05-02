@@ -60,7 +60,7 @@ class SurveyTableViewCell: UITableViewCell {
         let inset2 = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
         backgroundColor = UIColor(hex6: 0xECEDF3)
         contentView.frame = contentView.frame.inset(by: inset2)
-        print("contentView height: \(contentView.frame.height)")
+//        print("contentView height: \(contentView.frame.height)")
         contentView.backgroundColor = .white
     }
     
@@ -149,6 +149,7 @@ class SurveyTableViewCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         label.textColor = UIColor.black
         label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         return label
     }()
     

@@ -18,12 +18,16 @@ class HomeViewController: UIViewController {
         Survey(id: 3, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"])
     ]
     
+    var surveysToShow = [Survey]()
+    
     let collectedMoney = 56000
-    let interestedCategories = ["애견", "운동", "음식", "피부"]
+    let categories = ["애견", "운동", "음식", "피부"]
+    var selectedCategories = Set<String>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableView()
+        setupCollectionView()
         setupLayout()
         view.backgroundColor = UIColor.mainBackgroundColor
     }
@@ -35,22 +39,11 @@ class HomeViewController: UIViewController {
     }
     
     private func setupLayout() {
-        
         navigationController?.title = "홈"
         
         [
-//            upperContainer,
-         collectedRewardLabel, surveyTableView, categoriesLabel, requestingButton].forEach { self.view.addSubview($0) }
+         collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView, requestingButton].forEach { self.view.addSubview($0) }
         
-//        [collectedRewardLabel].forEach {
-//            self.upperContainer.addSubview($0)
-//        }
-        
-//        upperContainer.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview()
-//            make.top.equalToSuperview()
-//            make.height.equalTo(100)
-//        }
         
         collectedRewardLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
@@ -58,14 +51,23 @@ class HomeViewController: UIViewController {
             make.top.equalTo(view.safeAreaLayoutGuide)
         }
         
-        categoriesLabel.snp.makeConstraints { make in
+        categorySelectionButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.width.equalTo(UIScreen.screenWidth / 6)
+            make.height.equalTo(60)
+        }
+        
+        categoryCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
+//            make.leading.trailing.equalToSuperview()
+            make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
+            make.trailing.equalToSuperview()
             make.height.equalTo(60)
         }
         
         surveyTableView.snp.makeConstraints { make in
-            make.top.equalTo(categoriesLabel.snp.bottom)
+            make.top.equalTo(categoryCollectionView.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(surveys.count * 200)
         }
@@ -79,7 +81,7 @@ class HomeViewController: UIViewController {
             font: UIFont.systemFont(ofSize: collectedRewardLabel.font.pointSize, weight: .bold),
             color: UIColor.blueTextColor)
         
-        categoriesLabel.text = "Categories"
+//        categoriesLabel.text = "Categories"
         
         requestingButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-tabbarHeight)
@@ -118,11 +120,28 @@ class HomeViewController: UIViewController {
     }()
     
     // TODO: Make it CollectionView
-
-    private let categoriesLabel: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = .magenta
-        return label
+    
+    private func setupCollectionView(){
+        categoryCollectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
+        categoryCollectionView.dataSource = self
+        categoryCollectionView.delegate = self
+    }
+    
+    private let categorySelectionButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("선택", for: .normal)
+        button.setTitleColor(.black, for: .normal)
+        return button
+    }()
+    
+    private let categoryCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 0
+        layout.minimumInteritemSpacing = 12
+        layout.itemSize = CGSize(width: UIScreen.screenWidth / 6, height: 40)
+        layout.sectionInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return collectionView
     }()
     
     private let surveyTableView: UITableView = {
@@ -134,16 +153,15 @@ class HomeViewController: UIViewController {
 }
 
 
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource, UICollectionViewDelegateFlowLayout {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
-        cell.survey = surveys[indexPath.row]
+        cell.survey = surveysToShow[indexPath.row]
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        let estimatedTitle =
+
         let approximatedWidthOfBioTextView = UIScreen.screenWidth - 16 * 2 - 12 * 2
         let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
         let estimatedFrame1 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 12)], context: nil)
@@ -160,10 +178,43 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return surveys.count
+        surveysToShow = surveys.filter {
+            let categories = Set($0.categories)
+            return categories.intersection(selectedCategories).isEmpty == false
+        }
+        return surveysToShow.count
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: false)
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let result = categories.count
+        return result
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
+        
+        collectionViewCell.category = categories[indexPath.row]
+        collectionViewCell.categoryCellDelegate = self
+        
+        
+        
+        return collectionViewCell
+    }
+}
+
+extension HomeViewController: CategoryCellDelegate {
+    func categoryTapped(category: String, selected: Bool) {
+        selectedCategories.toggle(category)
+        print("current selectedCategories: \(selectedCategories)")
+        DispatchQueue.main.async {
+            self.surveyTableView.reloadData()
+        }
     }
 }
