@@ -34,7 +34,6 @@ final class APITest: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
-
 }
 
 extension APITest {
@@ -56,3 +55,4 @@ extension APITest {
         waitForExpectations(timeout: 10)
     }
 }
+

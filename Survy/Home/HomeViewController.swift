@@ -15,9 +15,7 @@ import SnapKit
 
 class HomeViewController: UIViewController {
     
-    
-
-    let question = Question(id: 1, questionTypeId: 1, sectionId: 1, position: 1, text: "다이어트를 위해 약물을 복용해 본 적이 있나요?", expectedTimeInSec: 5, correctAnswer: nil)
+    let question = Question(id: 1, questionType: .singleSelection, sectionId: 1, position: 1, text: "다이어트를 위해 약물을 복용해 본 적이 있나요?", expectedTimeInSec: 5, selectableOptions: [SelectableOption(questionId: 1, position: 1, value: "네", placeHolder: nil), SelectableOption(questionId: 1, position: 2, value: "아니오", placeHolder: nil) ], correctAnswer: nil)
     
     let surveys: [Survey] = [
         Survey(id: 1, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
@@ -33,7 +31,6 @@ class HomeViewController: UIViewController {
     
     let categories = ["애견", "운동", "음식", "피부"]
     
-//    var selectedCategories = Set<String>()
     var selectedCategories = Set(["애견", "운동", "음식", "피부"])
     
     override func viewDidLoad() {
@@ -225,7 +222,12 @@ extension HomeViewController: CategoryCellDelegate {
 
 extension HomeViewController: SurveyTableViewDelegate {
     func surveyTapped(_ cell: SurveyTableViewCell) {
-        let questionViewController = QuestionViewController(question: question)
+        guard let selectedSurvey = cell.survey else { fatalError() }
+        
+        let surveyId = selectedSurvey.id
+        let section = Section(surveyId: surveyId, numOfQuestions: 3)
+        let questionViewController = QuestionViewController(question: question, section: section)
+        
         self.navigationController?.pushViewController(questionViewController, animated: true)
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 
 struct SelectableOption {
-    let id: Int
+    let id: Int = Int.random(in: 0 ... 10000)
     let questionId: Int
     let position: Int
-    let value: String?
-    let placeHolder: String?
+    var value: String? = nil
+    var placeHolder: String? = nil
 }

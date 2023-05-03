@@ -13,9 +13,17 @@ import SnapKit
 class QuestionViewController: BaseViewController {
 
     var question: Question
+    var questionType: QuestionType
+    var selectableOptions: [SelectableOption]
+    let section: Section
+    var percentage: CGFloat
     
-    init(question: Question) {
+    init(question: Question, section: Section) {
         self.question = question
+        self.questionType = question.questionType
+        self.selectableOptions = question.selectableOptions
+        self.section = section
+        self.percentage = CGFloat(question.position - 1) / CGFloat(section.numOfQuestions)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -23,23 +31,21 @@ class QuestionViewController: BaseViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    var percentage: CGFloat = 0.13
-    var questionType: QuestionType?
-    var selectableOptions: [SelectableOption]?
+    private func setupTargets() {
+        quitButton.addTarget(self, action: #selector(quitTapped), for: .touchUpInside)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configureLayout()
+        setupTargets()
         setupLayout()
-        callApi()
+
         view.backgroundColor = .mainBackgroundColor
         self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.setNavigationBarHidden(true, animated: false)
-    }
-    
-    func callApi() {
-//        APIManager.shared.testCall()
+        
     }
     
     private func configureLayout() {
@@ -47,6 +53,8 @@ class QuestionViewController: BaseViewController {
 //        guard let selectableOptions = selectableOptions else { return }
         
         questionLabel.text = "\(question.position). \(question.text)"
+        
+        
         // QuestionType 에 따라 갯수, 종류를 나누어야함.
 
 //        switch questionType {
@@ -65,8 +73,10 @@ class QuestionViewController: BaseViewController {
 //        optionStackView
     }
     
+    
+    
     private func setupLayout() {
-        [progressContainerView, questionContainerView, nextButton]
+        [progressContainerView, questionContainerView, nextButton, quitButton]
             .forEach {
             self.view.addSubview($0)
         }
@@ -76,7 +86,6 @@ class QuestionViewController: BaseViewController {
         }
         
         [questionLabel, optionStackView].forEach { self.questionContainerView.addSubview($0) }
-        
         
         progressContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -121,6 +130,12 @@ class QuestionViewController: BaseViewController {
             make.top.equalTo(questionContainerView.snp.bottom).offset(30)
             make.height.equalTo(50)
         }
+        
+        quitButton.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view.layoutMarginsGuide)
+            make.height.equalTo(50)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     
@@ -134,7 +149,7 @@ class QuestionViewController: BaseViewController {
     
     private let fullProgressBar: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(hex6: 0xD9D9D9)
+        view.backgroundColor = UIColor.grayProgressColor
         return view
     }()
     
@@ -147,7 +162,7 @@ class QuestionViewController: BaseViewController {
     private let percentageLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
-        label.text = "13%"
+        label.text = "0%"
         label.textColor = UIColor(white: 0.1, alpha: 1)
         return label
     }()
@@ -161,7 +176,6 @@ class QuestionViewController: BaseViewController {
         view.backgroundColor = .white
         view.layer.cornerRadius = 12
         view.addShadow(offset: CGSize(width: 5.0, height: 5.0))
-//        view.clipsToBounds = true
         return view
     }()
     
@@ -187,10 +201,38 @@ class QuestionViewController: BaseViewController {
         button.layer.cornerRadius = 7
         button.clipsToBounds = true
         button.addCharacterSpacing()
-//        button.addShadow(offset: CGSize(width: 0.5, height: 0.5), color: .black, opacity: 0.16, radius: 10)
         button.addShadow(offset: CGSize(width: 5.0, height: 5.0))
         return button
     }()
+    
+    private let quitButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = UIColor.grayProgressColor
+        button.setTitle("종료", for: .normal)
+        button.layer.cornerRadius = 7
+        button.clipsToBounds = true
+        button.addCharacterSpacing(textColor: UIColor(white: 0.4, alpha: 1))
+//        button.addShadow(offset: CGSize(width: 5.0, height: 5.0))
+        return button
+    }()
+    
+    @objc func quitTapped() {
+//        let alart = UIAlertAction(title: "Alert Title", style: <#T##UIAlertAction.Style#>)
+        
+        let alertController = UIAlertController(title: "정말 종료하시겠습니까?", message: "모든 설문을 마치지 않은 채 종료하실 경우 리워드가 제공되지 않고 해당 설문에 재참여가 불가능합니다.", preferredStyle: UIAlertController.Style.alert)
+        
+        let quitAction = UIAlertAction(title: "종료", style: .destructive) { _ in
+            DispatchQueue.main.async {
+                self.navigationController?.popToRootViewController(animated: true)
+            }
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: UIAlertAction.Style.cancel, handler: {
+            (action : UIAlertAction!) -> Void in })
+        [quitAction, cancelAction].forEach {
+            alertController.addAction($0)
+        }
+        self.present(alertController, animated: true)
+    }
     
     private let endButton: UIButton = {
         let button = UIButton()
