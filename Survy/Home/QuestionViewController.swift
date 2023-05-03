@@ -10,24 +10,11 @@ import SnapKit
 import Model
 // Coordinator pattern 필요할 것 같은데 ??
 
-class QuestionViewController: BaseViewController {
+class QuestionViewController: BaseViewController, Coordinating {
 
+    var coordinator: Coordinator?
+    
     var surveyService: SurveyService
-//    var question: Question
-//    var questionType: QuestionType
-//    var selectableOptions: [SelectableOption]
-//    let section: Section
-    
-//    var percentage: CGFloat
-    
-//    init(question: Question, section: Section) {
-//        self.question = question
-//        self.questionType = question.questionType
-//        self.selectableOptions = question.selectableOptions
-//        self.section = section
-//        self.percentage = CGFloat(question.position - 1) / CGFloat(section.numOfQuestions)
-//        super.init(nibName: nil, bundle: nil)
-//    }
     
     init(surveyService: SurveyServiceType) {
         self.surveyService = surveyService as! SurveyService
@@ -39,7 +26,8 @@ class QuestionViewController: BaseViewController {
     }
     
     private func setupTargets() {
-        quitButton.addTarget(self, action: #selector(quitTapped), for: .touchUpInside)
+        quitButton.addTarget(self, action: #selector(quitButtonTapped), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLoad() {
@@ -59,13 +47,19 @@ class QuestionViewController: BaseViewController {
 //        guard let questionType = questionType else { return }
 //        guard let selectableOptions = selectableOptions else { return }
         
-        guard let question = surveyService.currentQuestion else {return }
+        guard let question = surveyService.currentQuestion,
+              let percentage = surveyService.percentage else { return }
         
         questionLabel.text = "\(question.position). \(question.text)"
+        percentageLabel.text = "\(Int(percentage * 100))%"
         
+        if surveyService.isLastQuestion {
+            print("it's last Question!")
+            nextButton.setTitle("완료", for: .normal)
+            nextButton.addCharacterSpacing()
+        }
         
         // QuestionType 에 따라 갯수, 종류를 나누어야함.
-
 //        switch questionType {
 //        case .essay:
 //            break
@@ -82,6 +76,16 @@ class QuestionViewController: BaseViewController {
 //        optionStackView
     }
     
+    
+    @objc func nextButtonTapped() {
+        if !surveyService.isLastQuestion {
+            surveyService.moveToNextQuestion()
+            coordinator?.move(to: .questionController)
+        } else {
+            surveyService.initializeSurvey()
+            coordinator?.move(to: .root)
+        }
+    }
     
     
     private func setupLayout() {
@@ -179,8 +183,6 @@ class QuestionViewController: BaseViewController {
         return label
     }()
     
-    
-    
     // MARK: - Question Container
     
     private let questionContainerView: UIView = {
@@ -228,13 +230,14 @@ class QuestionViewController: BaseViewController {
     }()
     
     // MARK: - Helper Functions
-    @objc func quitTapped() {
+    @objc func quitButtonTapped() {
         
         let alertController = UIAlertController(title: "정말 종료하시겠습니까?", message: "모든 설문을 마치지 않은 채 종료하실 경우 리워드가 제공되지 않고 해당 설문에 재참여가 불가능합니다.", preferredStyle: UIAlertController.Style.alert)
         
         let quitAction = UIAlertAction(title: "종료", style: .destructive) { _ in
             DispatchQueue.main.async {
-                self.navigationController?.popToRootViewController(animated: true)
+                self.surveyService.initializeSurvey()
+                self.coordinator?.move(to: .root)
             }
         }
         let cancelAction = UIAlertAction(title: "취소", style: UIAlertAction.Style.cancel, handler: {

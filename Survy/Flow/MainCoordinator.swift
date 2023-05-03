@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import Model
 
 class MainCoordinator: Coordinator {
     var provider: ProviderType
     
     init() {
         self.provider = Provider()
+        testSetup()
     }
     
     func start() {
@@ -19,14 +21,23 @@ class MainCoordinator: Coordinator {
         navigationController?.setViewControllers([mainTabController], animated: false)
     }
     
+    private func testSetup() {
+        self.provider.surveyService.currentSurvey = surveys[0]
+        self.provider.surveyService.currentSection = section
+        self.provider.surveyService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
+        self.provider.surveyService.questionIndex = 0
+    }
+    
     func move(to destination: Destination) {
         switch destination {
             case .questionController:
                 let questionController = QuestionViewController(surveyService: provider.surveyService)
+                questionController.coordinator = self
                 
                 navigationController?.pushViewController(questionController, animated: true)
+                
             case .root:
-                break
+                navigationController?.popToRootViewController(animated: true)
         }
     }
     
