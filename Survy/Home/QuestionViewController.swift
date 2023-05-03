@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import Model
 // Coordinator pattern 필요할 것 같은데 ??
 
 class QuestionViewController: BaseViewController {
@@ -103,6 +103,7 @@ class QuestionViewController: BaseViewController {
             make.width.equalTo(filledWidth)
             make.height.top.equalToSuperview()
         }
+        
         percentageLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.height.equalToSuperview()
@@ -116,7 +117,6 @@ class QuestionViewController: BaseViewController {
         }
         
         questionLabel.snp.makeConstraints { make in
-//            make.top.leading.trailing.equalToSuperview().inset(12)
             make.top.leading.trailing.equalToSuperview().inset(12)
         }
         
@@ -138,6 +138,8 @@ class QuestionViewController: BaseViewController {
         }
     }
     
+    
+    // MARK: - UI Properties
     
     // MARK: - Percentage Bar
     private let progressContainerView: UIView = {
@@ -182,7 +184,6 @@ class QuestionViewController: BaseViewController {
     private let questionLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
-        
         return label
     }()
     
@@ -192,7 +193,7 @@ class QuestionViewController: BaseViewController {
         return stackView
     }()
     
-    // MARK: - Others
+    // MARK: - Buttons
     
     private let nextButton: UIButton = {
         let button = UIButton()
@@ -216,8 +217,8 @@ class QuestionViewController: BaseViewController {
         return button
     }()
     
+    // MARK: - Helper Functions
     @objc func quitTapped() {
-//        let alart = UIAlertAction(title: "Alert Title", style: <#T##UIAlertAction.Style#>)
         
         let alertController = UIAlertController(title: "정말 종료하시겠습니까?", message: "모든 설문을 마치지 않은 채 종료하실 경우 리워드가 제공되지 않고 해당 설문에 재참여가 불가능합니다.", preferredStyle: UIAlertController.Style.alert)
         
@@ -233,11 +234,4 @@ class QuestionViewController: BaseViewController {
         }
         self.present(alertController, animated: true)
     }
-    
-    private let endButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("종료", for: .normal)
-        return button
-    }()
-    
 }

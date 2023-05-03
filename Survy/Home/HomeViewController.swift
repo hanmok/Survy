@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import Model
 //struct CategorySelection: Hashable {
 //    var name: String
 //    var isSelected: Bool

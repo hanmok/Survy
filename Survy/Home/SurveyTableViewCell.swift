@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-
+import Model
 
 protocol SurveyTableViewDelegate {
     func surveyTapped(_ cell: SurveyTableViewCell)
