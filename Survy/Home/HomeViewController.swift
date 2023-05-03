@@ -8,14 +8,20 @@
 import UIKit
 import SnapKit
 import Model
-//struct CategorySelection: Hashable {
-//    var name: String
-//    var isSelected: Bool
-//}
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, Coordinating {
     
-    let question = Question(id: 1, questionType: .singleSelection, sectionId: 1, position: 1, text: "다이어트를 위해 약물을 복용해 본 적이 있나요?", expectedTimeInSec: 5, selectableOptions: [SelectableOption(questionId: 1, position: 1, value: "네", placeHolder: nil), SelectableOption(questionId: 1, position: 2, value: "아니오", placeHolder: nil) ], correctAnswer: nil)
+    var surveyService: SurveyServiceType
+    var coordinator: Coordinator?
+    
+    init(surveyService: SurveyServiceType) {
+        self.surveyService = surveyService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     let surveys: [Survey] = [
         Survey(id: 1, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
@@ -222,12 +228,17 @@ extension HomeViewController: CategoryCellDelegate {
 
 extension HomeViewController: SurveyTableViewDelegate {
     func surveyTapped(_ cell: SurveyTableViewCell) {
+        
+        print("umm1")
         guard let selectedSurvey = cell.survey else { fatalError() }
+        surveyService.currentSurvey = selectedSurvey
+//        let surveyId = selectedSurvey.id
+//        let section = Section(surveyId: surveyId, numOfQuestions: 3)
+//        let questionViewController = QuestionViewController(question: dietQuestion1, section: section)
         
-        let surveyId = selectedSurvey.id
-        let section = Section(surveyId: surveyId, numOfQuestions: 3)
-        let questionViewController = QuestionViewController(question: question, section: section)
+        coordinator?.move(to: .questionController)
         
-        self.navigationController?.pushViewController(questionViewController, animated: true)
+//        print(coordinator)
+//        self.navigationController?.pushViewController(questionViewController, animated: true)
     }
 }

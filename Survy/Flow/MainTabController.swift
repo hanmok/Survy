@@ -7,11 +7,25 @@
 
 import UIKit
 
-class MainTabController: UITabBarController, UINavigationControllerDelegate {
+class MainTabController: UITabBarController, UINavigationControllerDelegate, Coordinating {
+    var coordinator: Coordinator?
+    
 
 //    override func viewWillAppear(_ animated: Bool) {
 //        tabBarController?.selectedIndex = 2
 //    }
+//    var coordinator: Coordinator
+    
+    var provider: ProviderType
+    init(provider: ProviderType, coordinator: Coordinator) {
+        self.provider = provider
+        self.coordinator = coordinator
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,22 +47,27 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate {
     func configureViewControllers() {
         
         tabBar.backgroundColor = UIColor.mainColor
+        guard let coordinator = self.coordinator else { fatalError() }
+        let homeVC = HomeViewController(surveyService: self.provider.surveyService)
+        let storeVC = StoreViewController()
+        let myPageVC = MyPageViewController()
+        homeVC.coordinator = coordinator
         
         let home = templateNavigationController(
             unselectedImage: UIImage.unselectedHomeIcon,
             selectedImage: UIImage.selectedHomeIcon,
-            rootViewController: HomeViewController()
+            rootViewController: homeVC
         )
         
         let store = templateNavigationController(
             unselectedImage: UIImage.unselectedStoreIcon,
             selectedImage: UIImage.selectedStoreIcon,
-            rootViewController: StoreViewController())
+            rootViewController: storeVC)
         
         let myPage = templateNavigationController(
             unselectedImage: UIImage.unselectedMyPageIcon,
             selectedImage: UIImage.selectedMyPageIcon,
-            rootViewController: MyPageViewController())
+            rootViewController: myPageVC)
 
         
         viewControllers = [home, store, myPage]

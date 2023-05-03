@@ -13,10 +13,10 @@ class MyPageViewController: UIViewController {
     let collectedMoney = 56000
     
     var moreInfos: [Info] = [
-        Info(text: "친구초대", nextViewController: HomeViewController()),
-        Info(text: "이용안내", nextViewController: HomeViewController()),
-        Info(text: "고객센터", nextViewController: HomeViewController()),
-        Info(text: "회원탈퇴", nextViewController: HomeViewController())
+        Info(text: "친구초대", nextViewController: UIViewController()),
+        Info(text: "이용안내", nextViewController: UIViewController()),
+        Info(text: "고객센터", nextViewController: UIViewController()),
+        Info(text: "회원탈퇴", nextViewController: UIViewController())
     ]
     
     override func viewDidLoad() {

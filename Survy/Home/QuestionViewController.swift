@@ -12,18 +12,25 @@ import Model
 
 class QuestionViewController: BaseViewController {
 
-    var question: Question
-    var questionType: QuestionType
-    var selectableOptions: [SelectableOption]
-    let section: Section
-    var percentage: CGFloat
+    var surveyService: SurveyService
+//    var question: Question
+//    var questionType: QuestionType
+//    var selectableOptions: [SelectableOption]
+//    let section: Section
     
-    init(question: Question, section: Section) {
-        self.question = question
-        self.questionType = question.questionType
-        self.selectableOptions = question.selectableOptions
-        self.section = section
-        self.percentage = CGFloat(question.position - 1) / CGFloat(section.numOfQuestions)
+//    var percentage: CGFloat
+    
+//    init(question: Question, section: Section) {
+//        self.question = question
+//        self.questionType = question.questionType
+//        self.selectableOptions = question.selectableOptions
+//        self.section = section
+//        self.percentage = CGFloat(question.position - 1) / CGFloat(section.numOfQuestions)
+//        super.init(nibName: nil, bundle: nil)
+//    }
+    
+    init(surveyService: SurveyServiceType) {
+        self.surveyService = surveyService as! SurveyService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -52,6 +59,8 @@ class QuestionViewController: BaseViewController {
 //        guard let questionType = questionType else { return }
 //        guard let selectableOptions = selectableOptions else { return }
         
+        guard let question = surveyService.currentQuestion else {return }
+        
         questionLabel.text = "\(question.position). \(question.text)"
         
         
@@ -76,6 +85,7 @@ class QuestionViewController: BaseViewController {
     
     
     private func setupLayout() {
+        let percentage = surveyService.percentage ?? 0.0
         [progressContainerView, questionContainerView, nextButton, quitButton]
             .forEach {
             self.view.addSubview($0)
