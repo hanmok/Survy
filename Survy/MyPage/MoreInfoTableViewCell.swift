@@ -19,7 +19,6 @@ class MoreInfoTableViewCell: UITableViewCell {
     private func configureLayout() {
         guard let moreInfo = moreInfo else { return }
         titleLabel.text = moreInfo.text
-
     }
     
     private let titleLabel: UILabel = {
@@ -72,4 +71,3 @@ struct Info {
     var text: String
     var nextViewController: UIViewController
 }
-

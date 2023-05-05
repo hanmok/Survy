@@ -15,7 +15,6 @@
 		9A6113CE2A00C8860051FF2B /* APITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113CD2A00C8860051FF2B /* APITest.swift */; };
 		9A6113D02A00D5F40051FF2B /* NSMutableParagraphStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113CF2A00D5F40051FF2B /* NSMutableParagraphStyle.swift */; };
 		9A6113D22A010B840051FF2B /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113D12A010B840051FF2B /* CategoryCollectionViewCell.swift */; };
-		9A6113D42A0114C50051FF2B /* CategoryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113D32A0114C50051FF2B /* CategoryButton.swift */; };
 		9A6113D62A0134F80051FF2B /* SetExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113D52A0134F80051FF2B /* SetExt+.swift */; };
 		9A6114432A02923E0051FF2B /* libModel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9A6114422A02923E0051FF2B /* libModel.a */; };
 		9A6114472A0296240051FF2B /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114462A0296240051FF2B /* Coordinator.swift */; };
@@ -26,6 +25,12 @@
 		9A6114512A0296E90051FF2B /* SurveyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114502A0296E90051FF2B /* SurveyService.swift */; };
 		9A6114542A0297920051FF2B /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114532A0297920051FF2B /* MainCoordinator.swift */; };
 		9A6114562A0298D10051FF2B /* Destination.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114552A0298D10051FF2B /* Destination.swift */; };
+		9A6114B82A02B1F70051FF2B /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114B72A02B1F70051FF2B /* RadioButton.swift */; };
+		9A6114BA2A02B2230051FF2B /* CheckBoxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114B92A02B2230051FF2B /* CheckBoxButton.swift */; };
+		9A6114BC2A02B2DB0051FF2B /* RadioButtonStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114BB2A02B2DB0051FF2B /* RadioButtonStackView.swift */; };
+		9A6114BE2A0500110051FF2B /* SingleChoiceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114BD2A0500110051FF2B /* SingleChoiceButton.swift */; };
+		9A6114C02A0508620051FF2B /* OptionStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114BF2A0508620051FF2B /* OptionStackView.swift */; };
+		9A6114C22A050A100051FF2B /* MultipleChoiceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114C12A050A100051FF2B /* MultipleChoiceButton.swift */; };
 		9ABBC35529DC6405006980E6 /* MoreInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */; };
 		9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */; };
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
@@ -73,7 +78,6 @@
 		9A6113CD2A00C8860051FF2B /* APITest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITest.swift; sourceTree = "<group>"; };
 		9A6113CF2A00D5F40051FF2B /* NSMutableParagraphStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSMutableParagraphStyle.swift; sourceTree = "<group>"; };
 		9A6113D12A010B840051FF2B /* CategoryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCollectionViewCell.swift; sourceTree = "<group>"; };
-		9A6113D32A0114C50051FF2B /* CategoryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryButton.swift; sourceTree = "<group>"; };
 		9A6113D52A0134F80051FF2B /* SetExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SetExt+.swift"; sourceTree = "<group>"; };
 		9A6114422A02923E0051FF2B /* libModel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libModel.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9A6114462A0296240051FF2B /* Coordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
@@ -84,6 +88,12 @@
 		9A6114502A0296E90051FF2B /* SurveyService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyService.swift; sourceTree = "<group>"; };
 		9A6114532A0297920051FF2B /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		9A6114552A0298D10051FF2B /* Destination.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Destination.swift; sourceTree = "<group>"; };
+		9A6114B72A02B1F70051FF2B /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
+		9A6114B92A02B2230051FF2B /* CheckBoxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBoxButton.swift; sourceTree = "<group>"; };
+		9A6114BB2A02B2DB0051FF2B /* RadioButtonStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButtonStackView.swift; sourceTree = "<group>"; };
+		9A6114BD2A0500110051FF2B /* SingleChoiceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleChoiceButton.swift; sourceTree = "<group>"; };
+		9A6114BF2A0508620051FF2B /* OptionStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionStackView.swift; sourceTree = "<group>"; };
+		9A6114C12A050A100051FF2B /* MultipleChoiceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleChoiceButton.swift; sourceTree = "<group>"; };
 		9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreInfoTableViewCell.swift; sourceTree = "<group>"; };
 		9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewExt+.swift"; sourceTree = "<group>"; };
 		9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewControllerExt+.swift"; sourceTree = "<group>"; };
@@ -152,8 +162,10 @@
 		9A6113BC29F521E90051FF2B /* HelperClass */ = {
 			isa = PBXGroup;
 			children = (
-				9A6113D32A0114C50051FF2B /* CategoryButton.swift */,
 				9AE2961529D844CC00387883 /* PaddedLabel.swift */,
+				9A6114B72A02B1F70051FF2B /* RadioButton.swift */,
+				9A6114BB2A02B2DB0051FF2B /* RadioButtonStackView.swift */,
+				9A6114B92A02B2230051FF2B /* CheckBoxButton.swift */,
 				9A6113BA29F521910051FF2B /* BaseViewController.swift */,
 			);
 			path = HelperClass;
@@ -271,9 +283,12 @@
 				9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */,
 				9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */,
 				9AE2961929D8474A00387883 /* UIButtonExt+.swift */,
+				9A6114BD2A0500110051FF2B /* SingleChoiceButton.swift */,
+				9A6114C12A050A100051FF2B /* MultipleChoiceButton.swift */,
 				9A6113B829F51F5B0051FF2B /* UIScreenExt+.swift */,
 				9A6113CF2A00D5F40051FF2B /* NSMutableParagraphStyle.swift */,
 				9A6113D52A0134F80051FF2B /* SetExt+.swift */,
+				9A6114BF2A0508620051FF2B /* OptionStackView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -460,14 +475,17 @@
 				9A6113C729F539C10051FF2B /* APIManager.swift in Sources */,
 				9A61144D2A0296770051FF2B /* StartingNavigationController.swift in Sources */,
 				9AE2961A29D8474A00387883 /* UIButtonExt+.swift in Sources */,
+				9A6114BC2A02B2DB0051FF2B /* RadioButtonStackView.swift in Sources */,
 				9AE295FA29D7131C00387883 /* SurveyTableViewCell.swift in Sources */,
 				9A6113D02A00D5F40051FF2B /* NSMutableParagraphStyle.swift in Sources */,
+				9A6114C22A050A100051FF2B /* MultipleChoiceButton.swift in Sources */,
 				9AE295EE29D6FA5C00387883 /* MyPageViewController.swift in Sources */,
+				9A6114BE2A0500110051FF2B /* SingleChoiceButton.swift in Sources */,
+				9A6114C02A0508620051FF2B /* OptionStackView.swift in Sources */,
 				9A6114562A0298D10051FF2B /* Destination.swift in Sources */,
 				9AE2961629D844CC00387883 /* PaddedLabel.swift in Sources */,
 				9A6114472A0296240051FF2B /* Coordinator.swift in Sources */,
 				9A6113B929F51F5B0051FF2B /* UIScreenExt+.swift in Sources */,
-				9A6113D42A0114C50051FF2B /* CategoryButton.swift in Sources */,
 				9A6113B729F515FF0051FF2B /* QuestionViewController.swift in Sources */,
 				9A6114512A0296E90051FF2B /* SurveyService.swift in Sources */,
 				9A61144F2A0296940051FF2B /* UserService.swift in Sources */,
@@ -477,6 +495,7 @@
 				9A6113D62A0134F80051FF2B /* SetExt+.swift in Sources */,
 				9AE2960129D714F800387883 /* UICollectionViewCellExt+.swift in Sources */,
 				9A6113D22A010B840051FF2B /* CategoryCollectionViewCell.swift in Sources */,
+				9A6114B82A02B1F70051FF2B /* RadioButton.swift in Sources */,
 				9AE295F129D6FB4A00387883 /* UIImageExt+.swift in Sources */,
 				9A6113BB29F521910051FF2B /* BaseViewController.swift in Sources */,
 				9AE295F829D706A200387883 /* UserDefaultsExt+.swift in Sources */,
@@ -487,6 +506,7 @@
 				9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */,
 				9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */,
 				9AE295FF29D714E300387883 /* UITableViewCellExt+.swift in Sources */,
+				9A6114BA2A02B2230051FF2B /* CheckBoxButton.swift in Sources */,
 				9AE295D429D6F81400387883 /* SceneDelegate.swift in Sources */,
 				9AE295EA29D6FA4C00387883 /* HomeViewController.swift in Sources */,
 			);

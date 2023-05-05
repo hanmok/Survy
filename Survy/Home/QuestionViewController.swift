@@ -59,7 +59,10 @@ class QuestionViewController: BaseViewController, Coordinating {
             nextButton.addCharacterSpacing()
         }
         
+        // Strategy Pattern 써야 하는거 아닌가 ??
+        
         // QuestionType 에 따라 갯수, 종류를 나누어야함.
+    
 //        switch questionType {
 //        case .essay:
 //            break
@@ -74,6 +77,17 @@ class QuestionViewController: BaseViewController, Coordinating {
 //        }
         
 //        optionStackView
+        
+        let singleChoiceButton1 = SingleChoiceButton(text: "네 다이어트 좋아해요오", tag: 1)
+        
+        let singleChoiceButton2 = SingleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
+        
+//        [singleChoiceButton1, singleChoiceButton2].forEach {
+//            optionStackView.addArrangedSubview($0)
+//            $0.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+//        }
+        
+        optionStackView.setSingleChoiceButtons([singleChoiceButton1, singleChoiceButton2])
     }
     
     
@@ -103,7 +117,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         progressContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
-            make.height.equalTo(30)
+            make.height.equalTo(40)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
         
@@ -199,9 +213,8 @@ class QuestionViewController: BaseViewController, Coordinating {
         return label
     }()
     
-    private let optionStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
+    private let optionStackView: OptionStackView = {
+        let stackView = OptionStackView()
         return stackView
     }()
     
@@ -225,7 +238,6 @@ class QuestionViewController: BaseViewController, Coordinating {
         button.layer.cornerRadius = 7
         button.clipsToBounds = true
         button.addCharacterSpacing(textColor: UIColor(white: 0.4, alpha: 1))
-//        button.addShadow(offset: CGSize(width: 5.0, height: 5.0))
         return button
     }()
     

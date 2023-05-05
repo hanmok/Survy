@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 extension UIButton {
     func addInsets(top: CGFloat = 10.0, bottom: CGFloat = 10.0, left: CGFloat = 10.0, right: CGFloat = 10.0) {
@@ -19,5 +20,15 @@ extension UIButton {
         let myString: NSMutableAttributedString = NSMutableAttributedString(string: title + " ")
         myString.append(attachmentString)
         self.setAttributedTitle(myString, for: .normal)
+    }
+    
+    func addImage(image: UIImage) {
+//        let imageView = UIImageView()
+        setBackgroundImage(image, for: .normal)
+//        imageView.image = image
+//        addSubview(imageView)
+//        imageView.snp.makeConstraints { make in
+//            make.edges.equalToSuperview()
+//        }
     }
 }
