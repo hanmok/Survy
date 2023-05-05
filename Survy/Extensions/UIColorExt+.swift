@@ -37,7 +37,7 @@ extension UIColor {
 
 extension UIColor {
     
-    public static let grayProgressColor = UIColor(hex6: 0xD9D9D9)
+    public static let grayProgress = UIColor(hex6: 0xD9D9D9)
     public static let unselectedUpperTabColor = UIColor(hex6: 0x818181)
     static let selectedUpperTabColor = UIColor.black
     static let participantsColor = UIColor(hex6: 0x8F939F)

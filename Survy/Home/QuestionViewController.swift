@@ -12,6 +12,10 @@ import Model
 
 class QuestionViewController: BaseViewController, Coordinating {
 
+    @objc func otherViewTapped() {
+        view.endEditing(true)
+    }
+    
     var coordinator: Coordinator?
     
     var surveyService: SurveyService
@@ -41,11 +45,15 @@ class QuestionViewController: BaseViewController, Coordinating {
         self.tabBarController?.tabBar.isHidden = true
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
+        view.addGestureRecognizer(tapGesture)
     }
     
     private func configureLayout() {
 //        guard let questionType = questionType else { return }
 //        guard let selectableOptions = selectableOptions else { return }
+        
+        optionStackView.optionStackViewDelegate = self
         
         guard let question = surveyService.currentQuestion,
               let percentage = surveyService.percentage else { return }
@@ -63,18 +71,23 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         // QuestionType 에 따라 갯수, 종류를 나누어야함.
     
-//        switch questionType {
-//        case .essay:
-//            break
-//        case .shortSentence:
-//            break
-//        case .singleSelection:
-//            break
-//        case .muiltipleSelection:
-//            break
-//        case .multipleSentences:
-//            break
-//        }
+        switch question.questionType {
+            
+            case .singleSelection:
+                break
+            case .multipleSelection:
+                break
+            case .shortSentence: // Should have Placeholder
+                break
+            case .essay: // Should have Placeholder
+                break
+            case .multipleSentences:
+                break
+        }
+        
+        // PlaceHolder 가 여기있음.
+//        switch question.selectableOptions
+        
         
 //        optionStackView
         
@@ -84,19 +97,47 @@ class QuestionViewController: BaseViewController, Coordinating {
 //        let singleChoiceButton2 = SingleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
 //
 //        optionStackView.setSingleChoiceButtons([singleChoiceButton1, singleChoiceButton2])
-        
+    
         // Multiple Choices
         let multipleChoiceButton1 = MultipleChoiceButton(text: "네 다이어트 좋아해요오", tag: 1)
-        
         let multipleChoiceButton2 = MultipleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
-        
+        let multipleChoiceButton3 = MultipleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 3)
+        let multipleChoiceButton4 = MultipleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 4)
+
         optionStackView.setQuestionType(.multipleSelection)
+
+        optionStackView.setMultipleSelectionButtons([multipleChoiceButton1, multipleChoiceButton2, multipleChoiceButton3, multipleChoiceButton4])
         
-        optionStackView.setMultipleSelectionButtons([multipleChoiceButton1, multipleChoiceButton2])
+        
+        
+        // Short Sentence, Essay
+//        let textField = UITextField()
+//        textField.placeholder = "Random Placeholder"
+//        optionStackView.addTextField(textField)
+        
+        // 다음 누를 때 전달되는 Answer: OptionStackView 에서 가져오기.
+        
     }
     
     
     @objc func nextButtonTapped() {
+        
+        guard let question = surveyService.currentQuestion else { fatalError() }
+        
+        switch question.questionType {
+            
+            case .singleSelection:
+                surveyService.selectedIndex = optionStackView.selectedIndex
+            case .multipleSelection:
+                surveyService.selectedIndexes = optionStackView.selectedIndices
+            case .shortSentence:
+                surveyService.textAnswer = optionStackView.textAnswer
+            case .essay:
+                surveyService.textAnswer = optionStackView.textAnswer
+            case .multipleSentences:
+                break
+        }
+        
         if !surveyService.isLastQuestion {
             surveyService.moveToNextQuestion()
             coordinator?.move(to: .questionController)
@@ -146,7 +187,9 @@ class QuestionViewController: BaseViewController, Coordinating {
         questionContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
             make.top.equalTo(progressContainerView.snp.bottom).offset(80)
-            make.height.equalTo(200)
+//            make.height.equalTo(200)
+            // TODO: 50 -> Question Title 길이에 따라 변해야함.
+            make.height.equalTo(optionStackView.subviews.count * 40 + 50)
         }
         
         questionLabel.snp.makeConstraints { make in
@@ -184,7 +227,7 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     private let fullProgressBar: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.grayProgressColor
+        view.backgroundColor = UIColor.grayProgress
         return view
     }()
     
@@ -227,7 +270,8 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     private let nextButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor.mainColor
+//        button.backgroundColor = UIColor.mainColor
+        button.backgroundColor = .grayProgress
         button.setTitle("다음", for: .normal)
         button.layer.cornerRadius = 7
         button.clipsToBounds = true
@@ -238,7 +282,7 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     private let quitButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor.grayProgressColor
+        button.backgroundColor = UIColor.grayProgress
         button.setTitle("종료", for: .normal)
         button.layer.cornerRadius = 7
         button.clipsToBounds = true
@@ -263,5 +307,12 @@ class QuestionViewController: BaseViewController, Coordinating {
             alertController.addAction($0)
         }
         self.present(alertController, animated: true)
+    }
+}
+
+extension QuestionViewController: OptionStackViewDelegate {
+    func notifyConditionChange(to condition: Bool) {
+        self.nextButton.isUserInteractionEnabled = condition
+        self.nextButton.backgroundColor = condition ? .mainColor : .grayProgress
     }
 }

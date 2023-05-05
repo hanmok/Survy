@@ -15,17 +15,33 @@ protocol SurveyServiceType: AnyObject {
     var questionIndex: Int? { get set }
     var questionsToConduct: [Question]? { get set }
     var isLastQuestion: Bool { get }
+    var selectedIndexes: Set<Int>? { get set }
+    var selectedIndex: Int? { get set }
+    var textAnswer: String? { get set }
     func moveToNextQuestion()
     func initializeSurvey()
+    func postAnswer()
+    
 }
 
 class SurveyService: SurveyServiceType {
+    var selectedIndexes: Set<Int>?
+    
+    var selectedIndex: Int?
+    
+    var textAnswer: String?
+    
+    func postAnswer() {
+        
+    }
+    
     func initializeSurvey() {
         currentSurvey = nil
         currentSection = nil
         questionIndex = nil
         questionsToConduct = nil
     }
+    
     var currentSurvey: Survey?
     var currentSection: Section?
     var currentQuestion: Question? {
