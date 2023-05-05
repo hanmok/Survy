@@ -25,12 +25,17 @@ class MultipleChoiceButton: SelectionButton {
         }
     }
     
+    override func buttonSelected(_ isSelected: Bool) {
+        self.isSelected = isSelected
+    }
+    
     var text: String
     
-    init(text: String) {
+    init(text: String, tag: Int) {
         self.text = text
         super.init(frame: .zero)
         setupLayout()
+        self.tag = tag
     }
 
     private func setupLayout() {

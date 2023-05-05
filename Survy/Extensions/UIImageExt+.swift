@@ -29,7 +29,9 @@ extension UIImage {
     static let filledCircle = UIImage(systemName:  "largecircle.fill.circle")!
     
     static let uncheckedSquare = UIImage(systemName: "square")!
-    static let checkedSquare = UIImage(systemName: "square.fill")!
+    
+    static let checkedSquare = UIImage(systemName: "checkmark.square.fill")!
     
     //    static let requesting_image = UIImage(named: "requesting_image3")!
+    
 }

@@ -28,7 +28,6 @@ class SingleChoiceButton: SelectionButton {
         self.isSelected = isSelected
     }
     
-    
     init(text: String, tag: Int) {
         self.text = text
         super.init(frame: .zero)

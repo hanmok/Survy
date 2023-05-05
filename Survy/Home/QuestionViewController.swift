@@ -78,16 +78,21 @@ class QuestionViewController: BaseViewController, Coordinating {
         
 //        optionStackView
         
-        let singleChoiceButton1 = SingleChoiceButton(text: "네 다이어트 좋아해요오", tag: 1)
+        // Single Choice
+//        let singleChoiceButton1 = SingleChoiceButton(text: "네 다이어트 좋아해요오", tag: 1)
+//
+//        let singleChoiceButton2 = SingleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
+//
+//        optionStackView.setSingleChoiceButtons([singleChoiceButton1, singleChoiceButton2])
         
-        let singleChoiceButton2 = SingleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
+        // Multiple Choices
+        let multipleChoiceButton1 = MultipleChoiceButton(text: "네 다이어트 좋아해요오", tag: 1)
         
-//        [singleChoiceButton1, singleChoiceButton2].forEach {
-//            optionStackView.addArrangedSubview($0)
-//            $0.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
-//        }
+        let multipleChoiceButton2 = MultipleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
         
-        optionStackView.setSingleChoiceButtons([singleChoiceButton1, singleChoiceButton2])
+        optionStackView.setQuestionType(.multipleSelection)
+        
+        optionStackView.setMultipleSelectionButtons([multipleChoiceButton1, multipleChoiceButton2])
     }
     
     

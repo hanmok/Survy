@@ -9,10 +9,11 @@ import UIKit
 import Model
 
 class OptionStackView: UIStackView {
+    
     var questionType: QuestionType = .singleSelection
     
-    var selectedIndex: Int?
-    var selectedIndices: Int?
+    public var selectedIndex: Int?
+    public var selectedIndices: Set<Int>?
     
     var buttons: [SelectionButton] = []
     
@@ -21,6 +22,13 @@ class OptionStackView: UIStackView {
         super.init(frame: .zero)
         self.axis = .vertical
         setupLayout()
+    }
+    
+    public func setQuestionType(_ questionType: QuestionType) {
+        self.questionType = questionType
+        if questionType == .multipleSelection {
+            selectedIndices = Set<Int>()
+        }
     }
     
     init() {
@@ -64,9 +72,7 @@ class OptionStackView: UIStackView {
         }
     }
     
-    // Tag 는 각 Class 생성 시 미리 만들어져 있어야함
     @objc func singleSelectionButtonTapped(_ sender: SingleChoiceButton) {
-        print("sender.tag1: \(sender.tag), selectedIndex: \(selectedIndex)")
         
         if let selectedIndex = selectedIndex, sender.tag != selectedIndex {
           // 현재 선택된 것과 비교, 다를 경우 이미 선택된 것을 unselected 로 변경
@@ -78,8 +84,11 @@ class OptionStackView: UIStackView {
     }
     
     @objc func multipleSelectionButtonTapped(_ sender: MultipleChoiceButton) {
+        // 이미 선택되어 있는 상태면 해제, 안되어 있으면 선택
+        guard selectedIndices != nil else { fatalError() }
+        let isNotSelectedYet = !selectedIndices!.contains(sender.tag)
+        sender.buttonSelected(isNotSelectedYet)
         
+        selectedIndices!.toggle(sender.tag)
     }
-    
-    
 }
