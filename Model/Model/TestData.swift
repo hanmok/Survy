@@ -26,9 +26,10 @@ public let dietQuestion2 = Question(id: 2, questionType: .multipleSelection, sec
     SelectableOption(questionId: 2, position: 3, value: "기타 광고")
 ])
 
-public let dietQuestion3 = Question(id: 3, questionType: .singleSelection, sectionId: 1, position: 3, text: "해당 약물을 통해 긍정적인 효과를 보셨나요?", expectedTimeInSec: 5, selectableOptions: [
-    SelectableOption(questionId: 2, position: 1, value: "예"),
-    SelectableOption(questionId: 2, position: 2, value: "아니오")
+public let dietQuestion3 = Question(id: 3, questionType: .shortSentence, sectionId: 1, position: 3, text: "해당 약물을 통한 경험은 어땠나요?", expectedTimeInSec: 5, selectableOptions: [
+//    SelectableOption(questionId: 2, position: 1, value: "예"),
+//    SelectableOption(questionId: 2, position: 2, value: "아니오")
+    SelectableOption(questionId: 2, position: 1, value: nil, placeHolder: "경험을 공유해주세요.")
 ])
 
 public let section = Section(surveyId: 1, numOfQuestions: 3)

@@ -70,53 +70,32 @@ class QuestionViewController: BaseViewController, Coordinating {
         // Strategy Pattern 써야 하는거 아닌가 ??
         
         // QuestionType 에 따라 갯수, 종류를 나누어야함.
-    
+        let selectableOptions = question.selectableOptions
+        optionStackView.setQuestionType(question.questionType)
+        
         switch question.questionType {
-            
             case .singleSelection:
-                break
+                for selectableOption in selectableOptions {
+                    guard let value = selectableOption.value else { return }
+                    let singleChoiceButton = SingleChoiceButton(text: value, tag: selectableOption.position)
+                    optionStackView.addSingleSelectionButton(singleChoiceButton)
+                }
             case .multipleSelection:
-                break
+                for selectableOption in selectableOptions {
+                    guard let value = selectableOption.value else { return }
+                    let multipleChoiceButton = MultipleChoiceButton(text: value, tag: selectableOption.position)
+                    optionStackView.addMultipleSelectionButton(multipleChoiceButton)
+                }
             case .shortSentence: // Should have Placeholder
-                break
+                guard let first = selectableOptions.first, let textFieldPlaceholder = first.placeHolder else { return }
+                let textField = UITextField()
+                textField.placeholder = textFieldPlaceholder
+                optionStackView.addTextField(textField)
             case .essay: // Should have Placeholder
                 break
             case .multipleSentences:
                 break
         }
-        
-        // PlaceHolder 가 여기있음.
-//        switch question.selectableOptions
-        
-        
-//        optionStackView
-        
-        // Single Choice
-//        let singleChoiceButton1 = SingleChoiceButton(text: "네 다이어트 좋아해요오", tag: 1)
-//
-//        let singleChoiceButton2 = SingleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
-//
-//        optionStackView.setSingleChoiceButtons([singleChoiceButton1, singleChoiceButton2])
-    
-        // Multiple Choices
-        let multipleChoiceButton1 = MultipleChoiceButton(text: "네 다이어트 좋아해요오", tag: 1)
-        let multipleChoiceButton2 = MultipleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 2)
-        let multipleChoiceButton3 = MultipleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 3)
-        let multipleChoiceButton4 = MultipleChoiceButton(text: "아니오 다이어트 안좋아해요오", tag: 4)
-
-        optionStackView.setQuestionType(.multipleSelection)
-
-        optionStackView.setMultipleSelectionButtons([multipleChoiceButton1, multipleChoiceButton2, multipleChoiceButton3, multipleChoiceButton4])
-        
-        
-        
-        // Short Sentence, Essay
-//        let textField = UITextField()
-//        textField.placeholder = "Random Placeholder"
-//        optionStackView.addTextField(textField)
-        
-        // 다음 누를 때 전달되는 Answer: OptionStackView 에서 가져오기.
-        
     }
     
     

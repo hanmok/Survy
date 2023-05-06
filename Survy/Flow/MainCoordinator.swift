@@ -17,11 +17,11 @@ class MainCoordinator: Coordinator {
     }
     
     func start() {
-//        let mainTabController = MainTabController(provider: self.provider, coordinator: self)
-//        navigationController?.setViewControllers([mainTabController], animated: false)
+        let mainTabController = MainTabController(provider: self.provider, coordinator: self)
+        navigationController?.setViewControllers([mainTabController], animated: false)
         
-        let questionController = QuestionViewController(surveyService: self.provider.surveyService)
-        navigationController?.setViewControllers([questionController], animated: false)
+//        let questionController = QuestionViewController(surveyService: self.provider.surveyService)
+//        navigationController?.setViewControllers([questionController], animated: false)
     }
     
     private func testSetup() {

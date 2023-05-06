@@ -83,6 +83,14 @@ class OptionStackView: UIStackView {
         }
     }
     
+    public func addSingleSelectionButton(_ button: SingleChoiceButton) {
+        addArrangedSubview(button)
+        self.buttons.append(button)
+        button.addTarget(self, action: #selector(singleSelectionButtonTapped(_:)), for: .touchUpInside)
+    }
+    
+    
+    
     public func addTextField(_ textField: UITextField) {
         addArrangedSubview(textField)
         textField.delegate = self
@@ -103,6 +111,11 @@ class OptionStackView: UIStackView {
         buttons.forEach {
             $0.addTarget(self, action: #selector(multipleSelectionButtonTapped(_:)), for: .touchUpInside)
         }
+    }
+    
+    public func addMultipleSelectionButton(_ button: MultipleChoiceButton) {
+        addArrangedSubview(button)
+        button.addTarget(self, action: #selector(multipleSelectionButtonTapped(_:)), for: .touchUpInside)
     }
     
     // 현재 선택된 것과 비교, 다를 경우 이미 선택된 것을 unselected 로 변경
@@ -133,8 +146,8 @@ protocol OptionStackViewDelegate: AnyObject {
     func notifyConditionChange(to condition: Bool)
 }
 
-//extension
-
 extension OptionStackView: UITextFieldDelegate {
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        endEditing(true)
+    }
 }
