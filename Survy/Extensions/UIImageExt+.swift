@@ -20,12 +20,12 @@ extension UIImage {
     static let smallMidiumCoin2 = UIImage(named: "smallMidiumCoin2")!
     static let bigCoin = UIImage(named: "bigCoin")!
     static let rightChevron = UIImage(systemName: "chevron.right")!
-    
+    static let leftChevron = UIImage(systemName: "chevron.left")!
     static let profile = UIImage(named: "profile_image")!
     static let medal = UIImage(named: "medal")!
 
     static let emptyCircle = UIImage(systemName: "circle")!
-
+    static let plus = UIImage(systemName: "plus")!
     static let filledCircle = UIImage(systemName:  "largecircle.fill.circle")!
     
     static let uncheckedSquare = UIImage(systemName: "square")!

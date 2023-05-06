@@ -162,12 +162,9 @@ class QuestionViewController: BaseViewController, Coordinating {
             make.height.equalToSuperview()
         }
         
-        // Height: Intrinsic Size 에 맡겨야함.
         questionContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
             make.top.equalTo(progressContainerView.snp.bottom).offset(80)
-//            make.height.equalTo(200)
-            // TODO: 50 -> Question Title 길이에 따라 변해야함.
             make.height.equalTo(optionStackView.subviews.count * 40 + 50)
         }
         

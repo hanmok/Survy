@@ -31,6 +31,8 @@
 		9A6114BE2A0500110051FF2B /* SingleChoiceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114BD2A0500110051FF2B /* SingleChoiceButton.swift */; };
 		9A6114C02A0508620051FF2B /* OptionStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114BF2A0508620051FF2B /* OptionStackView.swift */; };
 		9A6114C22A050A100051FF2B /* MultipleChoiceButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114C12A050A100051FF2B /* MultipleChoiceButton.swift */; };
+		9A6114C62A0691D80051FF2B /* PostingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114C52A0691D80051FF2B /* PostingViewController.swift */; };
+		9A6114CA2A069D6B0051FF2B /* UIStackViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114C92A069D6B0051FF2B /* UIStackViewExt+.swift */; };
 		9ABBC35529DC6405006980E6 /* MoreInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */; };
 		9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */; };
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
@@ -94,6 +96,8 @@
 		9A6114BD2A0500110051FF2B /* SingleChoiceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleChoiceButton.swift; sourceTree = "<group>"; };
 		9A6114BF2A0508620051FF2B /* OptionStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionStackView.swift; sourceTree = "<group>"; };
 		9A6114C12A050A100051FF2B /* MultipleChoiceButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleChoiceButton.swift; sourceTree = "<group>"; };
+		9A6114C52A0691D80051FF2B /* PostingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingViewController.swift; sourceTree = "<group>"; };
+		9A6114C92A069D6B0051FF2B /* UIStackViewExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackViewExt+.swift"; sourceTree = "<group>"; };
 		9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreInfoTableViewCell.swift; sourceTree = "<group>"; };
 		9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewExt+.swift"; sourceTree = "<group>"; };
 		9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewControllerExt+.swift"; sourceTree = "<group>"; };
@@ -202,6 +206,23 @@
 			path = Providers;
 			sourceTree = "<group>";
 		};
+		9A6114C32A0691650051FF2B /* RespondingQuestion */ = {
+			isa = PBXGroup;
+			children = (
+				9A6113B629F515FF0051FF2B /* QuestionViewController.swift */,
+				9A6114BF2A0508620051FF2B /* OptionStackView.swift */,
+			);
+			path = RespondingQuestion;
+			sourceTree = "<group>";
+		};
+		9A6114C42A0691A30051FF2B /* PostingQuestion */ = {
+			isa = PBXGroup;
+			children = (
+				9A6114C52A0691D80051FF2B /* PostingViewController.swift */,
+			);
+			path = PostingQuestion;
+			sourceTree = "<group>";
+		};
 		9AE295C529D6F81400387883 = {
 			isa = PBXGroup;
 			children = (
@@ -249,7 +270,8 @@
 				9AE295E929D6FA4C00387883 /* HomeViewController.swift */,
 				9AE295F929D7131C00387883 /* SurveyTableViewCell.swift */,
 				9A6113D12A010B840051FF2B /* CategoryCollectionViewCell.swift */,
-				9A6113B629F515FF0051FF2B /* QuestionViewController.swift */,
+				9A6114C42A0691A30051FF2B /* PostingQuestion */,
+				9A6114C32A0691650051FF2B /* RespondingQuestion */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -288,7 +310,7 @@
 				9A6113B829F51F5B0051FF2B /* UIScreenExt+.swift */,
 				9A6113CF2A00D5F40051FF2B /* NSMutableParagraphStyle.swift */,
 				9A6113D52A0134F80051FF2B /* SetExt+.swift */,
-				9A6114BF2A0508620051FF2B /* OptionStackView.swift */,
+				9A6114C92A069D6B0051FF2B /* UIStackViewExt+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -479,6 +501,7 @@
 				9AE295FA29D7131C00387883 /* SurveyTableViewCell.swift in Sources */,
 				9A6113D02A00D5F40051FF2B /* NSMutableParagraphStyle.swift in Sources */,
 				9A6114C22A050A100051FF2B /* MultipleChoiceButton.swift in Sources */,
+				9A6114C62A0691D80051FF2B /* PostingViewController.swift in Sources */,
 				9AE295EE29D6FA5C00387883 /* MyPageViewController.swift in Sources */,
 				9A6114BE2A0500110051FF2B /* SingleChoiceButton.swift in Sources */,
 				9A6114C02A0508620051FF2B /* OptionStackView.swift in Sources */,
@@ -490,6 +513,7 @@
 				9A6114512A0296E90051FF2B /* SurveyService.swift in Sources */,
 				9A61144F2A0296940051FF2B /* UserService.swift in Sources */,
 				9AE295D629D6F81400387883 /* MainTabController.swift in Sources */,
+				9A6114CA2A069D6B0051FF2B /* UIStackViewExt+.swift in Sources */,
 				9A6114542A0297920051FF2B /* MainCoordinator.swift in Sources */,
 				9AE295D229D6F81400387883 /* AppDelegate.swift in Sources */,
 				9A6113D62A0134F80051FF2B /* SetExt+.swift in Sources */,

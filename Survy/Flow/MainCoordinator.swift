@@ -5,8 +5,14 @@
 //  Created by Mac mini on 2023/05/03.
 //
 
-import Foundation
+import UIKit
 import Model
+
+enum InitialScreen {
+    case mainTab
+    case responsdingQuestion
+    case postingQuestion
+}
 
 class MainCoordinator: Coordinator {
     var provider: ProviderType
@@ -17,11 +23,23 @@ class MainCoordinator: Coordinator {
     }
     
     func start() {
-        let mainTabController = MainTabController(provider: self.provider, coordinator: self)
-        navigationController?.setViewControllers([mainTabController], animated: false)
+        var initialScreen: InitialScreen = .mainTab
+        var initialController: UIViewController
         
-//        let questionController = QuestionViewController(surveyService: self.provider.surveyService)
-//        navigationController?.setViewControllers([questionController], animated: false)
+//        initialScreen = .postingQuestion
+        initialScreen = .mainTab
+        
+        switch initialScreen {
+            case .mainTab:
+                initialController = MainTabController(provider: self.provider, coordinator: self)
+                
+            case .responsdingQuestion:
+                initialController = QuestionViewController(surveyService: self.provider.surveyService)
+            case .postingQuestion:
+                initialController = PostingViewController()
+        }
+        
+        navigationController?.setViewControllers([initialController], animated: false)
     }
     
     private func testSetup() {
@@ -36,11 +54,12 @@ class MainCoordinator: Coordinator {
             case .questionController:
                 let questionController = QuestionViewController(surveyService: provider.surveyService)
                 questionController.coordinator = self
-                
                 navigationController?.pushViewController(questionController, animated: true)
-                
             case .root:
                 navigationController?.popToRootViewController(animated: true)
+            case .postingController:
+                let postingController = PostingViewController()
+                navigationController?.pushViewController(postingController, animated: true)
         }
     }
     

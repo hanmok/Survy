@@ -40,10 +40,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
         
         backgroundCircularView.backgroundColor = .clear
         backgroundCircularView.layer.cornerRadius = 20
-//        backgroundCircularView.layer.borderColor = UIColor.clear.cgColor
-//        backgroundCircularView.layer.borderWidth = 1
         backgroundCircularView.clipsToBounds = true
-        
         categoryButton.setTitleColor(UIColor(white: 0.3, alpha: 1), for: .normal)
     }
     

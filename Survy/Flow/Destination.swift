@@ -10,4 +10,5 @@ import Foundation
 enum Destination {
     case root
     case questionController
+    case postingController
 }

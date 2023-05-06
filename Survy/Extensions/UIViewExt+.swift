@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 // MARK: - Shadow
 // from https://ios-development.tistory.com/653
@@ -44,5 +45,18 @@ extension UIView {
         self.layer.shadowOffset = .zero
         self.layer.shadowOpacity = opacity
         self.layer.shadowRadius = radius
+    }
+}
+
+extension UIView {
+    public func addImageToCenter(image: UIImage) {
+        let imageView = UIImageView()
+        imageView.image = image
+        imageView.contentMode = .scaleAspectFit
+        addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.height.width.equalToSuperview().dividedBy(1.2)
+        }
     }
 }

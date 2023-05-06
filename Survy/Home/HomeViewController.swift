@@ -39,11 +39,21 @@ class HomeViewController: UIViewController, Coordinating {
     
     var selectedCategories = Set(["애견", "운동", "음식", "피부"])
     
+    private func setupTargets() {
+        requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
+    }
+    
+    @objc func moveToPostSurvey() {
+        coordinator?.move(to: .postingController)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableView()
+        setupTargets()
         setupCollectionView()
         setupLayout()
+        
         view.backgroundColor = UIColor.mainBackgroundColor
     }
     
