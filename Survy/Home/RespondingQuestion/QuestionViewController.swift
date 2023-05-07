@@ -289,6 +289,10 @@ class QuestionViewController: BaseViewController, Coordinating {
 }
 
 extension QuestionViewController: OptionStackViewDelegate {
+    func notifySelectionChange(to index: Int) {
+        
+    }
+    
     func notifyConditionChange(to condition: Bool) {
         self.nextButton.isUserInteractionEnabled = condition
         self.nextButton.backgroundColor = condition ? .mainColor : .grayProgress

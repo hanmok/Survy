@@ -144,6 +144,7 @@ class ResponseOptionStackView: UIStackView {
 
 protocol OptionStackViewDelegate: AnyObject {
     func notifyConditionChange(to condition: Bool)
+    func notifySelectionChange(to index: Int)
 }
 
 extension ResponseOptionStackView: UITextFieldDelegate {

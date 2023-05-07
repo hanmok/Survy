@@ -8,7 +8,7 @@
 import UIKit
 import Model
 
-class PostingOptionStackView: UIStackView {
+class PostingQuestionOptionStackView: UIStackView {
     
     var optionStackViewDelegate: OptionStackViewDelegate?
     
@@ -60,5 +60,7 @@ class PostingOptionStackView: UIStackView {
         sender.buttonSelected(true)
         selectedIndex = sender.tag
         isConditionFulfilled = true
+        guard let selectedIndex = selectedIndex else { return }
+        optionStackViewDelegate?.notifySelectionChange(to: selectedIndex)
     }
 }

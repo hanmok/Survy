@@ -39,13 +39,18 @@ class PostingViewController: BaseViewController {
     }
     
     private func registerCollectionView() {
+        
         postingBlockCollectionView.register(PostingBlockCollectionViewCell.self, forCellWithReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier)
+        
+        postingBlockCollectionView.register(PostingBlockCollectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: PostingBlockCollectionFooterCell.reuseIdentifier)
+        
         postingBlockCollectionView.delegate = self
         postingBlockCollectionView.dataSource = self
     }
     
     private func setupLayout() {
-        [targetLabel, categoryLabel, expectedCostGuideStackView, expectedCostResultStackView, requestingButton, plusButton, postingBlockCollectionView].forEach {
+        [targetLabel, categoryLabel, expectedCostGuideStackView, expectedCostResultStackView, requestingButton,
+         postingBlockCollectionView].forEach {
             self.view.addSubview($0)
         }
         
@@ -70,12 +75,6 @@ class PostingViewController: BaseViewController {
             make.height.equalTo(50)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-        
-        plusButton.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(view.layoutMarginsGuide)
-            make.top.equalTo(categoryLabel.snp.bottom).offset(20)
-            make.height.equalTo(140)
-        }
 
         expectedCostResultStackView.snp.makeConstraints { make in
             make.trailing.equalTo(view.layoutMarginsGuide)
@@ -96,6 +95,8 @@ class PostingViewController: BaseViewController {
             make.top.equalTo(categoryLabel.snp.bottom).offset(16)
             make.bottom.equalTo(expectedCostResultStackView.snp.top).offset(-10)
         }
+        
+        
     }
     
     private lazy var postingBlockCollectionView: UICollectionView = {
@@ -212,16 +213,6 @@ class PostingViewController: BaseViewController {
         return label
     }()
     
-    private let plusButton: UIButton = {
-        let button = UIButton()
-        button.layer.cornerRadius = 16
-        button.backgroundColor = .mainColor
-        button.addShadow(offset: CGSize(width: 5.0, height: 5.0))
-        let image = UIImage.plus.withTintColor(.white).withRenderingMode(.alwaysOriginal)
-        button.addImageToCenter(image: image)
-        return button
-    }()
-    
     private let requestingButton: UIButton = {
         let button = UIButton()
         button.setTitle("설문 요청하기", for: .normal)
@@ -240,6 +231,43 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionViewCell
         cell.questionIndex = indexPath.row + 1
+        cell.postingBlockCollectionViewDelegate = self
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        switch kind {
+            case UICollectionView.elementKindSectionFooter:
+                let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: PostingBlockCollectionFooterCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionFooterCell
+                return footer
+            default:
+                fatalError()
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
+        return CGSize(width: UIScreen.screenWidth - 40, height: 200)
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 20
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 20
+    }
+}
+
+extension PostingViewController: PostingBlockCollectionViewCellDelegate {
+    func questionTypeSelected(_ cell: PostingBlockCollectionViewCell, _ typeIndex: Int) {
+        switch typeIndex {
+            case 1: // 단일선택
+                break
+            case 2: // 다중선택
+                break
+            default: // 단답형, 서술형
+                break
+        }
     }
 }
