@@ -1,13 +1,4 @@
 //
-//  MultipleChoiceButton.swift
-//  Survy
-//
-//  Created by Mac mini on 2023/05/05.
-//
-
-
-
-//
 //  SingleChoiceButton.swift
 //  Survy
 //
@@ -16,7 +7,7 @@
 
 import UIKit
 
-class MultipleChoiceButton: SelectionButton {
+class MultipleChoiceResponseButton: SelectionButton {
     
     public override var isSelected: Bool {
         didSet {

@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Model
+
 // Coordinator pattern 필요할 것 같은데 ??
 
 class QuestionViewController: BaseViewController, Coordinating {
@@ -70,6 +71,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         // Strategy Pattern 써야 하는거 아닌가 ??
         
         // QuestionType 에 따라 갯수, 종류를 나누어야함.
+        
         let selectableOptions = question.selectableOptions
         optionStackView.setQuestionType(question.questionType)
         
@@ -77,13 +79,13 @@ class QuestionViewController: BaseViewController, Coordinating {
             case .singleSelection:
                 for selectableOption in selectableOptions {
                     guard let value = selectableOption.value else { return }
-                    let singleChoiceButton = SingleChoiceButton(text: value, tag: selectableOption.position)
+                    let singleChoiceButton = SingleChoiceResponseButton(text: value, tag: selectableOption.position)
                     optionStackView.addSingleSelectionButton(singleChoiceButton)
                 }
             case .multipleSelection:
                 for selectableOption in selectableOptions {
                     guard let value = selectableOption.value else { return }
-                    let multipleChoiceButton = MultipleChoiceButton(text: value, tag: selectableOption.position)
+                    let multipleChoiceButton = MultipleChoiceResponseButton(text: value, tag: selectableOption.position)
                     optionStackView.addMultipleSelectionButton(multipleChoiceButton)
                 }
             case .shortSentence: // Should have Placeholder
@@ -237,8 +239,8 @@ class QuestionViewController: BaseViewController, Coordinating {
         return label
     }()
     
-    private let optionStackView: OptionStackView = {
-        let stackView = OptionStackView()
+    private let optionStackView: ResponseOptionStackView = {
+        let stackView = ResponseOptionStackView()
         return stackView
     }()
     

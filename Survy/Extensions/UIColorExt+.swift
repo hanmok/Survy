@@ -47,6 +47,7 @@ extension UIColor {
 //    static let mainColor = UIColor(hex6: 0xE3EDFF)
     
     static let mainColor = UIColor(hex6: 0xB8D4FF)
+    static let strongMainColor = UIColor(hex6: 0x66A1FF)
     static let deeperMainColor = UIColor(hex6: 0x5094FD)
     static let blurredMainColor = UIColor(hex6: 0xB8D4FF, alpha: 0.5)
     
@@ -71,4 +72,6 @@ extension UIColor {
     static let logoutButtonBackground = UIColor(hex6: 0xF2F2F2)
     
     static let logoutButtonText = UIColor(hex6: 0xA1A6B8)
+    
+//    static let blurredTextColor = UIColor(hex6: 0x888888)
 }

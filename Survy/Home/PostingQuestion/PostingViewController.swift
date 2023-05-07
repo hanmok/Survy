@@ -15,10 +15,18 @@ class PostingViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerCollectionView()
         setupNavigationBar()
         setupLayout()
         setupTargets()
         view.backgroundColor = UIColor(hex6: 0xF4F7FB)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
+        view.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func otherViewTapped() {
+        view.endEditing(true)
     }
     
     private func setupTargets() {
@@ -30,8 +38,14 @@ class PostingViewController: BaseViewController {
         setupLeftNavigationBar()
     }
     
+    private func registerCollectionView() {
+        postingBlockCollectionView.register(PostingBlockCollectionViewCell.self, forCellWithReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier)
+        postingBlockCollectionView.delegate = self
+        postingBlockCollectionView.dataSource = self
+    }
+    
     private func setupLayout() {
-        [targetLabel, categoryLabel, expectedCostGuideStackView, expectedCostResultStackView, requestingButton, plusButton].forEach {
+        [targetLabel, categoryLabel, expectedCostGuideStackView, expectedCostResultStackView, requestingButton, plusButton, postingBlockCollectionView].forEach {
             self.view.addSubview($0)
         }
         
@@ -63,7 +77,6 @@ class PostingViewController: BaseViewController {
             make.height.equalTo(140)
         }
 
-        
         expectedCostResultStackView.snp.makeConstraints { make in
             make.trailing.equalTo(view.layoutMarginsGuide)
             make.height.equalTo(86)
@@ -77,7 +90,23 @@ class PostingViewController: BaseViewController {
             make.bottom.equalTo(requestingButton.snp.top).offset(-20)
             make.width.equalTo(100)
         }
+        
+        postingBlockCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(categoryLabel.snp.bottom).offset(16)
+            make.bottom.equalTo(expectedCostResultStackView.snp.top).offset(-10)
+        }
     }
+    
+    private lazy var postingBlockCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = CGSize(width: UIScreen.screenWidth - 40, height: 200)
+        layout.minimumInteritemSpacing = 12
+        layout.scrollDirection = .vertical
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .clear
+        return collectionView
+    }()
     
     private func setupLeftNavigationBar() {
         let backButton = UIBarButtonItem(image: UIImage.leftChevron, style: .plain, target: self, action: #selector(dismissTapped))
@@ -155,9 +184,7 @@ class PostingViewController: BaseViewController {
         label.text = "예상 비용"
         return label
     }()
-    
-    
-    
+
     private let numOfSpecimenButton: UIButton = {
         let button = UIButton()
         button.setTitle("100명", for: .normal)
@@ -203,4 +230,16 @@ class PostingViewController: BaseViewController {
         button.clipsToBounds = true
         return button
     }()
+}
+
+extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionViewCell
+        cell.questionIndex = indexPath.row + 1
+        return cell
+    }
 }

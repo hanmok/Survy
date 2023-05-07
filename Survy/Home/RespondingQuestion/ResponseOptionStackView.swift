@@ -8,7 +8,7 @@
 import UIKit
 import Model
 
-class OptionStackView: UIStackView {
+class ResponseOptionStackView: UIStackView {
     
     var questionType: QuestionType = .singleSelection
 
@@ -31,10 +31,10 @@ class OptionStackView: UIStackView {
         }
     }
     
-    init(questionType: QuestionType = .singleSelection) {
+    init(questionType: QuestionType = .singleSelection, axis: NSLayoutConstraint.Axis = .vertical) {
         self.questionType = questionType
         super.init(frame: .zero)
-        self.axis = .vertical
+        self.axis = axis
         setupLayout()
     }
     
@@ -75,7 +75,7 @@ class OptionStackView: UIStackView {
         self.buttons = selectionButtons
     }
     
-    public func setSingleChoiceButtons(_ buttons: [SingleChoiceButton]) {
+    public func setSingleChoiceButtons(_ buttons: [SingleChoiceResponseButton]) {
         addArrangedSubviews(buttons)
         self.buttons = buttons
         buttons.forEach {
@@ -83,7 +83,7 @@ class OptionStackView: UIStackView {
         }
     }
     
-    public func addSingleSelectionButton(_ button: SingleChoiceButton) {
+    public func addSingleSelectionButton(_ button: SingleChoiceResponseButton) {
         addArrangedSubview(button)
         self.buttons.append(button)
         button.addTarget(self, action: #selector(singleSelectionButtonTapped(_:)), for: .touchUpInside)
@@ -106,20 +106,20 @@ class OptionStackView: UIStackView {
         
     }
     
-    public func setMultipleSelectionButtons(_ buttons: [MultipleChoiceButton]) {
+    public func setMultipleSelectionButtons(_ buttons: [MultipleChoiceResponseButton]) {
         addArrangedSubviews(buttons)
         buttons.forEach {
             $0.addTarget(self, action: #selector(multipleSelectionButtonTapped(_:)), for: .touchUpInside)
         }
     }
     
-    public func addMultipleSelectionButton(_ button: MultipleChoiceButton) {
+    public func addMultipleSelectionButton(_ button: MultipleChoiceResponseButton) {
         addArrangedSubview(button)
         button.addTarget(self, action: #selector(multipleSelectionButtonTapped(_:)), for: .touchUpInside)
     }
     
     // 현재 선택된 것과 비교, 다를 경우 이미 선택된 것을 unselected 로 변경
-    @objc func singleSelectionButtonTapped(_ sender: SingleChoiceButton) {
+    @objc func singleSelectionButtonTapped(_ sender: SingleChoiceResponseButton) {
         if let selectedIndex = selectedIndex, sender.tag != selectedIndex {
             guard let selectedButton = buttons.first(where: { $0.tag == selectedIndex}) else { fatalError() }
                 selectedButton.buttonSelected(false)
@@ -130,7 +130,7 @@ class OptionStackView: UIStackView {
     }
     
     // 이미 선택되어 있는 상태면 해제, 안되어 있으면 선택
-    @objc func multipleSelectionButtonTapped(_ sender: MultipleChoiceButton) {
+    @objc func multipleSelectionButtonTapped(_ sender: MultipleChoiceResponseButton) {
         guard selectedIndices != nil else { fatalError() }
         let isNotSelectedYet = !selectedIndices!.contains(sender.tag)
         sender.buttonSelected(isNotSelectedYet)
@@ -146,7 +146,7 @@ protocol OptionStackViewDelegate: AnyObject {
     func notifyConditionChange(to condition: Bool)
 }
 
-extension OptionStackView: UITextFieldDelegate {
+extension ResponseOptionStackView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         endEditing(true)
     }

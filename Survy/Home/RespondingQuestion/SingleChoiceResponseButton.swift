@@ -13,7 +13,7 @@ class SelectionButton: UIButton {
     }
 }
 
-class SingleChoiceButton: SelectionButton {
+class SingleChoiceResponseButton: SelectionButton {
     
     var text: String
     
