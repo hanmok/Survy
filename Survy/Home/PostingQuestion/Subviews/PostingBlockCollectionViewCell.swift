@@ -14,6 +14,8 @@ protocol PostingBlockCollectionViewCellDelegate {
 
 class PostingBlockCollectionViewCell: UICollectionViewCell {
     
+    public var numberOfSelectableOptions: Int = 0
+    
     var postingBlockCollectionViewDelegate: PostingBlockCollectionViewCellDelegate?
     
     public var questionIndex: Int? {
@@ -75,7 +77,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         selectableOptionStackView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
-            //            make.bottom.equalToSuperview().inset(10)
         }
     }
     
@@ -160,6 +161,7 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
                 let plain = SelectableOptionFieldView(briefQuestionType: .others)
                 selectableOptionStackView.addSelectableOptionView(plain)
         }
+        numberOfSelectableOptions = 1
         
         postingBlockCollectionViewDelegate?.questionTypeSelected(self, selectedIndex)
     }
@@ -182,12 +184,16 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
                 
                 selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
                 
+                numberOfSelectableOptions += 1
+                
             case BriefQuestionType.multipleSelection.rawValue: // 다중선택
                 let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .multipleSelection)
                 selectableOptionFieldView.selectableOptionFieldDelegate = self
                 
                 selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
-                selectableOptionStackView.selectableOptionFieldViews
+                
+                numberOfSelectableOptions += 1
+                
             default: // 단답형, 서술형
                 break
         }

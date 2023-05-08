@@ -95,13 +95,11 @@ class PostingViewController: BaseViewController {
             make.top.equalTo(categoryLabel.snp.bottom).offset(16)
             make.bottom.equalTo(expectedCostResultStackView.snp.top).offset(-10)
         }
-        
-        
     }
     
     private lazy var postingBlockCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: UIScreen.screenWidth - 40, height: 200)
+//        layout.itemSize = CGSize(width: UIScreen.screenWidth - 40, height: 200)
         layout.minimumInteritemSpacing = 12
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -256,6 +254,11 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 20
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        
+        return CGSize(width: UIScreen.screenWidth - 40, height: 240)
     }
 }
 
