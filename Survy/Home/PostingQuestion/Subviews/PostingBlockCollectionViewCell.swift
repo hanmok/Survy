@@ -41,7 +41,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func otherViewTapped() {
-        endEditing(true)
+        dismissKeyboard()
     }
     
     private func setupLayout() {
@@ -169,7 +169,7 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
 
 extension PostingBlockCollectionViewCell: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        endEditing(true)
+        dismissKeyboard()
     }
 }
 
@@ -195,7 +195,7 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
                 numberOfSelectableOptions += 1
                 
             default: // 단답형, 서술형
-                break
+                dismissKeyboard() // dismissKeyboard
         }
     }
 }

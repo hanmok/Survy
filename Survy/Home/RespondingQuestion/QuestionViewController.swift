@@ -14,7 +14,7 @@ import Model
 class QuestionViewController: BaseViewController, Coordinating {
 
     @objc func otherViewTapped() {
-        view.endEditing(true)
+        view.dismissKeyboard()
     }
     
     var coordinator: Coordinator?

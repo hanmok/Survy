@@ -11,6 +11,7 @@ import SnapKit
 
 class PostingViewController: BaseViewController {
     
+    var numberOfQuestions: Int = 1
     var numOfSpecimen: Int = 100
     
     override func viewDidLoad() {
@@ -26,7 +27,8 @@ class PostingViewController: BaseViewController {
     }
     
     @objc func otherViewTapped() {
-        view.endEditing(true)
+//        view.endEditing(true)
+        view.dismissKeyboard()
     }
     
     private func setupTargets() {
@@ -223,7 +225,7 @@ class PostingViewController: BaseViewController {
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return numberOfQuestions
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -237,6 +239,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         switch kind {
             case UICollectionView.elementKindSectionFooter:
                 let footer = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: PostingBlockCollectionFooterCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionFooterCell
+                footer.footerDelegate = self
                 return footer
             default:
                 fatalError()
@@ -244,7 +247,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: UIScreen.screenWidth - 40, height: 200)
+        return CGSize(width: UIScreen.screenWidth - 40, height: 100)
     }
     
     
@@ -271,6 +274,15 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
                 break
             default: // 단답형, 서술형
                 break
+        }
+    }
+}
+
+extension PostingViewController: PostingBlockCollectionFooterDelegate {
+    func addQuestionButtonTapped() {
+        numberOfQuestions += 1
+        DispatchQueue.main.async {
+            self.postingBlockCollectionView.reloadData()
         }
     }
 }

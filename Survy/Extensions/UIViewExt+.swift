@@ -60,3 +60,12 @@ extension UIView {
         }
     }
 }
+
+
+extension UIView {
+    @discardableResult
+    public func dismissKeyboard() -> Bool {
+        endEditing(true)
+        return true
+    }
+}

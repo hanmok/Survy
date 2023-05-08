@@ -82,7 +82,6 @@ class SelectableOptionFieldView: UIView {
 
 extension SelectableOptionFieldView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        endEditing(true)
         selectableOptionFieldDelegate?.notifyReturnButtonTapped()
         return true
     }
