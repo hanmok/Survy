@@ -52,13 +52,16 @@ class MainCoordinator: Coordinator {
     func move(to destination: Destination) {
         switch destination {
             case .questionController:
+                
                 let questionController = QuestionViewController(surveyService: provider.surveyService)
                 questionController.coordinator = self
                 navigationController?.pushViewController(questionController, animated: true)
             case .root:
                 navigationController?.popToRootViewController(animated: true)
+                navigationController?.toastMessage(title: "Test naslkdnkj ialiusdhjlajliu hadiudialjsild jasiodjio", message: "message")
             case .postingController:
                 let postingController = PostingViewController()
+                postingController.coordinator = self
                 navigationController?.pushViewController(postingController, animated: true)
         }
     }

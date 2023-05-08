@@ -38,6 +38,7 @@
 		9A6114D52A0790FC0051FF2B /* UICollectionReusableViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114D42A0790FC0051FF2B /* UICollectionReusableViewExt+.swift */; };
 		9A6114D72A07E5BA0051FF2B /* SelectableOptionFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114D62A07E5BA0051FF2B /* SelectableOptionFieldView.swift */; };
 		9A6114D92A07F1F80051FF2B /* PostingSelectableOptionStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114D82A07F1F80051FF2B /* PostingSelectableOptionStackView.swift */; };
+		9A6114DC2A08C83A0051FF2B /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9A6114DB2A08C83A0051FF2B /* Toast */; };
 		9ABBC35529DC6405006980E6 /* MoreInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */; };
 		9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */; };
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
@@ -147,6 +148,7 @@
 				9AE295F629D702EF00387883 /* SnapKit in Frameworks */,
 				9A6114432A02923E0051FF2B /* libModel.a in Frameworks */,
 				9A6113CA29FBD1140051FF2B /* Alamofire in Frameworks */,
+				9A6114DC2A08C83A0051FF2B /* Toast in Frameworks */,
 				A888A22CB2C6F95DB56C25D4 /* Pods_Survy.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,6 +379,7 @@
 			packageProductDependencies = (
 				9AE295F529D702EF00387883 /* SnapKit */,
 				9A6113C929FBD1140051FF2B /* Alamofire */,
+				9A6114DB2A08C83A0051FF2B /* Toast */,
 			);
 			productName = Survy;
 			productReference = 9AE295CE29D6F81400387883 /* Survy.app */;
@@ -432,6 +435,7 @@
 			packageReferences = (
 				9AE295F429D702EF00387883 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				9A6113C829FBD1140051FF2B /* XCRemoteSwiftPackageReference "Alamofire" */,
+				9A6114DA2A08C83A0051FF2B /* XCRemoteSwiftPackageReference "Toast-Swift" */,
 			);
 			productRefGroup = 9AE295CF29D6F81400387883 /* Products */;
 			projectDirPath = "";
@@ -848,6 +852,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		9A6114DA2A08C83A0051FF2B /* XCRemoteSwiftPackageReference "Toast-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scalessec/Toast-Swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		9AE295F429D702EF00387883 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
@@ -863,6 +875,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9A6113C829FBD1140051FF2B /* XCRemoteSwiftPackageReference "Alamofire" */;
 			productName = Alamofire;
+		};
+		9A6114DB2A08C83A0051FF2B /* Toast */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9A6114DA2A08C83A0051FF2B /* XCRemoteSwiftPackageReference "Toast-Swift" */;
+			productName = Toast;
 		};
 		9AE295F529D702EF00387883 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

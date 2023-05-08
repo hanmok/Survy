@@ -13,6 +13,9 @@ extension UIButton {
         self.contentEdgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
     }
     
+    func addSmallerInsets(top: CGFloat = 4.0, bottom: CGFloat = 4.0, left: CGFloat = 6.0, right: CGFloat = 6.0) {
+        self.contentEdgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
+    }
     func setTitleWithImage(image: UIImage, title: String) {
         let attachment:NSTextAttachment = NSTextAttachment()
         attachment.image = image
@@ -23,12 +26,6 @@ extension UIButton {
     }
     
     func addImage(image: UIImage) {
-//        let imageView = UIImageView()
         setBackgroundImage(image, for: .normal)
-//        imageView.image = image
-//        addSubview(imageView)
-//        imageView.snp.makeConstraints { make in
-//            make.edges.equalToSuperview()
-//        }
     }
 }

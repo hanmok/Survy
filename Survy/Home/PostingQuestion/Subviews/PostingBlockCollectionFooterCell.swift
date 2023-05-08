@@ -33,8 +33,10 @@ class PostingBlockCollectionFooterCell: UICollectionReusableView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let inset = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
-        frame = self.frame.inset(by: inset)
+        if frame.width == UIScreen.screenWidth {
+            let inset = UIEdgeInsets(top: 12, left: 20, bottom: 12, right: 20)
+            frame = self.frame.inset(by: inset)
+        }
     }
     
     private func setupTargets() {

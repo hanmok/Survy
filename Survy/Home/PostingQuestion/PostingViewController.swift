@@ -8,8 +8,11 @@
 import UIKit
 import Model
 import SnapKit
+import Toast
 
-class PostingViewController: BaseViewController {
+class PostingViewController: BaseViewController, Coordinating {
+    
+    var coordinator: Coordinator?
     
     var numberOfQuestions: Int = 1
     var numOfSpecimen: Int = 100
@@ -33,6 +36,24 @@ class PostingViewController: BaseViewController {
     
     private func setupTargets() {
         numOfSpecimenButton.addTarget(self, action: #selector(specimenButtonTapped), for: .touchUpInside)
+        requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
+        
+        targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
+        categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
+    }
+    
+    @objc func targetTapped(_ sender: UIButton) {
+        
+    }
+    
+    @objc func categoryTapped(_ sender: UIButton) {
+        
+    }
+    
+    @objc func requestSurveyTapped(_ sender: UIButton) {
+        
+        coordinator?.move(to: .root) // toast Message
+        
     }
     
     private func setupNavigationBar() {
@@ -51,7 +72,7 @@ class PostingViewController: BaseViewController {
     }
     
     private func setupLayout() {
-        [targetLabel, categoryLabel, expectedCostGuideStackView, expectedCostResultStackView, requestingButton,
+        [targetButton, categoryButton, expectedCostGuideStackView, expectedCostResultStackView, requestingButton,
          postingBlockCollectionView].forEach {
             self.view.addSubview($0)
         }
@@ -60,17 +81,21 @@ class PostingViewController: BaseViewController {
         
         expectedCostResultStackView.addArrangedSubviews([numOfSpecimenButton, expectedTimeResultLabel, expectedCostResultLabel])
         
-        targetLabel.snp.makeConstraints { make in
+        targetButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.leading.equalTo(view.layoutMarginsGuide)
             make.height.equalTo(26)
         }
         
-        categoryLabel.snp.makeConstraints { make in
-            make.top.equalTo(targetLabel.snp.bottom).offset(16)
+        targetButton.addSmallerInsets()
+        
+        categoryButton.snp.makeConstraints { make in
+            make.top.equalTo(targetButton.snp.bottom).offset(16)
             make.leading.equalTo(view.layoutMarginsGuide)
             make.height.equalTo(26)
         }
+        
+        categoryButton.addSmallerInsets()
         
         requestingButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -94,7 +119,7 @@ class PostingViewController: BaseViewController {
         
         postingBlockCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
-            make.top.equalTo(categoryLabel.snp.bottom).offset(16)
+            make.top.equalTo(categoryButton.snp.bottom).offset(16)
             make.bottom.equalTo(expectedCostResultStackView.snp.top).offset(-10)
         }
     }
@@ -104,7 +129,20 @@ class PostingViewController: BaseViewController {
 //        layout.itemSize = CGSize(width: UIScreen.screenWidth - 40, height: 200)
         layout.minimumInteritemSpacing = 12
         layout.scrollDirection = .vertical
+        
+        let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
+        let anotherLayout = UICollectionViewCompositionalLayout.list(using: configuration)
+        
+        let someConfig = UICollectionViewCompositionalLayoutConfiguration()
+        someConfig.scrollDirection = .vertical
+        
+//        let comp = UICollectionviewcompositionallayout
+//        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
+        
+        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    
         collectionView.backgroundColor = .clear
         return collectionView
     }()
@@ -139,19 +177,25 @@ class PostingViewController: BaseViewController {
     }
     
     // MARK: - Views
-    
-    private let targetLabel: UILabel = {
-        let label = UILabel()
-        label.text = "타겟층 지정"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        return label
+
+    private let targetButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("타겟층", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        button.layer.cornerRadius = 6
+        button.clipsToBounds = true
+        return button
     }()
     
-    private let categoryLabel: UILabel = {
-        let label = UILabel()
-        label.text = "관심사 지정"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        return label
+    private let categoryButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("관심사", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        button.layer.cornerRadius = 6
+        button.clipsToBounds = true
+        return button
     }()
     
     private let expectedCostGuideStackView: UIStackView = {
@@ -247,7 +291,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
-        return CGSize(width: UIScreen.screenWidth - 40, height: 100)
+        return CGSize(width: UIScreen.screenWidth - 100, height: 100)
     }
     
     
@@ -263,6 +307,8 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         return CGSize(width: UIScreen.screenWidth - 40, height: 240)
     }
+    
+    
 }
 
 extension PostingViewController: PostingBlockCollectionViewCellDelegate {
@@ -286,3 +332,5 @@ extension PostingViewController: PostingBlockCollectionFooterDelegate {
         }
     }
 }
+
+
