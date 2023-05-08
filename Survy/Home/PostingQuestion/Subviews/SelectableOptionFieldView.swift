@@ -24,7 +24,7 @@ class SelectableOptionFieldView: UIView {
     }
     
     private func setupDelegate() {
-        textField.delegate = self
+        selectableOptionTextField.delegate = self
     }
     
     init(briefQuestionType: BriefQuestionType) {
@@ -36,13 +36,13 @@ class SelectableOptionFieldView: UIView {
     }
     
     private func setupLayout() {
-        [optionSymbolImageView, textField].forEach { addSubview($0) }
+        [optionSymbolImageView, selectableOptionTextField].forEach { addSubview($0) }
         optionSymbolImageView.snp.makeConstraints { make in
             make.leading.top.bottom.equalToSuperview()
             make.width.equalTo(20)
         }
         
-        textField.snp.makeConstraints { make in
+        selectableOptionTextField.snp.makeConstraints { make in
             make.leading.equalTo(optionSymbolImageView.snp.trailing).offset(5)
             make.top.bottom.equalToSuperview()
         }
@@ -52,13 +52,13 @@ class SelectableOptionFieldView: UIView {
         switch briefQuestionType {
         case .singleSelection:
             optionSymbolImageView.image = UIImage.emptyCircle
-            textField.placeholder = "항목을 입력해주세요."
+            selectableOptionTextField.placeholder = "항목을 입력해주세요."
         case .multipleSelection:
             optionSymbolImageView.image = UIImage.uncheckedSquare
-                textField.placeholder = "항목을 입력해주세요."
+                selectableOptionTextField.placeholder = "항목을 입력해주세요."
         default:
             optionSymbolImageView.image = nil
-            textField.placeholder = "placeHolder"
+            selectableOptionTextField.placeholder = "placeHolder"
         }
     }
     
@@ -67,7 +67,7 @@ class SelectableOptionFieldView: UIView {
         return imageView
     }()
     
-    private let textField: UITextField = {
+    public let selectableOptionTextField: UITextField = {
         let textField = UITextField()
         textField.placeholder = "항목을 입력해주세요."
         return textField
@@ -76,10 +76,19 @@ class SelectableOptionFieldView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    weak var selectableOptionFieldDelegate: SelectableOptionFieldDelegate?
 }
 
 extension SelectableOptionFieldView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        endEditing(true)
+//        endEditing(true)
+        selectableOptionFieldDelegate?.notifyReturnButtonTapped()
+        return true
     }
 }
+
+protocol SelectableOptionFieldDelegate: AnyObject {
+    func notifyReturnButtonTapped()
+}
+

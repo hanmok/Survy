@@ -7,6 +7,7 @@
 
 import XCTest
 import Alamofire
+import Model
 
 @testable import Survy
 

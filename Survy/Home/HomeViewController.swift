@@ -239,16 +239,9 @@ extension HomeViewController: CategoryCellDelegate {
 extension HomeViewController: SurveyTableViewDelegate {
     func surveyTapped(_ cell: SurveyTableViewCell) {
         
-//        print("umm1")
         guard let selectedSurvey = cell.survey else { fatalError() }
         surveyService.currentSurvey = selectedSurvey
-//        let surveyId = selectedSurvey.id
-//        let section = Section(surveyId: surveyId, numOfQuestions: 3)
-//        let questionViewController = QuestionViewController(question: dietQuestion1, section: section)
         
         coordinator?.move(to: .questionController)
-        
-//        print(coordinator)
-//        self.navigationController?.pushViewController(questionViewController, animated: true)
     }
 }

@@ -63,7 +63,6 @@ class QuestionViewController: BaseViewController, Coordinating {
         percentageLabel.text = "\(Int(percentage * 100))%"
         
         if surveyService.isLastQuestion {
-            print("it's last Question!")
             nextButton.setTitle("완료", for: .normal)
             nextButton.addCharacterSpacing()
         }

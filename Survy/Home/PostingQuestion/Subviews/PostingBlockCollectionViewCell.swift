@@ -30,6 +30,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     }
     
     private func setupDelegate() {
+        questionTextField.delegate = self
         questionTypeOptionStackView.optionStackViewDelegate = self
     }
     
@@ -74,7 +75,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         selectableOptionStackView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
-//            make.bottom.equalToSuperview().inset(10)
+            //            make.bottom.equalToSuperview().inset(10)
         }
     }
     
@@ -129,17 +130,14 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
 extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
     func notifySelectionChange(to index: Int) {
         
-        print("selected changed to \(index)")
         var briefQuestionType: BriefQuestionType
         switch index {
             case 1: briefQuestionType = .singleSelection
             case 2: briefQuestionType = .multipleSelection
             default: briefQuestionType = .others
         }
-//        let briefQuestionType = BriefQuestionType(rawValue: index)!
         
         selectableOptionStackView.changeQuestionType(briefQuestionType)
-        print("selectableOptionStackView: \(selectableOptionStackView.selectableOptionFieldViews)")
     }
     
     // 한번만 호출될걸?
@@ -148,22 +146,50 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
         switch selectedIndex {
             case BriefQuestionType.singleSelection.rawValue: // 단일선택
                 let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .singleSelection)
-//                selectableOptionStackView.addArrangedSubview(selectableOptionFieldView)
+                selectableOptionFieldView.selectableOptionFieldDelegate = self
+                
                 selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
-
+                
             case BriefQuestionType.multipleSelection.rawValue: // 다중선택
                 let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .multipleSelection)
-//                selectableOptionStackView.addArrangedSubview(selectableOptionFieldView)
+                selectableOptionFieldView.selectableOptionFieldDelegate = self
+                
                 selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
                 
             default: // 단답형, 서술형
                 let plain = SelectableOptionFieldView(briefQuestionType: .others)
-//                selectableOptionStackView.addArrangedSubview(plain)
                 selectableOptionStackView.addSelectableOptionView(plain)
         }
         
-        
-        
         postingBlockCollectionViewDelegate?.questionTypeSelected(self, selectedIndex)
+    }
+}
+
+extension PostingBlockCollectionViewCell: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        endEditing(true)
+    }
+}
+
+extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
+    func notifyReturnButtonTapped() {
+        guard let selectedIndex = questionTypeOptionStackView.selectedIndex else { fatalError() }
+        
+        switch selectedIndex {
+            case BriefQuestionType.singleSelection.rawValue: // 단일선택
+                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .singleSelection)
+                selectableOptionFieldView.selectableOptionFieldDelegate = self
+                
+                selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
+                
+            case BriefQuestionType.multipleSelection.rawValue: // 다중선택
+                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .multipleSelection)
+                selectableOptionFieldView.selectableOptionFieldDelegate = self
+                
+                selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
+                selectableOptionStackView.selectableOptionFieldViews
+            default: // 단답형, 서술형
+                break
+        }
     }
 }

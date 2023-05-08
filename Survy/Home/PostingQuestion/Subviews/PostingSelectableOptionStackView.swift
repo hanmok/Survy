@@ -21,6 +21,7 @@ class PostingSelectableOptionStackView: UIStackView {
     public func addSelectableOptionView(_ selectableOptionFieldView: SelectableOptionFieldView) {
         selectableOptionFieldViews.append(selectableOptionFieldView)
         addArrangedSubview(selectableOptionFieldView)
+        selectableOptionFieldView.selectableOptionTextField.becomeFirstResponder()
     }
     
     init() {
@@ -35,6 +36,18 @@ class PostingSelectableOptionStackView: UIStackView {
     }
     
     public func changeQuestionType(_ briefQuestionType: BriefQuestionType) {
+        
+        switch briefQuestionType {
+            case .others:
+                while selectableOptionFieldViews.count != 1 {
+                    let last = selectableOptionFieldViews.removeLast()
+                    last.willMove(toSuperview: nil)
+                    last.removeFromSuperview()
+                    removeArrangedSubview(last)
+                }
+            default:
+                break
+        }
         
         selectableOptionFieldViews.forEach {
             $0.changeType(to: briefQuestionType)
