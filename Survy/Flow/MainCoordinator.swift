@@ -7,6 +7,7 @@
 
 import UIKit
 import Model
+import SnapKit
 
 enum InitialScreen {
     case mainTab
@@ -67,4 +68,30 @@ class MainCoordinator: Coordinator {
     }
     
     var navigationController: StartingNavigationController?
+    
+    func manipulate(_ childView: ChildView, command: Command) {
+        switch (childView, command) {
+            case (.targetSelection, .present): break
+            case (.targetSelection, .dismiss): break
+            case (.categorySelection, .present):
+                let targetSelectionController = CategorySelectionController()
+                targetSelectionController.coordinator = self
+                guard let topViewController = navigationController?.topViewController else { return }
+                topViewController.view.backgroundColor = UIColor(white: 0.2, alpha: 0.9)
+                topViewController.addChild(targetSelectionController)
+                topViewController.view.addSubview(targetSelectionController.view)
+                targetSelectionController.view.snp.makeConstraints { make in
+                    make.edges.equalTo(topViewController.view.layoutMarginsGuide)
+                }
+                
+            case (.categorySelection, .dismiss):
+                guard let topViewController = navigationController?.topViewController else { return }
+                topViewController.view.backgroundColor = UIColor.postingVCBackground
+                topViewController.children.forEach {
+                    $0.willMove(toParent: nil)
+                    $0.view.removeFromSuperview()
+                    $0.removeFromParent()
+                }
+        }
+    }
 }

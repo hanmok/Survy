@@ -73,5 +73,6 @@ extension UIColor {
     
     static let logoutButtonText = UIColor(hex6: 0xA1A6B8)
     
+    static let postingVCBackground = UIColor(hex6: 0xF4F7FB)
 //    static let blurredTextColor = UIColor(hex6: 0x888888)
 }

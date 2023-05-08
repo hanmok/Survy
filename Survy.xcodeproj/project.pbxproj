@@ -39,6 +39,8 @@
 		9A6114D72A07E5BA0051FF2B /* SelectableOptionFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114D62A07E5BA0051FF2B /* SelectableOptionFieldView.swift */; };
 		9A6114D92A07F1F80051FF2B /* PostingSelectableOptionStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114D82A07F1F80051FF2B /* PostingSelectableOptionStackView.swift */; };
 		9A6114DC2A08C83A0051FF2B /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9A6114DB2A08C83A0051FF2B /* Toast */; };
+		9A61151A2A0926530051FF2B /* TargetSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6115192A0926530051FF2B /* TargetSelectionController.swift */; };
+		9A61151C2A092BF40051FF2B /* CategorySelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61151B2A092BF40051FF2B /* CategorySelectionController.swift */; };
 		9ABBC35529DC6405006980E6 /* MoreInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */; };
 		9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */; };
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
@@ -109,6 +111,8 @@
 		9A6114D42A0790FC0051FF2B /* UICollectionReusableViewExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionReusableViewExt+.swift"; sourceTree = "<group>"; };
 		9A6114D62A07E5BA0051FF2B /* SelectableOptionFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableOptionFieldView.swift; sourceTree = "<group>"; };
 		9A6114D82A07F1F80051FF2B /* PostingSelectableOptionStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingSelectableOptionStackView.swift; sourceTree = "<group>"; };
+		9A6115192A0926530051FF2B /* TargetSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetSelectionController.swift; sourceTree = "<group>"; };
+		9A61151B2A092BF40051FF2B /* CategorySelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionController.swift; sourceTree = "<group>"; };
 		9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreInfoTableViewCell.swift; sourceTree = "<group>"; };
 		9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewExt+.swift"; sourceTree = "<group>"; };
 		9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewControllerExt+.swift"; sourceTree = "<group>"; };
@@ -245,6 +249,8 @@
 				9A6114CD2A074B870051FF2B /* PostingSelectionButton.swift */,
 				9A6114CF2A074E520051FF2B /* PostingQuestionOptionStackView.swift */,
 				9A6114D82A07F1F80051FF2B /* PostingSelectableOptionStackView.swift */,
+				9A6115192A0926530051FF2B /* TargetSelectionController.swift */,
+				9A61151B2A092BF40051FF2B /* CategorySelectionController.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -533,6 +539,7 @@
 				9A6114BE2A0500110051FF2B /* SingleChoiceResponseButton.swift in Sources */,
 				9A6114C02A0508620051FF2B /* ResponseOptionStackView.swift in Sources */,
 				9A6114D32A078F520051FF2B /* PostingBlockCollectionFooterCell.swift in Sources */,
+				9A61151A2A0926530051FF2B /* TargetSelectionController.swift in Sources */,
 				9A6114562A0298D10051FF2B /* Destination.swift in Sources */,
 				9AE2961629D844CC00387883 /* PaddedLabel.swift in Sources */,
 				9A6114472A0296240051FF2B /* Coordinator.swift in Sources */,
@@ -545,6 +552,7 @@
 				9A6114D92A07F1F80051FF2B /* PostingSelectableOptionStackView.swift in Sources */,
 				9A6114542A0297920051FF2B /* MainCoordinator.swift in Sources */,
 				9AE295D229D6F81400387883 /* AppDelegate.swift in Sources */,
+				9A61151C2A092BF40051FF2B /* CategorySelectionController.swift in Sources */,
 				9A6114D72A07E5BA0051FF2B /* SelectableOptionFieldView.swift in Sources */,
 				9A6113D62A0134F80051FF2B /* SetExt+.swift in Sources */,
 				9AE2960129D714F800387883 /* UICollectionViewCellExt+.swift in Sources */,

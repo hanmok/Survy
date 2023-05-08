@@ -32,6 +32,8 @@ extension UIImage {
     
     static let checkedSquare = UIImage(systemName: "checkmark.square.fill")!
     
+    static let search = UIImage(systemName: "magnifyingglass")!
+    
     //    static let requesting_image = UIImage(named: "requesting_image3")!
     
 }

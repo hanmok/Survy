@@ -78,7 +78,6 @@ class HomeViewController: UIViewController, Coordinating {
         }
         
         categorySelectionButton.snp.makeConstraints { make in
-//            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth / 6)

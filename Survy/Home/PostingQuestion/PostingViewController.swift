@@ -23,7 +23,9 @@ class PostingViewController: BaseViewController, Coordinating {
         setupNavigationBar()
         setupLayout()
         setupTargets()
-        view.backgroundColor = UIColor(hex6: 0xF4F7FB)
+        
+//        view.backgroundColor = UIColor(hex6: 0xF4F7FB)
+        view.backgroundColor = UIColor.postingVCBackground
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
         view.addGestureRecognizer(tapGesture)
@@ -46,14 +48,13 @@ class PostingViewController: BaseViewController, Coordinating {
         
     }
     
+    
     @objc func categoryTapped(_ sender: UIButton) {
-        
+        coordinator?.manipulate(.categorySelection, command: .present)
     }
     
     @objc func requestSurveyTapped(_ sender: UIButton) {
-        
         coordinator?.move(to: .root) // toast Message
-        
     }
     
     private func setupNavigationBar() {
@@ -180,8 +181,9 @@ class PostingViewController: BaseViewController, Coordinating {
 
     private let targetButton: UIButton = {
         let button = UIButton()
-        button.setTitle("타겟층", for: .normal)
-        button.setTitleColor(.systemBlue, for: .normal)
+        let attributedString = NSAttributedString(string: "타겟층", attributes: [.foregroundColor: UIColor.systemBlue, .font: UIFont.systemFont(ofSize: 18, weight: .semibold)])
+        
+        button.setAttributedTitle(attributedString, for: .normal)
         button.backgroundColor = UIColor(white: 0.9, alpha: 1)
         button.layer.cornerRadius = 6
         button.clipsToBounds = true
@@ -190,8 +192,11 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private let categoryButton: UIButton = {
         let button = UIButton()
-        button.setTitle("관심사", for: .normal)
-        button.setTitleColor(.systemBlue, for: .normal)
+        
+        let attributedString = NSAttributedString(string: "관심사", attributes: [.foregroundColor: UIColor.systemBlue, .font: UIFont.systemFont(ofSize: 18, weight: .semibold)])
+        
+        button.setAttributedTitle(attributedString, for: .normal)
+        
         button.backgroundColor = UIColor(white: 0.9, alpha: 1)
         button.layer.cornerRadius = 6
         button.clipsToBounds = true
