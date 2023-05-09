@@ -37,7 +37,7 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     private func setupTargets() {
-        numOfSpecimenButton.addTarget(self, action: #selector(specimenButtonTapped), for: .touchUpInside)
+//        numOfSpecimenButton.addTarget(self, action: #selector(specimenButtonTapped), for: .touchUpInside)
         requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
         
         targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
@@ -73,14 +73,17 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     private func setupLayout() {
-        [targetButton, categoryButton, expectedCostGuideStackView, expectedCostResultStackView, requestingButton,
+        [targetButton, categoryButton,
+//         expectedCostGuideStackView, expectedCostResultStackView,
+         expectedTimeGuideLabel, expectedTimeResultLabel,
+         requestingButton,
          postingBlockCollectionView].forEach {
             self.view.addSubview($0)
         }
         
-        expectedCostGuideStackView.addArrangedSubviews([numOfSpecimenGuideLabel, expectedTimeGuideLabel, expectedCostGuideLabel])
+//        expectedCostGuideStackView.addArrangedSubviews([numOfSpecimenGuideLabel, expectedTimeGuideLabel, expectedCostGuideLabel])
         
-        expectedCostResultStackView.addArrangedSubviews([numOfSpecimenButton, expectedTimeResultLabel, expectedCostResultLabel])
+//        expectedCostResultStackView.addArrangedSubviews([numOfSpecimenButton, expectedTimeResultLabel, expectedCostResultLabel])
         
         targetButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
@@ -104,24 +107,36 @@ class PostingViewController: BaseViewController, Coordinating {
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
 
-        expectedCostResultStackView.snp.makeConstraints { make in
+//        expectedCostResultStackView.snp.makeConstraints { make in
+//            make.trailing.equalTo(view.layoutMarginsGuide)
+//            make.height.equalTo(86)
+//            make.bottom.equalTo(requestingButton.snp.top).offset(-20)
+//            make.width.equalTo(100)
+//        }
+//
+//        expectedCostGuideStackView.snp.makeConstraints { make in
+//            make.trailing.equalTo(expectedCostResultStackView.snp.leading).offset(-10)
+//            make.height.equalTo(expectedCostResultStackView.snp.height)
+//            make.bottom.equalTo(requestingButton.snp.top).offset(-20)
+//            make.width.equalTo(100)
+//        }
+        
+        expectedTimeResultLabel.snp.makeConstraints { make in
             make.trailing.equalTo(view.layoutMarginsGuide)
-            make.height.equalTo(86)
             make.bottom.equalTo(requestingButton.snp.top).offset(-20)
-            make.width.equalTo(100)
+            make.width.equalTo(50)
         }
         
-        expectedCostGuideStackView.snp.makeConstraints { make in
-            make.trailing.equalTo(expectedCostResultStackView.snp.leading).offset(-10)
-            make.height.equalTo(expectedCostResultStackView.snp.height)
-            make.bottom.equalTo(requestingButton.snp.top).offset(-20)
-            make.width.equalTo(100)
+        expectedTimeGuideLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(expectedTimeResultLabel.snp.leading).offset(-10)
+            make.bottom.equalTo(expectedTimeResultLabel.snp.bottom)
         }
         
         postingBlockCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(categoryButton.snp.bottom).offset(16)
-            make.bottom.equalTo(expectedCostResultStackView.snp.top).offset(-10)
+//            make.bottom.equalTo(expectedCostResultStackView.snp.top).offset(-10)
+            make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
         }
     }
     
@@ -157,25 +172,25 @@ class PostingViewController: BaseViewController, Coordinating {
         self.navigationController?.popViewController(animated: true)
     }
     
-    @objc func specimenButtonTapped(_ sender: UIButton) {
-        let alertController = UIAlertController(title: "표본 수를 입력해주세요", message: nil, preferredStyle: .alert)
-        
-        alertController.addTextField { textField in
-            textField.keyboardType = .numberPad
-        }
-        
-        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] alert -> Void in
-            let textFieldInput = alertController.textFields![0] as UITextField
-            guard let text = textFieldInput.text, let numOfSpecimenInput = Int(text) else { fatalError() }
-            self?.numOfSpecimen = numOfSpecimenInput
-            self?.numOfSpecimenButton.setTitle(String(numOfSpecimenInput) + "명", for: .normal)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-        
-        [cancelAction, saveAction].forEach { alertController.addAction($0) }
-        
-        self.present(alertController, animated: true)
-    }
+//    @objc func specimenButtonTapped(_ sender: UIButton) {
+//        let alertController = UIAlertController(title: "표본 수를 입력해주세요", message: nil, preferredStyle: .alert)
+//
+//        alertController.addTextField { textField in
+//            textField.keyboardType = .numberPad
+//        }
+//
+//        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] alert -> Void in
+//            let textFieldInput = alertController.textFields![0] as UITextField
+//            guard let text = textFieldInput.text, let numOfSpecimenInput = Int(text) else { fatalError() }
+//            self?.numOfSpecimen = numOfSpecimenInput
+//            self?.numOfSpecimenButton.setTitle(String(numOfSpecimenInput) + "명", for: .normal)
+//        }
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+//
+//        [cancelAction, saveAction].forEach { alertController.addAction($0) }
+//
+//        self.present(alertController, animated: true)
+//    }
     
     // MARK: - Views
 
@@ -203,25 +218,25 @@ class PostingViewController: BaseViewController, Coordinating {
         return button
     }()
     
-    private let expectedCostGuideStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        return stackView
-    }()
+//    private let expectedCostGuideStackView: UIStackView = {
+//        let stackView = UIStackView()
+//        stackView.axis = .vertical
+//        stackView.distribution = .fillEqually
+//        return stackView
+//    }()
     
-    private let expectedCostResultStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        return stackView
-    }()
+//    private let expectedCostResultStackView: UIStackView = {
+//        let stackView = UIStackView()
+//        stackView.axis = .vertical
+//        stackView.distribution = .fillEqually
+//        return stackView
+//    }()
     
-    private let numOfSpecimenGuideLabel: UILabel = {
-        let label = UILabel()
-        label.text = "표본 수"
-        return label
-    }()
+//    private let numOfSpecimenGuideLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "표본 수"
+//        return label
+//    }()
     
     private let expectedTimeGuideLabel: UILabel = {
         let label = UILabel()
@@ -229,24 +244,24 @@ class PostingViewController: BaseViewController, Coordinating {
         return label
     }()
     
-    private let expectedCostGuideLabel: UILabel = {
-        let label = UILabel()
-        label.text = "예상 비용"
-        return label
-    }()
+//    private let expectedCostGuideLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "예상 비용"
+//        return label
+//    }()
 
-    private let numOfSpecimenButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("100명", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.contentHorizontalAlignment = .right
-        button.layer.cornerRadius = 10
-        button.backgroundColor = .white
-        button.layer.borderColor = UIColor(white: 0.7, alpha: 1).cgColor
-        button.layer.borderWidth = 1
-        button.addInsets(top: 5.0, bottom: 5.0, left: 0, right: 5.0)
-        return button
-    }()
+//    private let numOfSpecimenButton: UIButton = {
+//        let button = UIButton()
+//        button.setTitle("100명", for: .normal)
+//        button.setTitleColor(.black, for: .normal)
+//        button.contentHorizontalAlignment = .right
+//        button.layer.cornerRadius = 10
+//        button.backgroundColor = .white
+//        button.layer.borderColor = UIColor(white: 0.7, alpha: 1).cgColor
+//        button.layer.borderWidth = 1
+//        button.addInsets(top: 5.0, bottom: 5.0, left: 0, right: 5.0)
+//        return button
+//    }()
     
     private let expectedTimeResultLabel: UILabel = {
         let label = UILabel()
@@ -255,12 +270,12 @@ class PostingViewController: BaseViewController, Coordinating {
         return label
     }()
     
-    private let expectedCostResultLabel: UILabel = {
-        let label = UILabel()
-        label.text = "30,000P"
-        label.textAlignment = .right
-        return label
-    }()
+//    private let expectedCostResultLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "30,000P"
+//        label.textAlignment = .right
+//        return label
+//    }()
     
     private let requestingButton: UIButton = {
         let button = UIButton()
