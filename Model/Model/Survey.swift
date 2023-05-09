@@ -8,7 +8,7 @@
 import Foundation
 
 
-public struct Survey {
+public struct Survey: Hashable {
     public init(id: Int, numOfParticipation: Int, participationGoal: Int, title: String, rewardRange: [Int], categories: [String]) {
         self.id = id
         self.numOfParticipation = numOfParticipation

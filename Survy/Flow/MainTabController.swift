@@ -81,9 +81,8 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
         nav.tabBarItem.selectedImage = selectedImage.withTintColor(.black, renderingMode: .alwaysOriginal)
         nav.tabBarItem.badgeColor = .black
         
-        
 //        nav.tabBarItem.selectedImage = selectedImage.withTintColor(.orange, renderingMode: .alwaysOriginal)
-        
+
 //        nav.navigationBar.tintColor = .magenta
         
         return nav

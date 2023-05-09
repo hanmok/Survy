@@ -45,6 +45,10 @@ class SurveyTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
     
+    override func updateConfiguration(using state: UICellConfigurationState) {
+        super.updateConfiguration(using: state)
+    }
+    
     private func configureLayout() {
         guard let survey = survey else { return }
         

@@ -14,6 +14,10 @@ class HomeViewController: UIViewController, Coordinating {
     var surveyService: SurveyServiceType
     var coordinator: Coordinator?
     
+    enum Section {
+        case main
+    }
+    
     init(surveyService: SurveyServiceType) {
         self.surveyService = surveyService
         super.init(nibName: nil, bundle: nil)
@@ -31,13 +35,48 @@ class HomeViewController: UIViewController, Coordinating {
         Survey(id: 3, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"])
     ]
     
+    var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
+    var currentSurveySnapshot: NSDiffableDataSourceSnapshot<Section, Survey>! = nil
+    
+    private func configureDataSource() {
+        self.surveyDataSource = UITableViewDiffableDataSource<Section, Survey>(tableView: surveyTableView, cellProvider: { [weak self] tableView, indexPath, itemIdentifier -> UITableViewCell? in
+            guard let self = self else { return nil }
+            let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
+//            cell.survey = surveys[indexPath.row]
+            cell.survey = surveysToShow[indexPath.row]
+            
+            return cell
+        })
+    }
+    
+    private func updateUI() {
+        currentSurveySnapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
+        
+        currentSurveySnapshot.appendSections([.main])
+    
+        if selectedCategories.isEmpty == true {
+            surveysToShow = surveys
+        } else {
+            surveysToShow = surveys.filter {
+                let categories = Set($0.categories)
+                return categories.intersection(selectedCategories).isEmpty == false
+            }
+        }
+        
+        currentSurveySnapshot.appendItems(surveysToShow)
+        
+        self.surveyDataSource.apply(currentSurveySnapshot)
+    }
+    
+    
     var surveysToShow = [Survey]()
     
     let collectedMoney = 56000
     
     let categories = ["애견", "운동", "음식", "피부"]
     
-    var selectedCategories = Set(["애견", "운동", "음식", "피부"])
+//    var selectedCategories = Set(["애견", "운동", "음식", "피부"])
+    var selectedCategories = Set<String>()
     
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
@@ -50,6 +89,11 @@ class HomeViewController: UIViewController, Coordinating {
     override func viewDidLoad() {
         super.viewDidLoad()
         registerTableView()
+        
+        
+        configureDataSource()
+        updateUI()
+        
         setupTargets()
         setupCollectionView()
         setupLayout()
@@ -60,7 +104,7 @@ class HomeViewController: UIViewController, Coordinating {
     private func registerTableView() {
         surveyTableView.register(SurveyTableViewCell.self, forCellReuseIdentifier: SurveyTableViewCell.reuseIdentifier)
         surveyTableView.delegate = self
-        surveyTableView.dataSource = self
+//        surveyTableView.dataSource = self
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: 50))
         surveyTableView.tableFooterView = footerView
     }
@@ -131,8 +175,6 @@ class HomeViewController: UIViewController, Coordinating {
         let label = PaddedLabel()
         label.textAlignment = .right
         label.layer.cornerRadius = 14
-//        label.layer.borderWidth = 1
-//        label.layer.borderColor = UIColor.clear.cgColor
         label.clipsToBounds = true
         label.backgroundColor = UIColor.mainColor
         return label
@@ -172,23 +214,25 @@ class HomeViewController: UIViewController, Coordinating {
 }
 
 
-extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
-        cell.survey = surveysToShow[indexPath.row]
-        cell.surveyDelegate = self
-        return cell
-    }
-    
+//extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+extension HomeViewController: UITableViewDelegate {
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
+//        cell.survey = surveysToShow[indexPath.row]
+//        cell.surveyDelegate = self
+//        return cell
+//    }
+//
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
         let approximatedWidthOfBioTextView = UIScreen.screenWidth - 16 * 2 - 12 * 2
         let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
         let estimatedFrame1 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 12)], context: nil)
-        
+
         let estimatedFrame2 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 13)], context: nil)
-        
+
         let estimatedFrame3 = NSString(string: surveys[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
+        
         // 12 + 10 + 12 + 20 + 12
         let spacings: CGFloat = 66
         let sizes: CGFloat = 30
@@ -196,18 +240,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         let heightSum = frameHeight + spacings + sizes
         return heightSum
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        surveysToShow = surveys.filter {
-            let categories = Set($0.categories)
-            return categories.intersection(selectedCategories).isEmpty == false
-        }
-        return surveysToShow.count
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: false)
-    }
+//
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        surveysToShow = surveys.filter {
+//            let categories = Set($0.categories)
+//            return categories.intersection(selectedCategories).isEmpty == false
+//        }
+//        return surveysToShow.count
+//    }
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: false)
+//    }
 }
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -228,10 +272,13 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
 extension HomeViewController: CategoryCellDelegate {
     func categoryTapped(category: String, selected: Bool) {
+        
         selectedCategories.toggle(category)
-        DispatchQueue.main.async {
-            self.surveyTableView.reloadData()
-        }
+//        DispatchQueue.main.async {
+//            self.surveyTableView.reloadData()
+//        }
+        
+        updateUI()
     }
 }
 
