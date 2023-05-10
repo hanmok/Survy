@@ -30,7 +30,9 @@ class SurveyTableViewCell: UITableViewCell {
     }
     
     @objc func participatedTapped() {
+        
         surveyDelegate?.surveyTapped(self)
+        
     }
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

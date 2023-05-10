@@ -13,6 +13,7 @@ enum InitialScreen {
     case mainTab
     case responsdingQuestion
     case postingQuestion
+    case test
 }
 
 class MainCoordinator: Coordinator {
@@ -38,6 +39,9 @@ class MainCoordinator: Coordinator {
                 initialController = QuestionViewController(surveyService: self.provider.surveyService)
             case .postingQuestion:
                 initialController = PostingViewController()
+            case .test:
+                fatalError()
+//                initialController = DiffableTablePracticeViewController()
         }
         
         navigationController?.setViewControllers([initialController], animated: false)
@@ -59,7 +63,6 @@ class MainCoordinator: Coordinator {
                 navigationController?.pushViewController(questionController, animated: true)
             case .root:
                 navigationController?.popToRootViewController(animated: true)
-                navigationController?.toastMessage(title: "Test naslkdnkj ialiusdhjlajliu hadiudialjsild jasiodjio", message: "message")
             case .postingController:
                 let postingController = PostingViewController()
                 postingController.coordinator = self

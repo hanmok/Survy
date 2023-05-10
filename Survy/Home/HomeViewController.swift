@@ -44,7 +44,7 @@ class HomeViewController: UIViewController, Coordinating {
             let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
 //            cell.survey = surveys[indexPath.row]
             cell.survey = surveysToShow[indexPath.row]
-            
+            cell.surveyDelegate = self
             return cell
         })
     }
