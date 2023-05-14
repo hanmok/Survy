@@ -35,6 +35,13 @@ class HomeViewController: UIViewController, Coordinating {
         Survey(id: 3, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"])
     ]
     
+    var surveysToShow = [Survey]()
+    
+    let collectedMoney = 56000
+    let categories = ["애견", "운동", "음식", "피부"]
+    var selectedCategories = Set<String>()
+    
+    
     var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
     var currentSurveySnapshot: NSDiffableDataSourceSnapshot<Section, Survey>! = nil
     
@@ -42,7 +49,6 @@ class HomeViewController: UIViewController, Coordinating {
         self.surveyDataSource = UITableViewDiffableDataSource<Section, Survey>(tableView: surveyTableView, cellProvider: { [weak self] tableView, indexPath, itemIdentifier -> UITableViewCell? in
             guard let self = self else { return nil }
             let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
-//            cell.survey = surveys[indexPath.row]
             cell.survey = surveysToShow[indexPath.row]
             cell.surveyDelegate = self
             return cell
@@ -68,15 +74,7 @@ class HomeViewController: UIViewController, Coordinating {
         self.surveyDataSource.apply(currentSurveySnapshot)
     }
     
-    
-    var surveysToShow = [Survey]()
-    
-    let collectedMoney = 56000
-    
-    let categories = ["애견", "운동", "음식", "피부"]
-    
-//    var selectedCategories = Set(["애견", "운동", "음식", "피부"])
-    var selectedCategories = Set<String>()
+   
     
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
@@ -88,8 +86,8 @@ class HomeViewController: UIViewController, Coordinating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerTableView()
         
+        registerTableView()
         
         configureDataSource()
         updateUI()
@@ -101,10 +99,19 @@ class HomeViewController: UIViewController, Coordinating {
         view.backgroundColor = UIColor.mainBackgroundColor
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard navigationController != nil else { fatalError() }
+        
+        coordinator?.testSetup()
+        setupLayout()
+    }
+    
     private func registerTableView() {
         surveyTableView.register(SurveyTableViewCell.self, forCellReuseIdentifier: SurveyTableViewCell.reuseIdentifier)
         surveyTableView.delegate = self
-//        surveyTableView.dataSource = self
+
         let footerView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.screenWidth, height: 50))
         surveyTableView.tableFooterView = footerView
     }
@@ -161,7 +168,7 @@ class HomeViewController: UIViewController, Coordinating {
     
     private let requestingButton: UIButton = {
         let button = UIButton()
-        let attributedTitle = NSAttributedString(string: "설문 요청", attributes: [.font: UIFont.systemFont(ofSize: 20, weight: .semibold), .foregroundColor: UIColor.white, .paragraphStyle: NSMutableParagraphStyle.centerAlignmentStyle])
+        let attributedTitle = NSAttributedString(string: "설문 요청", attributes: [.font: UIFont.systemFont(ofSize: 20, weight: .semibold), .foregroundColor: UIColor.white, .paragraphStyle: NSMutableParagraphStyle.centerAlignment])
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.backgroundColor = UIColor.deeperMainColor
         return button

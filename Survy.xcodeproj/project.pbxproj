@@ -44,6 +44,7 @@
 		9ABBC35529DC6405006980E6 /* MoreInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */; };
 		9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */; };
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
+		9ACD1C1C2A112E840085D43E /* CategorySearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C1B2A112E840085D43E /* CategorySearchCell.swift */; };
 		9AE295D229D6F81400387883 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D129D6F81400387883 /* AppDelegate.swift */; };
 		9AE295D429D6F81400387883 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D329D6F81400387883 /* SceneDelegate.swift */; };
 		9AE295D629D6F81400387883 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D529D6F81400387883 /* MainTabController.swift */; };
@@ -118,6 +119,7 @@
 		9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewExt+.swift"; sourceTree = "<group>"; };
 		9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewControllerExt+.swift"; sourceTree = "<group>"; };
 		9ACA894243BBFA2D37D1A82C /* Pods-Survy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Survy.debug.xcconfig"; path = "Target Support Files/Pods-Survy/Pods-Survy.debug.xcconfig"; sourceTree = "<group>"; };
+		9ACD1C1B2A112E840085D43E /* CategorySearchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySearchCell.swift; sourceTree = "<group>"; };
 		9AE295CE29D6F81400387883 /* Survy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AE295D129D6F81400387883 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9AE295D329D6F81400387883 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				9A6114D82A07F1F80051FF2B /* PostingSelectableOptionStackView.swift */,
 				9A6115192A0926530051FF2B /* TargetSelectionController.swift */,
 				9A61151B2A092BF40051FF2B /* CategorySelectionController.swift */,
+				9ACD1C1B2A112E840085D43E /* CategorySearchCell.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -569,6 +572,7 @@
 				9AE2960129D714F800387883 /* UICollectionViewCellExt+.swift in Sources */,
 				9A6113D22A010B840051FF2B /* CategoryCollectionViewCell.swift in Sources */,
 				9AE295F129D6FB4A00387883 /* UIImageExt+.swift in Sources */,
+				9ACD1C1C2A112E840085D43E /* CategorySearchCell.swift in Sources */,
 				9AF4AE2B2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift in Sources */,
 				9A6114D02A074E520051FF2B /* PostingQuestionOptionStackView.swift in Sources */,
 				9A6113BB29F521910051FF2B /* BaseViewController.swift in Sources */,

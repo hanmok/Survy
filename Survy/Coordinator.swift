@@ -17,6 +17,8 @@ protocol Coordinator {
     func start()
     
     func manipulate(_ childView: ChildView, command: Command)
+    
+    func testSetup()
 }
 
 enum ChildView {

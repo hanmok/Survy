@@ -9,13 +9,13 @@
 import UIKit
 
 extension NSMutableParagraphStyle {
-    static var centerAlignmentStyle: NSMutableParagraphStyle {
+    static var centerAlignment: NSMutableParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.alignment = .center
         return style
     }
     
-    static var rightAlignmentStyle: NSMutableParagraphStyle {
+    static var rightAlignment: NSMutableParagraphStyle {
         let style = NSMutableParagraphStyle()
         style.alignment = .right
         return style

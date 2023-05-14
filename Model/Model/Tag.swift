@@ -21,6 +21,12 @@ public struct TagResponse: Decodable {
     public let tags: [Tag]?
 }
 
+extension Tag: Hashable {
+    public static func == (lhs: Tag, rhs: Tag) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 // 이거 먼저 Decode 해보기.
 
 //{

@@ -24,6 +24,7 @@ extension UIImage {
     static let profile = UIImage(named: "profile_image")!
     static let medal = UIImage(named: "medal")!
 
+    static let multiply = UIImage(systemName: "multiply")!
     static let emptyCircle = UIImage(systemName: "circle")!
     static let plus = UIImage(systemName: "plus")!
     static let filledCircle = UIImage(systemName:  "largecircle.fill.circle")!

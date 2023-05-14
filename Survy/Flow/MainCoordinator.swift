@@ -49,7 +49,7 @@ class MainCoordinator: Coordinator {
         navigationController?.setViewControllers([initialController], animated: false)
     }
     
-    private func testSetup() {
+    public func testSetup() {
         self.provider.surveyService.currentSurvey = surveys[0]
         self.provider.surveyService.currentSection = section
         self.provider.surveyService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]

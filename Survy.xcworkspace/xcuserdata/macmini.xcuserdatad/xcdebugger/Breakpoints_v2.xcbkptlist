@@ -140,8 +140,8 @@
             filePath = "Survy/Home/PostingQuestion/Subviews/CategorySelectionController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "57"
-            endingLineNumber = "57"
+            startingLineNumber = "113"
+            endingLineNumber = "113"
             landmarkName = "completeTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -158,8 +158,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "101"
             endingLineNumber = "101"
-            landmarkName = "MainCoordinator"
-            landmarkType = "3">
+            landmarkName = "manipulate(_:command:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -174,84 +174,6 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
             endingLineNumber = "104">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "F6745ACF-D9EA-484B-AC0B-D7CD81253172"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Survy/Home/HomeViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "289"
-            endingLineNumber = "289"
-            landmarkName = "surveyTapped(_:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "F6745ACF-D9EA-484B-AC0B-D7CD81253172 - 41c9085f53e39107"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Survy.HomeViewController.surveyTapped(Survy.SurveyTableViewCell) -&gt; ()"
-                  moduleName = "Survy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/HomeViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "289"
-                  endingLineNumber = "289"
-                  offsetFromSymbolStart = "292">
-               </Location>
-               <Location
-                  uuid = "F6745ACF-D9EA-484B-AC0B-D7CD81253172 - 41c9085f53e39107"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Survy.HomeViewController.surveyTapped(Survy.SurveyTableViewCell) -&gt; ()"
-                  moduleName = "Survy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/HomeViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "289"
-                  endingLineNumber = "289"
-                  offsetFromSymbolStart = "688">
-               </Location>
-               <Location
-                  uuid = "F6745ACF-D9EA-484B-AC0B-D7CD81253172 - 41c9085f53e39164"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Survy.HomeViewController.surveyTapped(Survy.SurveyTableViewCell) -&gt; ()"
-                  moduleName = "Survy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/HomeViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "290"
-                  endingLineNumber = "290"
-                  offsetFromSymbolStart = "292">
-               </Location>
-               <Location
-                  uuid = "F6745ACF-D9EA-484B-AC0B-D7CD81253172 - 41c9085f53e39164"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Survy.HomeViewController.surveyTapped(Survy.SurveyTableViewCell) -&gt; ()"
-                  moduleName = "Survy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/HomeViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "290"
-                  endingLineNumber = "290"
-                  offsetFromSymbolStart = "688">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
