@@ -110,7 +110,9 @@ class HomeViewController: UIViewController, Coordinating {
     }
     
     private func setupLayout() {
-        navigationController?.title = "홈"
+//        navigationController?.title = "홈"
+        navigationItem.titleView = UIView()
+        navigationController?.hidesBarsOnTap = true
         
         [
          collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView, requestingButton].forEach { self.view.addSubview($0) }
@@ -118,7 +120,7 @@ class HomeViewController: UIViewController, Coordinating {
         collectedRewardLabel.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
             make.height.equalTo(28)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(-35)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(-40)
         }
         
         categorySelectionButton.snp.makeConstraints { make in

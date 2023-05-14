@@ -21,10 +21,9 @@ class MyPageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        navigationController?.title = "마이페이지"
-        self.title = "마이페이지"
-        
-        // Do any additional setup after loading the view.
+
+        navigationItem.titleView = UIView()
+
         view.backgroundColor = .white
         configureTableView()
         setupLayout()
@@ -51,8 +50,7 @@ class MyPageViewController: UIViewController {
         
         profileButton.snp.makeConstraints { make in
             make.leading.equalTo(view.layoutMarginsGuide)
-//            make.leading.equalToSuperview().offset(20)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(23)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(-40)
             make.width.height.equalTo(66)
         }
         

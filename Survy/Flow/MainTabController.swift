@@ -14,7 +14,6 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
 //    override func viewWillAppear(_ animated: Bool) {
 //        tabBarController?.selectedIndex = 2
 //    }
-//    var coordinator: Coordinator
     
     var provider: ProviderType
     init(provider: ProviderType, coordinator: Coordinator) {
@@ -49,9 +48,16 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
         tabBar.backgroundColor = UIColor.mainColor
         guard let coordinator = self.coordinator else { fatalError() }
         let homeVC = HomeViewController(surveyService: self.provider.surveyService)
-        let storeVC = StoreViewController()
-        let myPageVC = MyPageViewController()
+        homeVC.title = "홈"
         homeVC.coordinator = coordinator
+        
+        
+        let storeVC = StoreViewController()
+        storeVC.title = "스토어"
+        
+        let myPageVC = MyPageViewController()
+        myPageVC.title = "마이페이지"
+        
         
         let home = templateNavigationController(
             unselectedImage: UIImage.unselectedHomeIcon,
@@ -78,13 +84,15 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
                                       rootViewController: UIViewController) -> UINavigationController {
         let nav = UINavigationController(rootViewController: rootViewController)
         nav.tabBarItem.image = unselectedImage
+        
+//        nav.tabBarItem.selectedImage = selectedImage.withTintColor(.black, renderingMode: .alwaysOriginal)
+        
+        // icon color
         nav.tabBarItem.selectedImage = selectedImage.withTintColor(.black, renderingMode: .alwaysOriginal)
-        nav.tabBarItem.badgeColor = .black
         
-//        nav.tabBarItem.selectedImage = selectedImage.withTintColor(.orange, renderingMode: .alwaysOriginal)
+//        nav.tabBarItem.badgeColor = .black
+//        nav.tabBarItem.badgeColor = .green
 
-//        nav.navigationBar.tintColor = .magenta
-        
         return nav
     }
 }

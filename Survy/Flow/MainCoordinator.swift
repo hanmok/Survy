@@ -29,7 +29,10 @@ class MainCoordinator: Coordinator {
         var initialController: UIViewController
         
 //        initialScreen = .postingQuestion
+        
         initialScreen = .mainTab
+        
+//        initialScreen = .test
         
         switch initialScreen {
             case .mainTab:
@@ -40,8 +43,7 @@ class MainCoordinator: Coordinator {
             case .postingQuestion:
                 initialController = PostingViewController()
             case .test:
-                fatalError()
-//                initialController = DiffableTablePracticeViewController()
+                initialController = DiffableTablePracticeViewController()
         }
         
         navigationController?.setViewControllers([initialController], animated: false)

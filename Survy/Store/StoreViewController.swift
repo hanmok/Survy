@@ -11,10 +11,7 @@ class StoreViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "스토어"
-//        navigationController?.title = "스토어"
-//        view.backgroundColor = .white
-        // Do any additional setup after loading the view.
+        navigationItem.titleView = UIView()
     }
     
 
