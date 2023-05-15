@@ -9,11 +9,11 @@ import UIKit
 import SnapKit
 import Model
 
-protocol CategorySearchCellDelegate: AnyObject {
-    func categorySearchCellTapped(_ cell: CategorySearchCell)
+protocol SelectedCategoryCellDelegate: AnyObject {
+    func selectedCategoryCellTapped(_ cell: SelectedCategoryCell)
 }
 
-class CategorySearchCell: UICollectionViewCell {
+class SelectedCategoryCell: UICollectionViewCell {
     
     var categoryTag: Tag? {
         didSet {
@@ -32,7 +32,7 @@ class CategorySearchCell: UICollectionViewCell {
         return button
     }()
     
-    weak var delegate: CategorySearchCellDelegate?
+    weak var delegate: SelectedCategoryCellDelegate?
     
     private func setupLayout() {
         contentView.addSubview(label)
@@ -53,7 +53,7 @@ class CategorySearchCell: UICollectionViewCell {
     }
     
     @objc func buttonTapped() {
-        delegate?.categorySearchCellTapped(self)
+        delegate?.selectedCategoryCellTapped(self)
     }
     
     private func configure() {

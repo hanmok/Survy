@@ -59,6 +59,6 @@ class PostingBlockCollectionFooterCell: UICollectionReusableView {
             make.edges.equalToSuperview()
         }
     }
-    
-    
 }
+
+

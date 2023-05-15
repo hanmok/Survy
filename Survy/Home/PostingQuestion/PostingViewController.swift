@@ -45,7 +45,7 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     @objc func targetTapped(_ sender: UIButton) {
-        
+        coordinator?.manipulate(.targetSelection, command: .present)
     }
     
     
@@ -74,16 +74,11 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private func setupLayout() {
         [targetButton, categoryButton,
-//         expectedCostGuideStackView, expectedCostResultStackView,
          expectedTimeGuideLabel, expectedTimeResultLabel,
          requestingButton,
          postingBlockCollectionView].forEach {
             self.view.addSubview($0)
         }
-        
-//        expectedCostGuideStackView.addArrangedSubviews([numOfSpecimenGuideLabel, expectedTimeGuideLabel, expectedCostGuideLabel])
-        
-//        expectedCostResultStackView.addArrangedSubviews([numOfSpecimenButton, expectedTimeResultLabel, expectedCostResultLabel])
         
         targetButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(20)

@@ -13,7 +13,7 @@ extension Set {
         if self.contains(element) {
             self.remove(element)
         } else {
-            self.insert(element)
+            self.insert(element) // discardableResult
         }
     }
 }
