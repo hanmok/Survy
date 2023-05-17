@@ -11,14 +11,14 @@ import Model
 
 class HomeViewController: UIViewController, Coordinating {
     
-    var surveyService: SurveyServiceType
+    var surveyService: ParticipationServiceType
     var coordinator: Coordinator?
     
     enum Section {
         case main
     }
     
-    init(surveyService: SurveyServiceType) {
+    init(surveyService: ParticipationServiceType) {
         self.surveyService = surveyService
         super.init(nibName: nil, bundle: nil)
     }
@@ -40,7 +40,6 @@ class HomeViewController: UIViewController, Coordinating {
     let collectedMoney = 56000
     let categories = ["애견", "운동", "음식", "피부"]
     var selectedCategories = Set<String>()
-    
     
     var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
     var currentSurveySnapshot: NSDiffableDataSourceSnapshot<Section, Survey>! = nil
@@ -73,8 +72,6 @@ class HomeViewController: UIViewController, Coordinating {
         
         self.surveyDataSource.apply(currentSurveySnapshot)
     }
-    
-   
     
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
@@ -117,7 +114,6 @@ class HomeViewController: UIViewController, Coordinating {
     }
     
     private func setupLayout() {
-//        navigationController?.title = "홈"
         navigationItem.titleView = UIView()
         navigationController?.hidesBarsOnTap = true
         

@@ -8,7 +8,7 @@
 import Foundation
 import Model
 
-protocol SurveyServiceType: AnyObject {
+protocol ParticipationServiceType: AnyObject {
     var currentSurvey: Survey? { get set }
     var currentSection: Section? { get set }
     var currentQuestion: Question? { get }
@@ -21,10 +21,9 @@ protocol SurveyServiceType: AnyObject {
     func moveToNextQuestion()
     func initializeSurvey()
     func postAnswer()
-    
 }
 
-class SurveyService: SurveyServiceType {
+class ParticipationService: ParticipationServiceType {
     var selectedIndexes: Set<Int>?
     
     var selectedIndex: Int?

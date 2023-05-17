@@ -25,13 +25,14 @@ class MainCoordinator: Coordinator {
     }
     
     func start() {
+        
         var initialScreen: InitialScreen = .mainTab
         var initialController: UIViewController
         
 //        initialScreen = .postingQuestion
-        
+
         initialScreen = .mainTab
-        
+
 //        initialScreen = .test
         
         switch initialScreen {
@@ -39,9 +40,10 @@ class MainCoordinator: Coordinator {
                 initialController = MainTabController(provider: self.provider, coordinator: self)
                 
             case .responsdingQuestion:
-                initialController = QuestionViewController(surveyService: self.provider.surveyService)
+                initialController = QuestionViewController(surveyService: self.provider.participationService)
             case .postingQuestion:
-                initialController = PostingViewController()
+                initialController = PostingViewController(postingService: self.provider.postingService)
+                
             case .test:
                 initialController = DiffableTablePracticeViewController()
         }
@@ -50,23 +52,25 @@ class MainCoordinator: Coordinator {
     }
     
     public func testSetup() {
-        self.provider.surveyService.currentSurvey = surveys[0]
-        self.provider.surveyService.currentSection = section
-        self.provider.surveyService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
-        self.provider.surveyService.questionIndex = 0
+        self.provider.participationService.currentSurvey = surveys[0]
+        self.provider.participationService.currentSection = section
+        self.provider.participationService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
+        self.provider.participationService.questionIndex = 0
     }
     
     func move(to destination: Destination) {
         switch destination {
             case .questionController:
                 
-                let questionController = QuestionViewController(surveyService: provider.surveyService)
+                let questionController = QuestionViewController(surveyService: provider.participationService)
                 questionController.coordinator = self
                 navigationController?.pushViewController(questionController, animated: true)
             case .root:
                 navigationController?.popToRootViewController(animated: true)
+                navigationController?.setNavigationBarHidden(false, animated: false)
             case .postingController:
-                let postingController = PostingViewController()
+//                let postingController = PostingViewController()
+                let postingController = PostingViewController(postingService: self.provider.postingService)
                 postingController.coordinator = self
                 navigationController?.pushViewController(postingController, animated: true)
         }
@@ -76,28 +80,6 @@ class MainCoordinator: Coordinator {
     
     func manipulate(_ childView: ChildView, command: Command) {
         switch (childView, command) {
-//            case (.targetSelection, .present): break
-//            case (.targetSelection, .dismiss): break
-                
-//            case (.categorySelection, .present):
-//                let targetSelectionController = CategorySelectionController()
-//                targetSelectionController.coordinator = self
-//                guard let topViewController = navigationController?.topViewController else { return }
-//                topViewController.view.backgroundColor = UIColor(white: 0.2, alpha: 0.9)
-//                topViewController.addChild(targetSelectionController)
-//                topViewController.view.addSubview(targetSelectionController.view)
-//                targetSelectionController.view.snp.makeConstraints { make in
-//                    make.edges.equalTo(topViewController.view.layoutMarginsGuide)
-//                }
-//
-//            case (.categorySelection, .dismiss):
-//                guard let topViewController = navigationController?.topViewController else { return }
-//                topViewController.view.backgroundColor = UIColor.postingVCBackground
-//                topViewController.children.forEach {
-//                    $0.willMove(toParent: nil)
-//                    $0.view.removeFromSuperview()
-//                    $0.removeFromParent()
-//                }
                 
             case (let type, .present):
                 var vc: UIViewController & Coordinating
@@ -105,7 +87,7 @@ class MainCoordinator: Coordinator {
                 if type == .targetSelection {
                     vc = TargetSelectionController()
                 } else { // categorySelection
-                    vc = CategorySelectionController()
+                    vc = CategorySelectionController(postingService: self.provider.postingService)
                 }
                 vc.coordinator = self
                 
@@ -119,13 +101,16 @@ class MainCoordinator: Coordinator {
                 }
                 
             case (_, .dismiss):
-                                guard let topViewController = navigationController?.topViewController else { return }
-                                topViewController.view.backgroundColor = UIColor.postingVCBackground
-                                topViewController.children.forEach {
-                                    $0.willMove(toParent: nil)
-                                    $0.view.removeFromSuperview()
-                                    $0.removeFromParent()
-                                }
+                guard let topViewController = navigationController?.topViewController else { return }
+                topViewController.view.backgroundColor = UIColor.postingVCBackground
+                topViewController.children.forEach {
+                    $0.willMove(toParent: nil)
+                    $0.view.removeFromSuperview()
+                    $0.removeFromParent()
+                }
+                guard let postingViewController = topViewController as? BaseViewController else { fatalError() }
+                postingViewController.updateMyUI()
+                navigationController?.setNavigationBarHidden(false, animated: false)
         }
     }
 }

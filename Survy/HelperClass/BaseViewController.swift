@@ -13,5 +13,8 @@ class BaseViewController: UIViewController {
         view.backgroundColor = .white
     }
     
+    func updateMyUI() {
+        print("hi")
+    }
     
 }

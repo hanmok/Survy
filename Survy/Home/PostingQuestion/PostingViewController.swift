@@ -12,27 +12,147 @@ import Toast
 
 class PostingViewController: BaseViewController, Coordinating {
     
+    override func updateMyUI() {
+        
+//        postingService.selectedTags
+//        postingService.selectedTargets
+        
+        print("selected tags: \(postingService.selectedTags)")
+        
+//        // Update Snapshot
+//        var targetSnapshot = NSDiffableDataSourceSnapshot<Section, Target>()
+//        targetSnapshot.appendSections([.main])
+//        targetSnapshot.appendItems(postingService.selectedTargets)
+//        targetDataSource.apply(targetSnapshot, animatingDifferences: false)
+
+
+        var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+        tagSnapshot.appendSections([.main])
+//        tagSnapshot.appendItems(postingService.selectedTags)
+        tagSnapshot.appendItems(CategorySelectionController(postingService: postingService).testTags)
+//        DispatchQueue.main.async {
+            self.tagDataSource.apply(tagSnapshot, animatingDifferences: true)
+//        }
+    }
+    
+//    var selectedTags = [Tag]()
+//    var selectedTargets = [Target]()
+    
     var coordinator: Coordinator?
     
     var numberOfQuestions: Int = 1
+    
     var numOfSpecimen: Int = 100
+    
+    var postingService: PostingServiceType
+    
+    public init(postingService: PostingServiceType) {
+        self.postingService = postingService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    enum Section {
+//        case target
+//        case tag
+        case main
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private var selectedTargetsCollectionView: UICollectionView!
+    private var selectedTagsCollectionView: UICollectionView!
+    
+    private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
+    private var tagDataSource: UICollectionViewDiffableDataSource<Section, Tag>!
+    
+    func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
+            layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
+            let contentSize = layoutEnvironment.container.effectiveContentSize
+            let columns = 5
+            let spacing = CGFloat(10)
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                  heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .absolute(32))
+            
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
+            
+            group.interItemSpacing = .fixed(spacing)
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = spacing
+            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+            
+            let headerFooterSize = NSCollectionLayoutSize(
+              widthDimension: .fractionalWidth(1.0),
+//              heightDimension: .estimated(100)
+              heightDimension: .absolute(40)
+            )
+            
+//            let someSize = NSCollectionlayoutsize
+            
+//            let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
+//              layoutSize: headerFooterSize,
+//              elementKind: UICollectionView.elementKindSectionHeader,
+//              alignment: .top
+//            )
+//            section.boundarySupplementaryItems = [sectionHeader]
+            
+            return section
+        }
+        
+        return layout
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        registerCollectionView()
+        registerPostingBlockCollectionView()
+        
+        setupTopCollectionViews()
+        configureTopDataSource()
+        
         setupNavigationBar()
+        
         setupLayout()
         setupTargets()
         
 //        view.backgroundColor = UIColor(hex6: 0xF4F7FB)
+        
         view.backgroundColor = UIColor.postingVCBackground
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
         view.addGestureRecognizer(tapGesture)
+        
+        setupInitialSnapshot()
+        
+    }
+    
+    private func setupInitialSnapshot() {
+        // Update Snapshot
+//        var targetSnapshot = NSDiffableDataSourceSnapshot<Section, Target>()
+//        targetSnapshot.appendSections([.target])
+//        targetSnapshot.appendItems(postingService.selectedTargets)
+//        targetDataSource.apply(targetSnapshot, animatingDifferences: true)
+        
+        
+        var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+        tagSnapshot.appendSections([.main])
+//        tagSnapshot.appendItems(postingService.selectedTags)
+        let currentTags = CategorySelectionController(postingService: postingService).testTags
+        
+        tagSnapshot.appendItems(currentTags)
+        
+        DispatchQueue.main.async {
+            self.tagDataSource.apply(tagSnapshot, animatingDifferences: false)
+        }
+        
     }
     
     @objc func otherViewTapped() {
-//        view.endEditing(true)
         view.dismissKeyboard()
     }
     
@@ -62,8 +182,47 @@ class PostingViewController: BaseViewController, Coordinating {
         setupLeftNavigationBar()
     }
     
-    private func registerCollectionView() {
+    private func setupTopCollectionViews() {
+        let layout = createLayout()
+        selectedTagsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        selectedTargetsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
+        selectedTagsCollectionView.register(LabelCollectionViewCell.self, forCellWithReuseIdentifier: LabelCollectionViewCell.reuseIdentifier)
+        
+        selectedTargetsCollectionView.register(LabelCollectionViewCell.self, forCellWithReuseIdentifier: LabelCollectionViewCell.reuseIdentifier)
+    }
+    
+    private func configureTopDataSource() {
+        let targetCellRegistration = UICollectionView.CellRegistration<LabelCollectionViewCell, Target> {
+            (cell, indexPath, target) in
+            cell.label.text = "something"
+        }
+        
+        targetDataSource = UICollectionViewDiffableDataSource<Section, Target>(collectionView: selectedTargetsCollectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Target) -> UICollectionViewCell? in
+             return collectionView.dequeueConfiguredReusableCell(using: targetCellRegistration, for: indexPath, item: identifier)
+        }
+        
+//        let tagCellRegistration = UICollectionView.CellRegistration<LabelCollectionViewCell, Tag> {
+//            (cell, indexPath, target) in
+//        }
+//
+//        tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView) {
+//            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
+//             return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
+//
+//        }
+        
+        self.tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView, cellProvider: { [weak self] collectionView, indexPath, itemIdentifier -> LabelCollectionViewCell? in
+            guard let self = self else { return nil }
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LabelCollectionViewCell.reuseIdentifier, for: indexPath) as! LabelCollectionViewCell
+            cell.text = itemIdentifier.name
+            return cell
+        })
+        
+    }
+    
+    private func registerPostingBlockCollectionView() {
         postingBlockCollectionView.register(PostingBlockCollectionViewCell.self, forCellWithReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier)
         
         postingBlockCollectionView.register(PostingBlockCollectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: PostingBlockCollectionFooterCell.reuseIdentifier)
@@ -74,6 +233,7 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private func setupLayout() {
         [targetButton, categoryButton,
+         selectedTargetsCollectionView, selectedTagsCollectionView,
          expectedTimeGuideLabel, expectedTimeResultLabel,
          requestingButton,
          postingBlockCollectionView].forEach {
@@ -88,6 +248,13 @@ class PostingViewController: BaseViewController, Coordinating {
         
         targetButton.addSmallerInsets()
         
+        selectedTargetsCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(targetButton.snp.top)
+            make.bottom.equalTo(targetButton.snp.bottom)
+            make.leading.equalTo(targetButton.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().inset(10)
+        }
+        
         categoryButton.snp.makeConstraints { make in
             make.top.equalTo(targetButton.snp.bottom).offset(16)
             make.leading.equalTo(view.layoutMarginsGuide)
@@ -95,6 +262,13 @@ class PostingViewController: BaseViewController, Coordinating {
         }
         
         categoryButton.addSmallerInsets()
+        
+        selectedTagsCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(categoryButton.snp.top)
+            make.bottom.equalTo(categoryButton.snp.bottom)
+            make.leading.equalTo(categoryButton.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().inset(10)
+        }
         
         requestingButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -150,8 +324,6 @@ class PostingViewController: BaseViewController, Coordinating {
 //        let comp = UICollectionviewcompositionallayout
 //        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
-        
-        
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     
         collectionView.backgroundColor = .clear
@@ -166,26 +338,6 @@ class PostingViewController: BaseViewController, Coordinating {
     @objc func dismissTapped() {
         self.navigationController?.popViewController(animated: true)
     }
-    
-//    @objc func specimenButtonTapped(_ sender: UIButton) {
-//        let alertController = UIAlertController(title: "표본 수를 입력해주세요", message: nil, preferredStyle: .alert)
-//
-//        alertController.addTextField { textField in
-//            textField.keyboardType = .numberPad
-//        }
-//
-//        let saveAction = UIAlertAction(title: "Save", style: .default) { [weak self] alert -> Void in
-//            let textFieldInput = alertController.textFields![0] as UITextField
-//            guard let text = textFieldInput.text, let numOfSpecimenInput = Int(text) else { fatalError() }
-//            self?.numOfSpecimen = numOfSpecimenInput
-//            self?.numOfSpecimenButton.setTitle(String(numOfSpecimenInput) + "명", for: .normal)
-//        }
-//        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-//
-//        [cancelAction, saveAction].forEach { alertController.addAction($0) }
-//
-//        self.present(alertController, animated: true)
-//    }
     
     // MARK: - Views
 

@@ -7,8 +7,10 @@
 
 import Foundation
 
-public struct Tag: Decodable {
-    public init(id: Int, name: String) {
+
+
+public struct Target {
+    public init(id: Int, name: String, section: TargetSection) {
         self.id = id
         self.name = name
     }
@@ -17,20 +19,22 @@ public struct Tag: Decodable {
     public let name: String
 }
 
-public struct TagResponse: Decodable {
-    public let tags: [Tag]?
-}
+extension Target: Decodable { }
 
-extension Tag: Hashable {
-    public static func == (lhs: Tag, rhs: Tag) -> Bool {
+extension Target: Hashable {
+    public static func == (lhs: Target, rhs: Target) -> Bool {
         return lhs.id == rhs.id
     }
 }
 
-extension Tag: Comparable {
-    public static func < (lhs: Tag, rhs: Tag) -> Bool {
+extension Target: Comparable {
+    public static func < (lhs: Target, rhs: Target) -> Bool {
         return lhs.name < rhs.name
     }
+}
+
+public struct TargetResponse: Decodable {
+    public let targets: [Target]?
 }
 
 // 이거 먼저 Decode 해보기.
@@ -43,3 +47,4 @@ extension Tag: Comparable {
 //        }
 //    ]
 //}
+

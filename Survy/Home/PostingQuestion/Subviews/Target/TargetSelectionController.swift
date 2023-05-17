@@ -9,52 +9,36 @@
 import UIKit
 import Model
 
-struct Target: Hashable {
-    let name: String
-    let section: TargetSection
-    let id = UUID()
-    
-    public static func == (lhs: Target, rhs: Target) -> Bool {
-        return lhs.id == rhs.id
-    }
-}
-
-enum TargetSection: String, CaseIterable {
-    case gender = "Gender"
-    case age = "Age"
-    case location = "Location"
-}
-
 class TargetSelectionController: UIViewController, Coordinating {
     
     var coordinator: Coordinator?
     
     let locations = [
-        Target(name: "서울특별시", section: .location),
-        Target(name: "경기도", section: .location),
-        Target(name: "인천광역시", section: .location),
-        Target(name: "부산광역시", section: .location),
-        Target(name: "대구광역시", section: .location),
-        Target(name: "강원도", section: .location),
-        Target(name: "전라도", section: .location),
-        Target(name: "경상도", section: .location),
-        Target(name: "제주도", section: .location),
-        Target(name: "충청도", section: .location),
-        Target(name: "대전광역시", section: .location),
-        Target(name: "광주광역시", section: .location),
-        Target(name: "울산광역시", section: .location),
-        Target(name: "세종특별자치시", section: .location)
+        Target(id: 101, name: "서울특별시", section: .location),
+        Target(id: 102, name: "경기도", section: .location),
+        Target(id: 103, name: "인천광역시", section: .location),
+        Target(id: 104, name: "부산광역시", section: .location),
+        Target(id: 105, name: "대구광역시", section: .location),
+        Target(id: 106, name: "강원도", section: .location),
+        Target(id: 107, name: "전라도", section: .location),
+        Target(id: 108, name: "경상도", section: .location),
+        Target(id: 109, name: "제주도", section: .location),
+        Target(id: 110, name: "충청도", section: .location),
+        Target(id: 111, name: "대전광역시", section: .location),
+        Target(id: 112, name: "광주광역시", section: .location),
+        Target(id: 113, name: "울산광역시", section: .location),
+        Target(id: 114, name: "세종특별자치시", section: .location)
     ]
 
-    let ages = [Target(name:"20대", section: .age),
-                Target(name:"30대", section: .age),
-                Target(name:"40대", section: .age),
-                Target(name:"50대", section: .age)
+    let ages = [Target(id: 12, name:"20대", section: .age),
+                Target(id: 13, name:"30대", section: .age),
+                Target(id: 14, name:"40대", section: .age),
+                Target(id: 15, name:"50대", section: .age)
     ]
     
     let genders = [
-        Target(name:"남성", section: .gender),
-        Target(name:"여성", section: .gender)
+        Target(id: 1, name:"남성", section: .gender),
+        Target(id: 2, name:"여성", section: .gender)
     ]
     
     enum SelectedTargetSection {
@@ -79,6 +63,8 @@ class TargetSelectionController: UIViewController, Coordinating {
         
         setupInitialValues()
     }
+    
+    
     
     
     func createSelectableTagLayout() -> UICollectionViewLayout {
@@ -233,7 +219,7 @@ extension TargetSelectionController {
     }
     
     func configureDataSource() {
-            registerHeader()
+        registerHeader()
         
         let selectableCellRegistration = UICollectionView.CellRegistration<SelectableTargetCell, Target> { (cell, indexPath, category) in
             cell.target = category

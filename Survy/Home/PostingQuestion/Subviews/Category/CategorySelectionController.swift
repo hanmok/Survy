@@ -11,10 +11,20 @@ import Model
 class CategorySelectionController: UIViewController, Coordinating {
     
     var coordinator: Coordinator?
-        
+    var postingService: PostingServiceType
+    
+    public init(postingService: PostingServiceType) {
+        self.postingService = postingService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private var selectedTags = Set<Tag>()
     
-    let testTags = [
+    public let testTags = [
         Tag(id: 1, name: "운동"),
         Tag(id: 2, name: "필라테스"),
         Tag(id: 3, name: "PT"),
@@ -126,6 +136,10 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     @objc func completeTapped(_ sender: UIButton) {
+        // TODO: Provider 에 selectedCategory 선택
+        
+        let selectedTagsArr = Array(selectedTags)
+        postingService.setTags(selectedTagsArr)
         coordinator?.manipulate(.categorySelection, command: .dismiss)
     }
     
@@ -192,14 +206,11 @@ class CategorySelectionController: UIViewController, Coordinating {
         selectableTagDataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    
-    
     private let completeButton: UIButton = {
         let button = UIButton()
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = UIColor.mainColor
-//        button.backgroundColor = UIColor.deeperMainColor
         button.layer.cornerRadius = 7
         button.clipsToBounds = true
         return button

@@ -133,17 +133,97 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "540E5308-7749-474C-B832-A74D1FF23265"
-            shouldBeEnabled = "No"
+            uuid = "7F12B37C-7EE5-47D1-9BFC-FDE47E5A0538"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Survy/Flow/MainCoordinator.swift"
+            filePath = "Survy/Home/PostingQuestion/LabelCollectionViewCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "130"
-            endingLineNumber = "130"
-            landmarkName = "manipulate(_:command:)"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "text"
+            landmarkType = "24">
+            <Locations>
+               <Location
+                  uuid = "7F12B37C-7EE5-47D1-9BFC-FDE47E5A0538 - 1615d25db916e693"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.LabelCollectionViewCell.text.didset : Swift.Optional&lt;Swift.String&gt;"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/LabelCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "19"
+                  endingLineNumber = "19"
+                  offsetFromSymbolStart = "172">
+               </Location>
+               <Location
+                  uuid = "7F12B37C-7EE5-47D1-9BFC-FDE47E5A0538 - 1615d25db916e6b2"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.LabelCollectionViewCell.text.didset : Swift.Optional&lt;Swift.String&gt;"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/LabelCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "20"
+                  endingLineNumber = "20"
+                  offsetFromSymbolStart = "172">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9DBE9A9D-863D-40F5-ACE0-113B204E72DE"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Survy/Home/PostingQuestion/LabelCollectionViewCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "45"
+            endingLineNumber = "45"
+            landmarkName = "configureLayout(_:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "9DBE9A9D-863D-40F5-ACE0-113B204E72DE - 74bbc78f19a6bbba"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.LabelCollectionViewCell.configureLayout(Swift.String) -&gt; ()"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/LabelCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "45"
+                  endingLineNumber = "45"
+                  offsetFromSymbolStart = "52">
+               </Location>
+               <Location
+                  uuid = "9DBE9A9D-863D-40F5-ACE0-113B204E72DE - 74bbc78f19a6bb5b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.LabelCollectionViewCell.configureLayout(Swift.String) -&gt; ()"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/LabelCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "46"
+                  endingLineNumber = "46"
+                  offsetFromSymbolStart = "52">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

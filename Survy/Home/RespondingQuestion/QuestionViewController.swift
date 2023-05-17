@@ -19,10 +19,10 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     var coordinator: Coordinator?
     
-    var surveyService: SurveyService
+    var surveyService: ParticipationService
     
-    init(surveyService: SurveyServiceType) {
-        self.surveyService = surveyService as! SurveyService
+    init(surveyService: ParticipationServiceType) {
+        self.surveyService = surveyService as! ParticipationService
         super.init(nibName: nil, bundle: nil)
     }
     
