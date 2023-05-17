@@ -13,6 +13,17 @@ class TargetSelectionController: UIViewController, Coordinating {
     
     var coordinator: Coordinator?
     
+    var postingService: PostingServiceType
+    
+    public init(postingService: PostingServiceType) {
+        self.postingService = postingService
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     let locations = [
         Target(id: 101, name: "서울특별시", section: .location),
         Target(id: 102, name: "경기도", section: .location),
@@ -128,6 +139,8 @@ class TargetSelectionController: UIViewController, Coordinating {
     }
     
     @objc func completeTapped(_ sender: UIButton) {
+        let selectedTargetsArr = Array(selectedTargets)
+        postingService.setTargets(selectedTargetsArr)
         coordinator?.manipulate(.categorySelection, command: .dismiss)
     }
     

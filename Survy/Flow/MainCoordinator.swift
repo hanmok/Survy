@@ -86,7 +86,7 @@ class MainCoordinator: Coordinator {
                 var vc: UIViewController & Coordinating
                 // 나중에 또 쓰일 수 있으므로 if 로 분리해놓음.
                 if type == .targetSelection {
-                    vc = TargetSelectionController()
+                    vc = TargetSelectionController(postingService: self.provider.postingService)
                 } else { // categorySelection
                     vc = CategorySelectionController(postingService: self.provider.postingService)
                 }

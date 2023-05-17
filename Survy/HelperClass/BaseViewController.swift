@@ -7,14 +7,22 @@
 
 import UIKit
 
+enum UpdatingDataType {
+    case target
+    case tag
+}
+
 class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
     }
     
-    func updateMyUI() {
-        print("hi")
-    }
+    
+//    func updateMyUI(_ updatingDataType: UpdatingDataType) {
+//
+//    }
+    
+    func updateMyUI() { }
     
 }

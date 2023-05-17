@@ -10,13 +10,11 @@ import UIKit
 import SnapKit
 import Model
 
-
-class LabelCollectionViewCell: UICollectionViewCell {
+class TagLabelCollectionViewCell: UICollectionViewCell {
     
     var text: String? {
         didSet {
             guard let text = text else { return }
-            
             configureLayout(text)
         }
     }
@@ -24,10 +22,8 @@ class LabelCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupLayout()
-        backgroundColor = .magenta
-//        configure()
     }
-    
+//    label.attributedText = NSAttributedString(string: categoryTag.name, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
     private func setupLayout() {
         
         addSubview(label)
@@ -37,14 +33,14 @@ class LabelCollectionViewCell: UICollectionViewCell {
         
         layer.borderWidth = 1
         layer.borderColor = UIColor.systemGray2.cgColor
+        layer.cornerRadius = 10
+        
         label.adjustsFontForContentSizeCategory = true
     }
     
-    
     private func configureLayout(_ text: String) {
-        
-        label.text = text
-        
+//        label.text = text
+        label.attributedText = NSAttributedString(string: text, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
     }
     
     let label: UILabel = {

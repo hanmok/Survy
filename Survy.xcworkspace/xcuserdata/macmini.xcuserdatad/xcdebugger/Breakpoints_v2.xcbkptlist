@@ -190,8 +190,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "50"
             endingLineNumber = "50"
-            landmarkName = "configureLayout(_:)"
-            landmarkType = "7">
+            landmarkName = "label"
+            landmarkType = "24">
             <Locations>
                <Location
                   uuid = "9DBE9A9D-863D-40F5-ACE0-113B204E72DE - 74bbc78f19a6bafc"
@@ -282,70 +282,6 @@
                   startingLineNumber = "50"
                   endingLineNumber = "50"
                   offsetFromSymbolStart = "120">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "309A4C13-2269-4687-A312-D6E006B7DA9B"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Survy/Home/PostingQuestion/PostingViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
-            landmarkName = "setupInitialSnapshot()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "09E5F89F-D202-4A9A-AE30-9592C88FB932"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Survy/Home/PostingQuestion/PostingViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "147"
-            endingLineNumber = "147"
-            landmarkName = "setupInitialSnapshot()"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "09E5F89F-D202-4A9A-AE30-9592C88FB932 - 861e8b85285d9528"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in Survy.PostingViewController.setupInitialSnapshot() -&gt; ()"
-                  moduleName = "Survy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/PostingViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "151"
-                  endingLineNumber = "151"
-                  offsetFromSymbolStart = "412">
-               </Location>
-               <Location
-                  uuid = "09E5F89F-D202-4A9A-AE30-9592C88FB932 - 861e8b85285d9509"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in Survy.PostingViewController.setupInitialSnapshot() -&gt; ()"
-                  moduleName = "Survy"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/PostingViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "152"
-                  endingLineNumber = "152"
-                  offsetFromSymbolStart = "412">
                </Location>
             </Locations>
          </BreakpointContent>
