@@ -45,7 +45,8 @@ class MainCoordinator: Coordinator {
                 initialController = PostingViewController(postingService: self.provider.postingService)
                 
             case .test:
-                initialController = DiffableTablePracticeViewController()
+//                initialController = DiffableTablePracticeViewController()
+                initialController = DiffableCollectionViewPractice()
         }
         
         navigationController?.setViewControllers([initialController], animated: false)

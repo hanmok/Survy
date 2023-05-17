@@ -50,6 +50,7 @@
 		9ACD1C262A1294A20085D43E /* TargetSelectionHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C252A1294A20085D43E /* TargetSelectionHeaderCell.swift */; };
 		9ACD1C282A13AE320085D43E /* PostingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C272A13AE320085D43E /* PostingService.swift */; };
 		9ACD1C2E2A13D17C0085D43E /* LabelCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C2D2A13D17C0085D43E /* LabelCollectionViewCell.swift */; };
+		9ACD1C6C2A1525D40085D43E /* DiffableCollectionViewPractice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C6B2A1525D40085D43E /* DiffableCollectionViewPractice.swift */; };
 		9AE295D229D6F81400387883 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D129D6F81400387883 /* AppDelegate.swift */; };
 		9AE295D429D6F81400387883 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D329D6F81400387883 /* SceneDelegate.swift */; };
 		9AE295D629D6F81400387883 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE295D529D6F81400387883 /* MainTabController.swift */; };
@@ -130,6 +131,7 @@
 		9ACD1C252A1294A20085D43E /* TargetSelectionHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetSelectionHeaderCell.swift; sourceTree = "<group>"; };
 		9ACD1C272A13AE320085D43E /* PostingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingService.swift; sourceTree = "<group>"; };
 		9ACD1C2D2A13D17C0085D43E /* LabelCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelCollectionViewCell.swift; sourceTree = "<group>"; };
+		9ACD1C6B2A1525D40085D43E /* DiffableCollectionViewPractice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableCollectionViewPractice.swift; sourceTree = "<group>"; };
 		9AE295CE29D6F81400387883 /* Survy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Survy.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AE295D129D6F81400387883 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9AE295D329D6F81400387883 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -396,6 +398,7 @@
 			isa = PBXGroup;
 			children = (
 				9AF4AE2A2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift */,
+				9ACD1C6B2A1525D40085D43E /* DiffableCollectionViewPractice.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -608,6 +611,7 @@
 				9AE2960129D714F800387883 /* UICollectionViewCellExt+.swift in Sources */,
 				9A6113D22A010B840051FF2B /* CategoryCollectionViewCell.swift in Sources */,
 				9AE295F129D6FB4A00387883 /* UIImageExt+.swift in Sources */,
+				9ACD1C6C2A1525D40085D43E /* DiffableCollectionViewPractice.swift in Sources */,
 				9ACD1C1C2A112E840085D43E /* SelectableCategoryCell.swift in Sources */,
 				9AF4AE2B2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift in Sources */,
 				9A6114D02A074E520051FF2B /* PostingQuestionOptionStackView.swift in Sources */,

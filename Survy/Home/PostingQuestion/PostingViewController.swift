@@ -61,7 +61,8 @@ class PostingViewController: BaseViewController, Coordinating {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var selectedTargetsCollectionView: UICollectionView!
+//    private var selectedTargetsCollectionView: UICollectionView!
+//    private var selectedTagsCollectionView: UICollectionView!
     private var selectedTagsCollectionView: UICollectionView!
     
     private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
@@ -85,13 +86,8 @@ class PostingViewController: BaseViewController, Coordinating {
 
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = spacing
-            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+//            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
             
-            let headerFooterSize = NSCollectionLayoutSize(
-              widthDimension: .fractionalWidth(1.0),
-//              heightDimension: .estimated(100)
-              heightDimension: .absolute(40)
-            )
             
 //            let someSize = NSCollectionlayoutsize
             
@@ -143,13 +139,13 @@ class PostingViewController: BaseViewController, Coordinating {
         tagSnapshot.appendSections([.main])
 //        tagSnapshot.appendItems(postingService.selectedTags)
         let currentTags = CategorySelectionController(postingService: postingService).testTags
+        print("testTags: \(currentTags)")
+        tagSnapshot.appendItems(currentTags, toSection: .main)
         
-        tagSnapshot.appendItems(currentTags)
-        
-        DispatchQueue.main.async {
-            self.tagDataSource.apply(tagSnapshot, animatingDifferences: false)
-        }
-        
+//        DispatchQueue.main.async {
+//            self.tagDataSource.apply(tagSnapshot, animatingDifferences: false)
+        tagDataSource.apply(tagSnapshot)
+//        }
     }
     
     @objc func otherViewTapped() {
@@ -184,41 +180,45 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private func setupTopCollectionViews() {
         let layout = createLayout()
+        
         selectedTagsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        selectedTargetsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        selectedTargetsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
-        selectedTagsCollectionView.register(LabelCollectionViewCell.self, forCellWithReuseIdentifier: LabelCollectionViewCell.reuseIdentifier)
+        selectedTagsCollectionView.backgroundColor = .cyan
         
-        selectedTargetsCollectionView.register(LabelCollectionViewCell.self, forCellWithReuseIdentifier: LabelCollectionViewCell.reuseIdentifier)
+//        selectedTargetsCollectionView.register(LabelCollectionViewCell.self, forCellWithReuseIdentifier: LabelCollectionViewCell.reuseIdentifier)
+        
+//        selectedTagsCollectionView.register(LabelCollectionViewCell.self, forCellWithReuseIdentifier: LabelCollectionViewCell.reuseIdentifier)
+        
     }
     
     private func configureTopDataSource() {
-        let targetCellRegistration = UICollectionView.CellRegistration<LabelCollectionViewCell, Target> {
-            (cell, indexPath, target) in
-            cell.label.text = "something"
-        }
-        
-        targetDataSource = UICollectionViewDiffableDataSource<Section, Target>(collectionView: selectedTargetsCollectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Target) -> UICollectionViewCell? in
-             return collectionView.dequeueConfiguredReusableCell(using: targetCellRegistration, for: indexPath, item: identifier)
-        }
-        
-//        let tagCellRegistration = UICollectionView.CellRegistration<LabelCollectionViewCell, Tag> {
+//        let targetCellRegistration = UICollectionView.CellRegistration<LabelCollectionViewCell, Target> {
 //            (cell, indexPath, target) in
+//            cell.label.text = "something"
 //        }
 //
-//        tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView) {
-//            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-//             return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
-//
+//        targetDataSource = UICollectionViewDiffableDataSource<Section, Target>(collectionView: selectedTargetsCollectionView) {
+//            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Target) -> UICollectionViewCell? in
+//             return collectionView.dequeueConfiguredReusableCell(using: targetCellRegistration, for: indexPath, item: identifier)
 //        }
         
-        self.tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView, cellProvider: { [weak self] collectionView, indexPath, itemIdentifier -> LabelCollectionViewCell? in
-            guard let self = self else { return nil }
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LabelCollectionViewCell.reuseIdentifier, for: indexPath) as! LabelCollectionViewCell
-            cell.text = itemIdentifier.name
-            return cell
-        })
+        let tagCellRegistration = UICollectionView.CellRegistration<LabelCollectionViewCell, Tag> {
+            (cell, indexPath, target) in
+            cell.backgroundColor = .red
+        }
+
+        tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
+             return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
+
+        }
+        
+//        self.tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView, cellProvider: { collectionView, indexPath, itemIdentifier -> LabelCollectionViewCell? in
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: LabelCollectionViewCell.reuseIdentifier, for: indexPath) as! LabelCollectionViewCell
+//            cell.text = itemIdentifier.name
+//            return cell
+//        })
         
     }
     
@@ -233,7 +233,8 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private func setupLayout() {
         [targetButton, categoryButton,
-         selectedTargetsCollectionView, selectedTagsCollectionView,
+//         selectedTargetsCollectionView,
+         selectedTagsCollectionView,
          expectedTimeGuideLabel, expectedTimeResultLabel,
          requestingButton,
          postingBlockCollectionView].forEach {
@@ -248,12 +249,12 @@ class PostingViewController: BaseViewController, Coordinating {
         
         targetButton.addSmallerInsets()
         
-        selectedTargetsCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(targetButton.snp.top)
-            make.bottom.equalTo(targetButton.snp.bottom)
-            make.leading.equalTo(targetButton.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().inset(10)
-        }
+//        selectedTargetsCollectionView.snp.makeConstraints { make in
+//            make.top.equalTo(targetButton.snp.top)
+//            make.bottom.equalTo(targetButton.snp.bottom)
+//            make.leading.equalTo(targetButton.snp.trailing).offset(10)
+//            make.trailing.equalToSuperview().inset(10)
+//        }
         
         categoryButton.snp.makeConstraints { make in
             make.top.equalTo(targetButton.snp.bottom).offset(16)
@@ -275,20 +276,6 @@ class PostingViewController: BaseViewController, Coordinating {
             make.height.equalTo(50)
             make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
-
-//        expectedCostResultStackView.snp.makeConstraints { make in
-//            make.trailing.equalTo(view.layoutMarginsGuide)
-//            make.height.equalTo(86)
-//            make.bottom.equalTo(requestingButton.snp.top).offset(-20)
-//            make.width.equalTo(100)
-//        }
-//
-//        expectedCostGuideStackView.snp.makeConstraints { make in
-//            make.trailing.equalTo(expectedCostResultStackView.snp.leading).offset(-10)
-//            make.height.equalTo(expectedCostResultStackView.snp.height)
-//            make.bottom.equalTo(requestingButton.snp.top).offset(-20)
-//            make.width.equalTo(100)
-//        }
         
         expectedTimeResultLabel.snp.makeConstraints { make in
             make.trailing.equalTo(view.layoutMarginsGuide)
