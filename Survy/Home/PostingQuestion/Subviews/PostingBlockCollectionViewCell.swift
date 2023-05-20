@@ -243,6 +243,7 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
 
 extension PostingBlockCollectionViewCell: UITextViewDelegate {
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        // return 이 아닌 다른곳 눌러도 이곳 호출됨.
         guard let text = textView.text else { return true }
         
         // FIXME: 음.. 질문을 입력한 후 return 을 눌러도 여기가 호출됨. 그리고, 중간 수정을 하는 경우 어떤 값인지 알 수가 없음. 따라서, Tag 를 넣어줘야함. question: tag: -1
@@ -253,6 +254,13 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
         return dismissKeyboard()
     }
     
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if text == "\n" {
+            textView.resignFirstResponder()
+            return false
+        }
+        return true
+    }
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
