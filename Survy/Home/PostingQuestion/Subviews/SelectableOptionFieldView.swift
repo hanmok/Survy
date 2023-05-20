@@ -27,9 +27,10 @@ class SelectableOptionFieldView: UIView {
         selectableOptionTextField.delegate = self
     }
     
-    init(briefQuestionType: BriefQuestionType) {
+    init(briefQuestionType: BriefQuestionType, tag: Int) {
         self.briefQuestionType = briefQuestionType
         super.init(frame: .zero)
+        self.tag = tag
         setupDelegate()
         configureLayout()
         setupLayout()
@@ -82,12 +83,13 @@ class SelectableOptionFieldView: UIView {
 
 extension SelectableOptionFieldView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        selectableOptionFieldDelegate?.notifyReturnButtonTapped()
+        guard let text = textField.text else { return true }
+        selectableOptionFieldDelegate?.notifyReturnButtonTapped(text, self.tag)
         return true
     }
 }
 
 protocol SelectableOptionFieldDelegate: AnyObject {
-    func notifyReturnButtonTapped()
+    func notifyReturnButtonTapped(_ text: String, _ tag: Int)
 }
 

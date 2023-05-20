@@ -18,11 +18,6 @@ class DiffableTablePracticeViewController: UIViewController {
 
     struct Fruit: Hashable {
         let title: String
-        
-//        let id = UUID()
-//        func hash(into hasher: inout Hasher) {
-//            hasher.combine(id)
-//        }
     }
     
     override func viewDidLoad() {
@@ -63,7 +58,6 @@ class DiffableTablePracticeViewController: UIViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Section, Fruit>()
         snapshot.appendSections([.first])
         snapshot.appendItems(fruits)
-//        snapshot.appendItems(<#T##identifiers: [Fruit]##[Fruit]#>, toSection: <#T##Section?#>)
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 

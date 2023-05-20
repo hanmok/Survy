@@ -149,8 +149,6 @@ protocol OptionStackViewDelegate: AnyObject {
 
 extension ResponseOptionStackView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-//        endEditing(true)
         dismissKeyboard()
-//        return true
     }
 }

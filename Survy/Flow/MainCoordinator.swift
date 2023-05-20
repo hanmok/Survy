@@ -46,7 +46,8 @@ class MainCoordinator: Coordinator {
                 
             case .test:
 //                initialController = DiffableTablePracticeViewController()
-                initialController = DiffableCollectionViewPractice()
+//                initialController = DiffableCollectionViewPractice()
+                initialController = MVVMController()
         }
         
         navigationController?.setViewControllers([initialController], animated: false)

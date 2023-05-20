@@ -8,15 +8,19 @@
 import Foundation
 
 public struct SelectableOption {
-    public init(questionId: Int, position: Int, value: String? = nil, placeHolder: String? = nil) {
-        self.questionId = questionId
+    public init(position: Int, value: String? = nil, placeHolder: String? = nil) {
         self.position = position
         self.value = value
         self.placeHolder = placeHolder
     }
     
+    public init(postion: Int, value: String? = nil, placeHolder: String? = nil) {
+        self.position = postion
+        self.value = value
+        self.placeHolder = placeHolder
+    }
+    
     public let id: Int = Int.random(in: 0 ... 10000)
-    public let questionId: Int
     public let position: Int
     public var value: String? = nil
     public var placeHolder: String? = nil

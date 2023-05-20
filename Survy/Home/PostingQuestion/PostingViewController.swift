@@ -13,79 +13,25 @@ import Toast
 class PostingViewController: BaseViewController, Coordinating {
     
     var currentTags: [Tag] = []
+    
     var currentTargets: [Target] = []
     
     var coordinator: Coordinator?
-    
-    var numberOfQuestions: Int = 1
     
     var numOfSpecimen: Int = 100
     
     var postingService: PostingServiceType
     
-    enum Section {
-        case main
-    }
-    
-    private var selectedTargetsCollectionView: UICollectionView!
-    private var selectedTagsCollectionView: UICollectionView!
-    
     private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
     private var tagDataSource: UICollectionViewDiffableDataSource<Section, Tag>!
     
-    override func updateMyUI() {
-        if postingService.selectedTags != currentTags {
-            currentTags = postingService.selectedTags
-            var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
-            tagSnapshot.appendSections([.main])
-            tagSnapshot.appendItems(currentTags)
-            tagDataSource.apply(tagSnapshot)
-        }
-        
-        if postingService.selectedTargets != currentTargets {
-            currentTargets = postingService.selectedTargets
-            var targetSnapshot = NSDiffableDataSourceSnapshot<Section, Target>()
-            targetSnapshot.appendSections([.main])
-            targetSnapshot.appendItems(currentTargets)
-            self.targetDataSource.apply(targetSnapshot, animatingDifferences: true)
-        }
+    enum Section {
+        case main
     }
     
     public init(postingService: PostingServiceType) {
         self.postingService = postingService
         super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-   
-    
-    func createLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
-            layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
-            let contentSize = layoutEnvironment.container.effectiveContentSize
-            let columns = 5
-            let spacing = CGFloat(10)
-            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                  heightDimension: .fractionalHeight(1.0))
-            let item = NSCollectionLayoutItem(layoutSize: itemSize)
-            
-            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                                   heightDimension: .fractionalHeight(1.0))
-            
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
-            
-            group.interItemSpacing = .fixed(spacing)
-
-            let section = NSCollectionLayoutSection(group: group)
-            section.interGroupSpacing = spacing
-
-            return section
-        }
-        
-        return layout
     }
     
     override func viewDidLoad() {
@@ -100,56 +46,23 @@ class PostingViewController: BaseViewController, Coordinating {
         setupLayout()
         setupTargets()
         
-//        view.backgroundColor = UIColor(hex6: 0xF4F7FB)
-        
         view.backgroundColor = UIColor.postingVCBackground
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
         view.addGestureRecognizer(tapGesture)
         
         setupInitialSnapshot()
+    }
+    
+    // MARK: - CollectionView, TableView Setup
+    
+    private func registerPostingBlockCollectionView() {
+        postingBlockCollectionView.register(PostingBlockCollectionViewCell.self, forCellWithReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier)
         
-    }
-    
-    private func setupInitialSnapshot() {
+        postingBlockCollectionView.register(PostingBlockCollectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: PostingBlockCollectionFooterCell.reuseIdentifier)
         
-        var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
-        tagSnapshot.appendSections([.main])
-        tagSnapshot.appendItems(currentTags, toSection: .main)
-        tagDataSource.apply(tagSnapshot)
-        
-        var targetSnapshot = NSDiffableDataSourceSnapshot<Section, Target>()
-        targetSnapshot.appendSections([.main])
-        targetSnapshot.appendItems(currentTargets)
-        targetDataSource.apply(targetSnapshot)
-    }
-    
-    @objc func otherViewTapped() {
-        view.dismissKeyboard()
-    }
-    
-    private func setupTargets() {
-        requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
-        targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
-        categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
-    }
-    
-    @objc func targetTapped(_ sender: UIButton) {
-        coordinator?.manipulate(.targetSelection, command: .present)
-    }
-    
-    
-    @objc func categoryTapped(_ sender: UIButton) {
-        coordinator?.manipulate(.categorySelection, command: .present)
-    }
-    
-    @objc func requestSurveyTapped(_ sender: UIButton) {
-        coordinator?.move(to: .root) // toast Message
-    }
-    
-    private func setupNavigationBar() {
-        self.title = "설문 요청"
-        setupLeftNavigationBar()
+        postingBlockCollectionView.delegate = self
+        postingBlockCollectionView.dataSource = self
     }
     
     private func setupTopCollectionViews() {
@@ -181,14 +94,93 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
-    private func registerPostingBlockCollectionView() {
-        postingBlockCollectionView.register(PostingBlockCollectionViewCell.self, forCellWithReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier)
+    override func updateMyUI() {
+        if postingService.selectedTags != currentTags {
+            currentTags = postingService.selectedTags
+            var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+            tagSnapshot.appendSections([.main])
+            tagSnapshot.appendItems(currentTags)
+            tagDataSource.apply(tagSnapshot)
+        }
         
-        postingBlockCollectionView.register(PostingBlockCollectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: PostingBlockCollectionFooterCell.reuseIdentifier)
-        
-        postingBlockCollectionView.delegate = self
-        postingBlockCollectionView.dataSource = self
+        if postingService.selectedTargets != currentTargets {
+            currentTargets = postingService.selectedTargets
+            var targetSnapshot = NSDiffableDataSourceSnapshot<Section, Target>()
+            targetSnapshot.appendSections([.main])
+            targetSnapshot.appendItems(currentTargets)
+            self.targetDataSource.apply(targetSnapshot, animatingDifferences: true)
+        }
     }
+    
+    private func setupInitialSnapshot() {
+        var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
+        tagSnapshot.appendSections([.main])
+        tagSnapshot.appendItems(currentTags, toSection: .main)
+        tagDataSource.apply(tagSnapshot)
+        
+        var targetSnapshot = NSDiffableDataSourceSnapshot<Section, Target>()
+        targetSnapshot.appendSections([.main])
+        targetSnapshot.appendItems(currentTargets)
+        targetDataSource.apply(targetSnapshot)
+    }
+    
+    func createLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
+            layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
+//            let contentSize = layoutEnvironment.container.effectiveContentSize
+            let columns = 5
+            let spacing = CGFloat(10)
+            let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                  heightDimension: .fractionalHeight(1.0))
+            let item = NSCollectionLayoutItem(layoutSize: itemSize)
+            
+            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                   heightDimension: .fractionalHeight(1.0))
+            
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
+            
+            group.interItemSpacing = .fixed(spacing)
+
+            let section = NSCollectionLayoutSection(group: group)
+            section.interGroupSpacing = spacing
+
+            return section
+        }
+        return layout
+    }
+    
+    
+    // MARK: - Helper functions
+    
+    private func setupTargets() {
+        requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
+        targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
+        categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
+    }
+    
+    // MARK: - Button Actions
+    
+    @objc func otherViewTapped() {
+        view.dismissKeyboard()
+    }
+    
+    @objc func targetTapped(_ sender: UIButton) {
+        coordinator?.manipulate(.targetSelection, command: .present)
+    }
+    
+    @objc func categoryTapped(_ sender: UIButton) {
+        coordinator?.manipulate(.categorySelection, command: .present)
+    }
+    
+    @objc func requestSurveyTapped(_ sender: UIButton) {
+        coordinator?.move(to: .root) // toast Message
+    }
+    
+    @objc func dismissTapped() {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    // MARK: - Layout
     
     private func setupLayout() {
         [targetButton, categoryButton,
@@ -254,9 +246,22 @@ class PostingViewController: BaseViewController, Coordinating {
             make.top.equalTo(categoryButton.snp.bottom).offset(16)
             make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
         }
-        
-        
     }
+    
+    private func setupNavigationBar() {
+        self.title = "설문 요청"
+        setupLeftNavigationBar()
+    }
+    
+    private func setupLeftNavigationBar() {
+        let backButton = UIBarButtonItem(image: UIImage.leftChevron, style: .plain, target: self, action: #selector(dismissTapped))
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    // MARK: - Views
+    
+    private var selectedTargetsCollectionView: UICollectionView!
+    private var selectedTagsCollectionView: UICollectionView!
     
     private lazy var postingBlockCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -274,22 +279,10 @@ class PostingViewController: BaseViewController, Coordinating {
         collectionView.backgroundColor = .clear
         return collectionView
     }()
-    
-    private func setupLeftNavigationBar() {
-        let backButton = UIBarButtonItem(image: UIImage.leftChevron, style: .plain, target: self, action: #selector(dismissTapped))
-        self.navigationItem.leftBarButtonItem = backButton
-    }
-    
-    @objc func dismissTapped() {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    // MARK: - Views
 
     private let targetButton: UIButton = {
         let button = UIButton()
         let attributedString = NSAttributedString(string: "타겟층", attributes: [.foregroundColor: UIColor.systemBlue, .font: UIFont.systemFont(ofSize: 18, weight: .semibold)])
-        
         button.setAttributedTitle(attributedString, for: .normal)
         button.backgroundColor = UIColor(white: 0.9, alpha: 1)
         button.layer.cornerRadius = 6
@@ -299,9 +292,7 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private let categoryButton: UIButton = {
         let button = UIButton()
-        
         let attributedString = NSAttributedString(string: "관심사", attributes: [.foregroundColor: UIColor.systemBlue, .font: UIFont.systemFont(ofSize: 18, weight: .semibold)])
-        
         button.setAttributedTitle(attributedString, for: .normal)
         
         button.backgroundColor = UIColor(white: 0.9, alpha: 1)
@@ -331,17 +322,25 @@ class PostingViewController: BaseViewController, Coordinating {
         button.clipsToBounds = true
         return button
     }()
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return numberOfQuestions
+//        return postingService.numberOfQuestions
+        return max(postingService.numberOfQuestions, 1)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionViewCell
         cell.questionIndex = indexPath.row + 1
         cell.postingBlockCollectionViewDelegate = self
+        let currentIndex = postingService.numberOfQuestions + 1
+        let postingQuestion = PostingQuestion(index: currentIndex)
+        cell.postingQuestion = postingQuestion
         return cell
     }
     
@@ -370,11 +369,8 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         return CGSize(width: UIScreen.screenWidth - 40, height: 240)
     }
-    
-    
 }
 
 extension PostingViewController: PostingBlockCollectionViewCellDelegate {
@@ -392,7 +388,7 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
 
 extension PostingViewController: PostingBlockCollectionFooterDelegate {
     func addQuestionButtonTapped() {
-        numberOfQuestions += 1
+        postingService.addQuestion()
         DispatchQueue.main.async {
             self.postingBlockCollectionView.reloadData()
         }
