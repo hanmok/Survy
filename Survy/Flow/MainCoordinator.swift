@@ -106,19 +106,11 @@ class MainCoordinator: Coordinator {
                 
                 topViewController.addChild(vc)
                 topViewController.view.addSubview(vc.view)
-                
-                if type != .confirmation {
-                    vc.view.snp.makeConstraints { make in
-                        make.edges.equalTo(topViewController.view.layoutMarginsGuide)
-                    }
-                } else {
-                    vc.view.snp.makeConstraints { make in
-                        make.edges.equalToSuperview()
-                    }
+                vc.view.snp.makeConstraints { make in
+                    make.edges.equalToSuperview()
                 }
                 
             case (let type, .dismiss):
-                
                 guard let topViewController = navigationController?.topViewController else { fatalError() }
                 
                 topViewController.view.backgroundColor = UIColor.postingVCBackground

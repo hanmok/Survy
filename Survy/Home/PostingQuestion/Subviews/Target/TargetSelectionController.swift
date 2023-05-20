@@ -61,10 +61,12 @@ class TargetSelectionController: UIViewController, Coordinating {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .white
+//        view.backgroundColor = .white
+        view.backgroundColor = UIColor(white: 0.2, alpha: 0.9)
         
-        view.layer.cornerRadius = 10
-        view.clipsToBounds = true
+//        view.layer.cornerRadius = 10
+//        view.clipsToBounds = true
+        
         setupNavigationBar()
         setupTargets()
         
@@ -144,13 +146,26 @@ class TargetSelectionController: UIViewController, Coordinating {
         coordinator?.manipulate(.categorySelection, command: .dismiss)
     }
     
+    private let wholeContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.applyCornerRadius(on: .top, radius: 10)
+        return view
+    }()
+    
     private func setupLayout() {
+        self.view.addSubview(wholeContainerView)
+        
         [topViewContainer,
          separatorView,
          selectableTargetCollectionView,
-         completeButton].forEach { self.view.addSubview($0) }
+         completeButton].forEach { self.wholeContainerView.addSubview($0) }
         
         [topViewLabel, exitButton].forEach { self.topViewContainer.addSubview($0) }
+        
+        wholeContainerView.snp.makeConstraints { make in
+            make.edges.equalTo(view.layoutMarginsGuide)
+        }
         
         topViewContainer.snp.makeConstraints { make in
             make.leading.trailing.top.equalToSuperview()

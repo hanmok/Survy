@@ -19,7 +19,6 @@ class StartingNavigationController: UINavigationController {
     
     // MARK: - Properties
 
-//    private let disposeBag = DisposeBag()
 
     // MARK: - LifeCycle
     
