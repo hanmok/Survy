@@ -96,12 +96,20 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     public var questionTextField: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        
+//        textView.
+//        textView.
+//        textView.adjustsFontForContentSizeCategory
+//        textView.adjust
+//        textView.minimumZoomScale = 2
+        
         textView.text = "질문을 입력해주세요."
         textView.textColor = UIColor.lightGray
         textView.tag = -1
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.sizeToFit()
+        textView.textContainer.maximumNumberOfLines = 2
         textView.isScrollEnabled = false
         return textView
     }()

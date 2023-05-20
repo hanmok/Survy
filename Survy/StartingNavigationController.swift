@@ -6,9 +6,6 @@
 //
 
 import UIKit
-//import RxSwift
-//import RxCocoa
-//import Then
 import SnapKit
 import Toast
 /**
@@ -16,7 +13,7 @@ import Toast
  */
 class StartingNavigationController: UINavigationController {
 
-    public func toastMessage(title: String, message: String?) {
+    public func toastMessage(title: String, message: String? = nil) {
         self.view.makeToast(title, duration: 3, position: .top, title: nil, image: nil, style: .init()) { didTap in }
     }
     

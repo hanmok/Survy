@@ -15,9 +15,14 @@ protocol PostingServiceType: AnyObject {
     var postingQuestions: [PostingQuestion] { get set }
     var numberOfQuestions: Int { get }
     
+    var defaultMinimumCost: Int { get }
+    var expectedTimeInMin: Int { get }
+    var numberOfSpecimens: Int { get set }
+    var totalCost: Int { get }
+    
     func setTargets(_ targets: [Target])
     func setTags(_ tags: [Tag])
-    
+    func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
 }
 
@@ -28,6 +33,18 @@ class PostingService: PostingServiceType {
     func addQuestion() {
         let index = self.numberOfQuestions + 1
         postingQuestions.append(PostingQuestion(index: index))
+    }
+    var defaultMinimumCost: Int { return 300 }
+    var expectedTimeInMin: Int { return 2 }
+    
+    var numberOfSpecimens: Int = 100
+    
+    var totalCost: Int {
+        return numberOfSpecimens * defaultMinimumCost * expectedTimeInMin
+    }
+    
+    func setNumberOfSpecimens(_ num: Int) {
+        self.numberOfSpecimens = num
     }
     
     var numberOfQuestions: Int {

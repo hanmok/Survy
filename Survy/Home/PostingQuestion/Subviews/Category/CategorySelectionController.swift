@@ -140,6 +140,7 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         let selectedTagsArr = Array(selectedTags)
         postingService.setTags(selectedTagsArr)
+        
         coordinator?.manipulate(.categorySelection, command: .dismiss)
     }
     
@@ -215,7 +216,6 @@ class CategorySelectionController: UIViewController, Coordinating {
         button.clipsToBounds = true
         return button
     }()
-    
     
     private let topViewContainer: UIView = {
         let view = UIView()

@@ -80,6 +80,9 @@ class PostingViewController: BaseViewController, Coordinating {
         
         selectedTagsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         selectedTargetsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        
+        selectedTagsCollectionView.backgroundColor = .magenta
+        selectedTargetsCollectionView.backgroundColor = .cyan
     }
     
     private func configureTopDataSource() {
@@ -105,12 +108,14 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     override func updateMyUI() {
+        
         if postingService.selectedTags != currentTags {
             currentTags = postingService.selectedTags
             var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
             tagSnapshot.appendSections([.main])
             tagSnapshot.appendItems(currentTags)
             tagDataSource.apply(tagSnapshot)
+            
         }
         
         if postingService.selectedTargets != currentTargets {
@@ -120,7 +125,9 @@ class PostingViewController: BaseViewController, Coordinating {
             targetSnapshot.appendItems(currentTargets)
             self.targetDataSource.apply(targetSnapshot, animatingDifferences: true)
         }
+        
     }
+    
     
     private func setupInitialSnapshot() {
         var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
@@ -175,10 +182,12 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     @objc func targetTapped(_ sender: UIButton) {
+        view.dismissKeyboard()
         coordinator?.manipulate(.targetSelection, command: .present)
     }
     
     @objc func categoryTapped(_ sender: UIButton) {
+        view.dismissKeyboard()
         coordinator?.manipulate(.categorySelection, command: .present)
     }
     
@@ -191,7 +200,10 @@ class PostingViewController: BaseViewController, Coordinating {
                 print("options: \($0.value)")
             }
         }
-        coordinator?.move(to: .root) // toast Message
+        
+        coordinator?.manipulate(.confirmation, command: .present)
+        
+//        coordinator?.move(to: .root) // toast Message
     }
     
     @objc func dismissTapped() {
@@ -266,7 +278,8 @@ class PostingViewController: BaseViewController, Coordinating {
             make.top.equalTo(targetButton.snp.top)
             make.bottom.equalTo(targetButton.snp.bottom)
             make.leading.equalTo(targetButton.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().inset(10)
+//            make.trailing.equalToSuperview().inset(10)
+            make.width.equalTo(300)
         }
         selectedTargetsCollectionView.backgroundColor = .clear
         
@@ -284,7 +297,8 @@ class PostingViewController: BaseViewController, Coordinating {
             make.top.equalTo(categoryButton.snp.top)
             make.bottom.equalTo(categoryButton.snp.bottom)
             make.leading.equalTo(categoryButton.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().inset(10)
+//            make.trailing.equalToSuperview().inset(10)
+            make.width.equalTo(300)
         }
         selectedTagsCollectionView.backgroundColor = .clear
         
@@ -396,14 +410,10 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionViewCell
-        cell.questionIndex = indexPath.row + 1
+        
         cell.postingBlockCollectionViewDelegate = self
-        
-//        let currentIndex = postingService.numberOfQuestions + 1
-//        let postingQuestion = PostingQuestion(index: currentIndex)
-//        if postingService.postingQuestions
+        cell.questionIndex = indexPath.row + 1
         let postingQuestion = postingService.postingQuestions[indexPath.row]
-        
         cell.postingQuestion = postingQuestion
         
         return cell

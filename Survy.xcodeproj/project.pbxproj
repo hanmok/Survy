@@ -78,6 +78,7 @@
 		9AE2961A29D8474A00387883 /* UIButtonExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE2961929D8474A00387883 /* UIButtonExt+.swift */; };
 		9AF4AE2B2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF4AE2A2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift */; };
 		9AF935E92A1916D70002B15B /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9AF935E82A1916D70002B15B /* IQKeyboardManagerSwift */; };
+		9AF935EB2A1932FE0002B15B /* ConfirmationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935EA2A1932FE0002B15B /* ConfirmationController.swift */; };
 		A244B07D1065A7D42AFE5B2F /* Pods_SurvyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F266BDB675BE90E308F32F23 /* Pods_SurvyTests.framework */; };
 		A888A22CB2C6F95DB56C25D4 /* Pods_Survy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F1FC6319283DBA86EE1005 /* Pods_Survy.framework */; };
 /* End PBXBuildFile section */
@@ -166,6 +167,7 @@
 		9AE2961529D844CC00387883 /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
 		9AE2961929D8474A00387883 /* UIButtonExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButtonExt+.swift"; sourceTree = "<group>"; };
 		9AF4AE2A2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableTablePracticeViewController.swift; sourceTree = "<group>"; };
+		9AF935EA2A1932FE0002B15B /* ConfirmationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationController.swift; sourceTree = "<group>"; };
 		E1F1FC6319283DBA86EE1005 /* Pods_Survy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Survy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAC2768CE42E7DF5BCF61527 /* Pods-SurvyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SurvyTests.debug.xcconfig"; path = "Target Support Files/Pods-SurvyTests/Pods-SurvyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F266BDB675BE90E308F32F23 /* Pods_SurvyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SurvyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -280,6 +282,7 @@
 				9A6114CD2A074B870051FF2B /* PostingSelectionButton.swift */,
 				9A6114CF2A074E520051FF2B /* PostingQuestionOptionStackView.swift */,
 				9A6114D82A07F1F80051FF2B /* PostingSelectableOptionStackView.swift */,
+				9AF935EA2A1932FE0002B15B /* ConfirmationController.swift */,
 				9ACD1C202A1274470085D43E /* Target */,
 				9ACD1C1F2A1274390085D43E /* Category */,
 			);
@@ -624,6 +627,7 @@
 				9A6114CA2A069D6B0051FF2B /* UIStackViewExt+.swift in Sources */,
 				9A6114D92A07F1F80051FF2B /* PostingSelectableOptionStackView.swift in Sources */,
 				9A6114542A0297920051FF2B /* MainCoordinator.swift in Sources */,
+				9AF935EB2A1932FE0002B15B /* ConfirmationController.swift in Sources */,
 				9AE295D229D6F81400387883 /* AppDelegate.swift in Sources */,
 				9ACD1C222A1278CD0085D43E /* SelectableTargetCell.swift in Sources */,
 				9ACD1C282A13AE320085D43E /* PostingService.swift in Sources */,

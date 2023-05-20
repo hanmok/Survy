@@ -24,6 +24,7 @@ protocol Coordinator {
 enum ChildView {
     case categorySelection
     case targetSelection
+    case confirmation
 }
 
 enum Command {

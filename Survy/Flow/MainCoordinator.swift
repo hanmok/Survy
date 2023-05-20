@@ -8,6 +8,7 @@
 import UIKit
 import Model
 import SnapKit
+import Toast
 
 enum InitialScreen {
     case mainTab
@@ -47,7 +48,9 @@ class MainCoordinator: Coordinator {
             case .test:
 //                initialController = DiffableTablePracticeViewController()
 //                initialController = DiffableCollectionViewPractice()
-                initialController = MVVMController()
+//                initialController = MVVMController()
+                
+                initialController = ConfirmationController(postingService: self.provider.postingService)
         }
         
         navigationController?.setViewControllers([initialController], animated: false)
@@ -86,11 +89,16 @@ class MainCoordinator: Coordinator {
             case (let type, .present):
                 var vc: UIViewController & Coordinating
                 // 나중에 또 쓰일 수 있으므로 if 로 분리해놓음.
-                if type == .targetSelection {
-                    vc = TargetSelectionController(postingService: self.provider.postingService)
-                } else { // categorySelection
-                    vc = CategorySelectionController(postingService: self.provider.postingService)
+
+                switch type {
+                    case .categorySelection:
+                        vc = CategorySelectionController(postingService: self.provider.postingService)
+                    case .targetSelection:
+                        vc = TargetSelectionController(postingService: self.provider.postingService)
+                    case .confirmation:
+                        vc = ConfirmationController(postingService: self.provider.postingService)
                 }
+                
                 vc.coordinator = self
                 
                 guard let topViewController = navigationController?.topViewController else { return }
@@ -98,21 +106,39 @@ class MainCoordinator: Coordinator {
                 
                 topViewController.addChild(vc)
                 topViewController.view.addSubview(vc.view)
-                vc.view.snp.makeConstraints { make in
-                    make.edges.equalTo(topViewController.view.layoutMarginsGuide)
+                
+                if type != .confirmation {
+                    vc.view.snp.makeConstraints { make in
+                        make.edges.equalTo(topViewController.view.layoutMarginsGuide)
+                    }
+                } else {
+                    vc.view.snp.makeConstraints { make in
+                        make.edges.equalToSuperview()
+                    }
                 }
                 
-            case (_, .dismiss):
-                guard let topViewController = navigationController?.topViewController else { return }
+            case (let type, .dismiss):
+                
+                guard let topViewController = navigationController?.topViewController else { fatalError() }
+                
                 topViewController.view.backgroundColor = UIColor.postingVCBackground
                 topViewController.children.forEach {
                     $0.willMove(toParent: nil)
                     $0.view.removeFromSuperview()
                     $0.removeFromParent()
                 }
+                
                 guard let postingViewController = topViewController as? BaseViewController else { fatalError() }
-                postingViewController.updateMyUI()
-                navigationController?.setNavigationBarHidden(false, animated: false)
+                
+                if type == .confirmation {
+                    Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                        self.move(to: .root)
+                        self.navigationController?.toastMessage(title: "설문이 요청되었습니다.")
+                    }
+                } else {
+                    postingViewController.updateMyUI()
+                    navigationController?.setNavigationBarHidden(false, animated: false)
+                }
         }
     }
 }
