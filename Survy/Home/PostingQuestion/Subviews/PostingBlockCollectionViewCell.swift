@@ -28,38 +28,10 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func setupNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-    
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
-            let keyboardHeight = keyboardRectangle.height
-//            todoInputBoxView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight - self.inputBoxHeight)
-            UIView.animate(withDuration: 0.2) {
-//                self.view.layoutIfNeeded()
-                self.layoutIfNeeded()
-            }
-        }
-    }
-    
-    @objc func keyboardWillHide(_ notification: Notification) {
-//        todoInputBoxView.transform = CGAffineTransform(translationX: 0, y: 0)
-        
-        UIView.animate(withDuration: 0.2) {
-            self.layoutIfNeeded()
-        }
-        
-//        todoTitleTextField.text = ""
-    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupDelegate()
         setupLayout()
-        setupNotifications()
     }
     
     private func setupDelegate() {

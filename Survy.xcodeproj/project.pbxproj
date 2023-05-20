@@ -77,6 +77,7 @@
 		9AE2961629D844CC00387883 /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE2961529D844CC00387883 /* PaddedLabel.swift */; };
 		9AE2961A29D8474A00387883 /* UIButtonExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE2961929D8474A00387883 /* UIButtonExt+.swift */; };
 		9AF4AE2B2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF4AE2A2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift */; };
+		9AF935E92A1916D70002B15B /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9AF935E82A1916D70002B15B /* IQKeyboardManagerSwift */; };
 		A244B07D1065A7D42AFE5B2F /* Pods_SurvyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F266BDB675BE90E308F32F23 /* Pods_SurvyTests.framework */; };
 		A888A22CB2C6F95DB56C25D4 /* Pods_Survy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F1FC6319283DBA86EE1005 /* Pods_Survy.framework */; };
 /* End PBXBuildFile section */
@@ -180,6 +181,7 @@
 				9A6113CA29FBD1140051FF2B /* Alamofire in Frameworks */,
 				9A6114DC2A08C83A0051FF2B /* Toast in Frameworks */,
 				A888A22CB2C6F95DB56C25D4 /* Pods_Survy.framework in Frameworks */,
+				9AF935E92A1916D70002B15B /* IQKeyboardManagerSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -449,6 +451,7 @@
 				9AE295F529D702EF00387883 /* SnapKit */,
 				9A6113C929FBD1140051FF2B /* Alamofire */,
 				9A6114DB2A08C83A0051FF2B /* Toast */,
+				9AF935E82A1916D70002B15B /* IQKeyboardManagerSwift */,
 			);
 			productName = Survy;
 			productReference = 9AE295CE29D6F81400387883 /* Survy.app */;
@@ -505,6 +508,7 @@
 				9AE295F429D702EF00387883 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				9A6113C829FBD1140051FF2B /* XCRemoteSwiftPackageReference "Alamofire" */,
 				9A6114DA2A08C83A0051FF2B /* XCRemoteSwiftPackageReference "Toast-Swift" */,
+				9AF935E72A1916D70002B15B /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
 			);
 			productRefGroup = 9AE295CF29D6F81400387883 /* Products */;
 			projectDirPath = "";
@@ -952,6 +956,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		9AF935E72A1916D70002B15B /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
+			requirement = {
+				kind = exactVersion;
+				version = 6.5.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -969,6 +981,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9AE295F429D702EF00387883 /* XCRemoteSwiftPackageReference "SnapKit" */;
 			productName = SnapKit;
+		};
+		9AF935E82A1916D70002B15B /* IQKeyboardManagerSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9AF935E72A1916D70002B15B /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
+			productName = IQKeyboardManagerSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
