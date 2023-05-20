@@ -25,6 +25,7 @@ class PostingViewController: BaseViewController, Coordinating {
     private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
     private var tagDataSource: UICollectionViewDiffableDataSource<Section, Tag>!
     
+    let marginSize = 12
     enum Section {
         case main
     }
@@ -34,6 +35,10 @@ class PostingViewController: BaseViewController, Coordinating {
         super.init(nibName: nil, bundle: nil)
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: UIScreen.screenHeight * 3)
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -196,46 +201,27 @@ class PostingViewController: BaseViewController, Coordinating {
     // MARK: - Layout
     
     private func setupLayout() {
-        [targetButton, categoryButton,
-         selectedTargetsCollectionView,
-         selectedTagsCollectionView,
+        [
+//        targetButton, categoryButton,
+//         selectedTargetsCollectionView,
+//         selectedTagsCollectionView,
+//        postingBlockCollectionView,
+            scrollView,
          expectedTimeGuideLabel, expectedTimeResultLabel,
-         requestingButton,
-         postingBlockCollectionView].forEach {
+         requestingButton
+         ].forEach {
             self.view.addSubview($0)
         }
         
-        targetButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-            make.leading.equalTo(view.layoutMarginsGuide)
-            make.height.equalTo(26)
+        [
+            targetButton, categoryButton,
+            selectedTargetsCollectionView,
+            selectedTagsCollectionView,
+            postingBlockCollectionView
+        ].forEach {
+            self.scrollView.addSubview($0)
         }
         
-        targetButton.addSmallerInsets()
-        
-        selectedTargetsCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(targetButton.snp.top)
-            make.bottom.equalTo(targetButton.snp.bottom)
-            make.leading.equalTo(targetButton.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().inset(10)
-        }
-        selectedTargetsCollectionView.backgroundColor = .clear
-        
-        categoryButton.snp.makeConstraints { make in
-            make.top.equalTo(targetButton.snp.bottom).offset(16)
-            make.leading.equalTo(view.layoutMarginsGuide)
-            make.height.equalTo(26)
-        }
-        
-        categoryButton.addSmallerInsets()
-        
-        selectedTagsCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(categoryButton.snp.top)
-            make.bottom.equalTo(categoryButton.snp.bottom)
-            make.leading.equalTo(categoryButton.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().inset(10)
-        }
-        selectedTagsCollectionView.backgroundColor = .clear
         
         requestingButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -254,8 +240,64 @@ class PostingViewController: BaseViewController, Coordinating {
             make.bottom.equalTo(expectedTimeResultLabel.snp.bottom)
         }
         
+        scrollView.snp.makeConstraints { make in
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+//            make.leading.equalTo(view.layoutMarginsGuide)
+            make.leading.equalToSuperview()
+//            make.width.equalTo(UIScreen.screenWidth - 40)
+            make.width.equalTo(UIScreen.screenWidth)
+            make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
+        }
+        
+//        postingBlockCollectionView.collectionViewLayout.collectionViewContentSize.height
+        
+        targetButton.snp.makeConstraints { make in
+//            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+//            make.leading.equalTo(view.layoutMarginsGuide)
+//            make.top.leading.equalToSuperview()
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().inset(20)
+            make.height.equalTo(26)
+        }
+        
+        targetButton.addSmallerInsets()
+        
+        selectedTargetsCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(targetButton.snp.top)
+            make.bottom.equalTo(targetButton.snp.bottom)
+            make.leading.equalTo(targetButton.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().inset(10)
+        }
+        selectedTargetsCollectionView.backgroundColor = .clear
+        
+        categoryButton.snp.makeConstraints { make in
+            make.top.equalTo(targetButton.snp.bottom).offset(20)
+//            make.leading.equalTo(view.layoutMarginsGuide)
+//            make.leading.equalToSuperview()
+            make.leading.equalToSuperview().inset(20)
+            make.height.equalTo(26)
+        }
+        
+        categoryButton.addSmallerInsets()
+        
+        selectedTagsCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(categoryButton.snp.top)
+            make.bottom.equalTo(categoryButton.snp.bottom)
+            make.leading.equalTo(categoryButton.snp.trailing).offset(10)
+            make.trailing.equalToSuperview().inset(10)
+        }
+        selectedTagsCollectionView.backgroundColor = .clear
+        
+        
+        
         postingBlockCollectionView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+//            make.leading.trailing.equalToSuperview()
+//            make.leading.equalToSuperview()
+//            make.width.equalToSuperview()
+//            make.leading.equalToSuperview().inset(20)
+            make.leading.equalToSuperview()
+//            make.width.equalTo(UIScreen.screenWidth - 40)
+            make.width.equalTo(UIScreen.screenWidth)
             make.top.equalTo(categoryButton.snp.bottom).offset(16)
             make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
         }
@@ -273,13 +315,19 @@ class PostingViewController: BaseViewController, Coordinating {
     
     // MARK: - Views
     
+    private let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        return scrollView
+    }()
+    
     private var selectedTargetsCollectionView: UICollectionView!
     private var selectedTagsCollectionView: UICollectionView!
     
     private lazy var postingBlockCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 12
-        layout.scrollDirection = .vertical
+//        layout.scrollDirection = .vertical
+        
         
         let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         let anotherLayout = UICollectionViewCompositionalLayout.list(using: configuration)
@@ -288,7 +336,7 @@ class PostingViewController: BaseViewController, Coordinating {
         someConfig.scrollDirection = .vertical
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    
+        collectionView.isScrollEnabled = false
         collectionView.backgroundColor = .clear
         return collectionView
     }()
@@ -386,7 +434,9 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: UIScreen.screenWidth - 40, height: 240)
+        // selectableStackView 내 갯수에 따라 변할 수 있어야 함.
+//        return CGSize(width: UIScreen.screenWidth - 40, height: 240)
+        return CGSize(width: UIScreen.screenWidth - 40, height: 150)
     }
 }
 

@@ -59,10 +59,12 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         
         [singleSelection1, singleSelection2, singleSelection3, singleSelection4].forEach { self.questionTypeOptionStackView.addPostingSingleSelectionButton($0)}
         
+        
         indexLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
             make.leading.equalToSuperview().offset(20)
-            make.width.equalTo(15)
+//            make.width.equalTo(15)
+            make.width.equalTo(20)
         }
         
         questionTextField.snp.makeConstraints { make in
@@ -86,15 +88,22 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     private let indexLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+//        label.backgroundColor = .cyan
         return label
     }()
     
-    public var questionTextField: UITextField = {
-        let textField = UITextField()
-        textField.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        textField.placeholder = "질문을 입력해주세요."
-        textField.tag = -1
-        return textField
+//    public var questionTextField: UITextField = {
+    public var questionTextField: UITextView = {
+        let textView = UITextView()
+        textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        textView.text = "질문을 입력해주세요."
+        textView.textColor = UIColor.lightGray
+        textView.tag = -1
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.sizeToFit()
+        textView.isScrollEnabled = false
+        return textView
     }()
     
     private var singleSelection1: PostingSelectionButton = {
@@ -227,6 +236,34 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
                 
             default: // 단답형, 서술형
                 dismissKeyboard() // dismissKeyboard
+        }
+    }
+}
+
+
+extension PostingBlockCollectionViewCell: UITextViewDelegate {
+    func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
+        guard let text = textView.text else { return true }
+        
+        // FIXME: 음.. 질문을 입력한 후 return 을 눌러도 여기가 호출됨. 그리고, 중간 수정을 하는 경우 어떤 값인지 알 수가 없음. 따라서, Tag 를 넣어줘야함. question: tag: -1
+        guard let postingQuestion = postingQuestion else { fatalError() }
+//        postingQuestion.question = text
+        postingQuestion.updateQuestion(text: text)
+        
+        return dismissKeyboard()
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.textColor == UIColor.lightGray {
+            textView.text = nil
+            textView.textColor = .black
+        }
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = "질문을 입력해주세요."
+            textView.textColor = UIColor.lightGray
         }
     }
 }
