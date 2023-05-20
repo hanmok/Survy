@@ -36,6 +36,11 @@ class PostingViewController: BaseViewController, Coordinating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        if postingService.numberOfQuestions == 0 {
+            postingService.addQuestion()
+        }
+        
         registerPostingBlockCollectionView()
         
         setupTopCollectionViews()
@@ -173,6 +178,14 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     @objc func requestSurveyTapped(_ sender: UIButton) {
+        print("current PostingQuestions: ")
+        print("number of Questions: \(postingService.numberOfQuestions)")
+        postingService.postingQuestions.forEach {
+            print("question: \($0.question), questionType: \($0.briefQuestionType)")
+            $0.selectableOptions.forEach {
+                print("options: \($0.value)")
+            }
+        }
         coordinator?.move(to: .root) // toast Message
     }
     
@@ -330,7 +343,6 @@ class PostingViewController: BaseViewController, Coordinating {
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return postingService.numberOfQuestions
         return max(postingService.numberOfQuestions, 1)
     }
     
@@ -338,9 +350,14 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionViewCell
         cell.questionIndex = indexPath.row + 1
         cell.postingBlockCollectionViewDelegate = self
-        let currentIndex = postingService.numberOfQuestions + 1
-        let postingQuestion = PostingQuestion(index: currentIndex)
+        
+//        let currentIndex = postingService.numberOfQuestions + 1
+//        let postingQuestion = PostingQuestion(index: currentIndex)
+//        if postingService.postingQuestions
+        let postingQuestion = postingService.postingQuestions[indexPath.row]
+        
         cell.postingQuestion = postingQuestion
+        
         return cell
     }
     

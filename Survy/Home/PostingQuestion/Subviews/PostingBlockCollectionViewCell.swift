@@ -28,10 +28,38 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+//            todoInputBoxView.transform = CGAffineTransform(translationX: 0, y: -keyboardHeight - self.inputBoxHeight)
+            UIView.animate(withDuration: 0.2) {
+//                self.view.layoutIfNeeded()
+                self.layoutIfNeeded()
+            }
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+//        todoInputBoxView.transform = CGAffineTransform(translationX: 0, y: 0)
+        
+        UIView.animate(withDuration: 0.2) {
+            self.layoutIfNeeded()
+        }
+        
+//        todoTitleTextField.text = ""
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupDelegate()
         setupLayout()
+        setupNotifications()
     }
     
     private func setupDelegate() {
@@ -182,7 +210,8 @@ extension PostingBlockCollectionViewCell: UITextFieldDelegate {
         
         // FIXME: 음.. 질문을 입력한 후 return 을 눌러도 여기가 호출됨. 그리고, 중간 수정을 하는 경우 어떤 값인지 알 수가 없음. 따라서, Tag 를 넣어줘야함. question: tag: -1
         guard let postingQuestion = postingQuestion else { fatalError() }
-        postingQuestion.question = text
+//        postingQuestion.question = text
+        postingQuestion.updateQuestion(text: text)
         
         return dismissKeyboard()
     }

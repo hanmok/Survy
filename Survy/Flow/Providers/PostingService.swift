@@ -31,7 +31,6 @@ class PostingService: PostingServiceType {
     }
     
     var numberOfQuestions: Int {
-//        return max(postingQuestions.count, 1)
         return postingQuestions.count
     }
     
@@ -78,6 +77,5 @@ public class PostingQuestion {
     public func addSelectableOption(selectableOption: SelectableOption) {
         print("type: \(type(of: self)), numOfSelectableOptions: \(self.selectableOptions.count)")
         self.selectableOptions.append(selectableOption)
-        
     }
 }
