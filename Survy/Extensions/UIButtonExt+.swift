@@ -16,6 +16,7 @@ extension UIButton {
     func addSmallerInsets(top: CGFloat = 4.0, bottom: CGFloat = 4.0, left: CGFloat = 6.0, right: CGFloat = 6.0) {
         self.contentEdgeInsets = UIEdgeInsets(top: top, left: left, bottom: bottom, right: right)
     }
+    
     func setTitleWithImage(image: UIImage, title: String) {
         let attachment:NSTextAttachment = NSTextAttachment()
         attachment.image = image

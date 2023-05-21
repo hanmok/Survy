@@ -64,7 +64,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     private func setupLayout() {
         addSubview(backgroundCircularView)
         backgroundCircularView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalToSuperview().inset(6)
         }
         
         addSubview(categoryButton)

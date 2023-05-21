@@ -14,13 +14,20 @@ class HomeViewController: UIViewController, Coordinating {
     var participationService: ParticipationServiceType
     var userService: UserServiceType
     var coordinator: Coordinator?
-
+    
+    var hasCategoryPinnedToTheTop = false
+    
     var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
-    var currentSurveySnapshot: NSDiffableDataSourceSnapshot<Section, Survey>! = nil
     
     enum Section {
         case main
     }
+    
+    var topViewHeightConstraint: NSLayoutConstraint?
+// viewheight: categoryHeight (50)
+    
+    private var isAnimationInProgress = false
+    
     
     private let categoryHeight: CGFloat = 50
     
@@ -39,11 +46,15 @@ class HomeViewController: UIViewController, Coordinating {
         configureDataSource()
         updateUI()
         
+        setupDelegates()
         setupTargets()
         setupCollectionView()
         setupLayout()
         
         view.backgroundColor = UIColor.mainBackgroundColor
+    }
+    private func setupDelegates() {
+        wholeScrollView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -80,12 +91,11 @@ class HomeViewController: UIViewController, Coordinating {
     }
     
     private func updateUI() {
-        currentSurveySnapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
-        currentSurveySnapshot.appendSections([.main])
+        var snapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(participationService.surveysToShow)
         
-        currentSurveySnapshot.appendItems(participationService.surveysToShow)
-        
-        self.surveyDataSource.apply(currentSurveySnapshot)
+        self.surveyDataSource.apply(snapshot)
     }
     
     private func setupTargets() {
@@ -97,16 +107,34 @@ class HomeViewController: UIViewController, Coordinating {
     }
     
     private func setupLayout() {
-        navigationItem.titleView = UIView()
+//        navigationItem.titleView = UIView()
 //        navigationController?.hidesBarsOnTap = true
+//        navigationItem.titleView?.isHidden = true
+        
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
+        self.view.addSubview(wholeScrollView)
+        self.view.addSubview(requestingButton)
+        self.view.addSubview(topCoverView)
+        topCoverView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(40)
+        }
         
         [
-         collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView, requestingButton].forEach { self.view.addSubview($0) }
+         collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView].forEach {
+             self.wholeScrollView.addSubview($0)
+         }
+        
+        wholeScrollView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-tabbarHeight - 50)
+        }
         
         collectedRewardLabel.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(20)
+            make.leading.equalToSuperview().offset(UIScreen.screenWidth - 12 - 100)
             make.height.equalTo(28)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(-40)
+            make.top.equalToSuperview()
         }
         
         categorySelectionButton.snp.makeConstraints { make in
@@ -117,21 +145,28 @@ class HomeViewController: UIViewController, Coordinating {
         }
         
         categoryCollectionView.snp.makeConstraints { make in
-            make.centerY.equalTo(categorySelectionButton.snp.centerY)
-            make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
-            make.trailing.equalToSuperview().inset(12)
+            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
+//            make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
+//            make.width.equalTo(UIScreen.screenWidth - 24)
+            make.leading.equalTo(categorySelectionButton.snp.trailing)
+            make.width.equalTo(UIScreen.screenWidth * 5 / 6)
             make.height.equalTo(categorySelectionButton.snp.height)
         }
         
         requestingButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-tabbarHeight)
             make.height.equalTo(50)
-            make.leading.trailing.equalToSuperview()
+//            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.width.equalTo(UIScreen.screenWidth)
         }
         
         surveyTableView.snp.makeConstraints { make in
-            make.top.equalTo(categoryCollectionView.snp.bottom).offset(20)
-            make.leading.trailing.equalToSuperview()
+//            make.top.equalTo(categoryCollectionView.snp.bottom).offset(20)
+            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(categoryHeight + 20)
+//            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.width.equalTo(UIScreen.screenWidth)
             make.bottom.equalTo(requestingButton.snp.top)
         }
         
@@ -146,6 +181,17 @@ class HomeViewController: UIViewController, Coordinating {
     }
     
     // MARK: - Views
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        wholeScrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: UIScreen.screenHeight * 3)
+    }
+    
+    private let wholeScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        return scrollView
+    }()
+    
     private let requestingButton: UIButton = {
         let button = UIButton()
         let attributedTitle = NSAttributedString(string: "설문 요청", attributes: [.font: UIFont.systemFont(ofSize: 20, weight: .semibold), .foregroundColor: UIColor.white, .paragraphStyle: NSMutableParagraphStyle.centerAlignment])
@@ -173,6 +219,10 @@ class HomeViewController: UIViewController, Coordinating {
         let button = UIButton()
         button.setTitle("선택", for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .mainBackgroundColor
+//        button.inset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+//        button.addInsets(top: 8, bottom: 12, left: 8, right: 12)
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         return button
     }()
     
@@ -183,6 +233,8 @@ class HomeViewController: UIViewController, Coordinating {
         layout.itemSize = CGSize(width: UIScreen.screenWidth / 6, height: categoryHeight)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .mainBackgroundColor
+        collectionView.isScrollEnabled = false
+//        collectionView.contentInset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         return collectionView
     }()
     
@@ -190,7 +242,16 @@ class HomeViewController: UIViewController, Coordinating {
         let tableView = UITableView()
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
+        tableView.allowsSelection = false
+        tableView.isScrollEnabled = false
         return tableView
+    }()
+    
+    private let topCoverView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .mainBackgroundColor
+        view.isHidden = true
+        return view
     }()
     
     required init?(coder: NSCoder) {
@@ -208,7 +269,7 @@ extension HomeViewController: UITableViewDelegate {
 
         let estimatedFrame2 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 13)], context: nil)
 
-        let estimatedFrame3 = NSString(string: surveys[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
+        let estimatedFrame3 = NSString(string: participationService.surveysToShow[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
         
         // 12 + 10 + 12 + 20 + 12
         let spacings: CGFloat = 66
@@ -240,7 +301,6 @@ extension HomeViewController: CategoryCellDelegate {
     func categoryTapped(category: String, selected: Bool) {
         participationService.toggleCategory(category)
         updateUI()
-        
     }
 }
 
@@ -249,5 +309,108 @@ extension HomeViewController: SurveyTableViewDelegate {
         guard let selectedSurvey = cell.survey else { fatalError() }
         participationService.currentSurvey = selectedSurvey
         coordinator?.move(to: .questionController)
+    }
+}
+
+extension HomeViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        scrollView.contentOffset
+        print("contentOffset: \(scrollView.contentOffset), scrollView: \(scrollView)")
+        
+        let edgeHeight: CGFloat = 24.0
+        if scrollView.contentOffset.y > edgeHeight && hasCategoryPinnedToTheTop == false {
+            print("case 1")
+            topCoverView.isHidden = false
+            hasCategoryPinnedToTheTop = true
+            
+            // TODO: pin to the top
+            [categorySelectionButton, categoryCollectionView].forEach {
+                $0.removeFromSuperview()
+                self.view.addSubview($0)
+            }
+            
+            self.view.addSubview(topCoverView)
+            
+            
+            
+            categorySelectionButton.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(40)
+                make.leading.equalToSuperview()
+                make.width.equalTo(UIScreen.screenWidth / 6)
+                make.height.equalTo(categoryHeight)
+            }
+            
+            categoryCollectionView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(40)
+                make.leading.equalTo(categorySelectionButton.snp.trailing)
+                make.width.equalTo(UIScreen.screenWidth * 5 / 6)
+                make.height.equalTo(categoryHeight)
+            }
+            
+        } else if scrollView.contentOffset.y <= edgeHeight && hasCategoryPinnedToTheTop == true {
+            topCoverView.isHidden = true
+            print("case 2")
+            hasCategoryPinnedToTheTop = false
+            
+            [categorySelectionButton, categoryCollectionView].forEach {
+                $0.removeFromSuperview()
+                self.wholeScrollView.addSubview($0)
+            }
+            
+            categorySelectionButton.snp.makeConstraints { make in
+                make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
+                make.leading.equalToSuperview()
+                make.width.equalTo(UIScreen.screenWidth / 6)
+                make.height.equalTo(categoryHeight)
+            }
+            
+            categoryCollectionView.snp.makeConstraints { make in
+                make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
+//                make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
+//                make.width.equalTo(UIScreen.screenWidth - 24)
+                make.leading.equalTo(categorySelectionButton.snp.trailing)
+                make.width.equalTo(UIScreen.screenWidth * 5 / 6)
+                make.height.equalTo(categorySelectionButton.snp.height)
+            }
+        }
+        
+        // Check if the animation is locked or not
+//        if !isAnimationInProgress {
+//
+//            guard let topViewHeightConstraint = topViewHeightConstraint
+//            else { return }
+//
+//            // Check if an animation is required
+//            if scrollView.contentOffset.y > .zero &&
+//                topViewHeightConstraint.constant > .zero {
+//
+//                topViewHeightConstraint.constant = .zero
+//                animateTopViewHeight()
+//            }
+//            else if scrollView.contentOffset.y <= .zero
+//                        && topViewHeightConstraint.constant <= .zero {
+//
+//                topViewHeightConstraint.constant = categoryHeight
+//                animateTopViewHeight()
+//            }
+//        }
+    }
+    
+    // Animate the top view
+    private func animateTopViewHeight() {
+        
+        // Lock the animation functionality
+        isAnimationInProgress = true
+        
+        UIView.animate(withDuration: 0.2) {
+            
+            self.view.layoutIfNeeded()
+            
+        } completion: { [weak self] (_) in
+            
+            // Unlock the animation functionality
+            self?.isAnimationInProgress = false
+        }
     }
 }

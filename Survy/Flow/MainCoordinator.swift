@@ -50,10 +50,13 @@ class MainCoordinator: Coordinator {
 //                initialController = DiffableCollectionViewPractice()
 //                initialController = MVVMController()
                 
-                initialController = ConfirmationController(postingService: self.provider.postingService)
+//                initialController = ConfirmationController(postingService: self.provider.postingService)
+//                initialController = ViewController6()
+                initialController = ViewController6()
         }
         
         navigationController?.setViewControllers([initialController], animated: false)
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     public func testSetup() {

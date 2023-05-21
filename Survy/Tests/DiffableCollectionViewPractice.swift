@@ -89,15 +89,10 @@ class DiffableCollectionViewPractice: UIViewController {
     }
     
     private func setupInitialValues() {
-        
         var snapShot = NSDiffableDataSourceSnapshot<Section, MyItem>()
-//        snapShot.appendSections([.gender, .age, .location])
         snapShot.appendSections([.main])
         let items: [MyItem] = [MyItem(name: "hi"), MyItem(name: "bye")]
         snapShot.appendItems(items)
-//        snapShot.appendItems(genders, toSection: .gender)
-//        snapShot.appendItems(ages, toSection: .age)
-//        snapShot.appendItems(locations, toSection: .location)
         myDataSource.apply(snapShot)
     }
 }
