@@ -81,6 +81,7 @@
 		9AF935EB2A1932FE0002B15B /* ConfirmationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935EA2A1932FE0002B15B /* ConfirmationController.swift */; };
 		9AF935EE2A1A6FAE0002B15B /* ScrollViewController6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935ED2A1A6FAE0002B15B /* ScrollViewController6.swift */; };
 		9AF935F02A1A70100002B15B /* ScrollViewController7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935EF2A1A70100002B15B /* ScrollViewController7.swift */; };
+		9AF935F22A1A7CB90002B15B /* CompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935F12A1A7CB90002B15B /* CompleteViewController.swift */; };
 		A244B07D1065A7D42AFE5B2F /* Pods_SurvyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F266BDB675BE90E308F32F23 /* Pods_SurvyTests.framework */; };
 		A888A22CB2C6F95DB56C25D4 /* Pods_Survy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1F1FC6319283DBA86EE1005 /* Pods_Survy.framework */; };
 /* End PBXBuildFile section */
@@ -172,6 +173,7 @@
 		9AF935EA2A1932FE0002B15B /* ConfirmationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationController.swift; sourceTree = "<group>"; };
 		9AF935ED2A1A6FAE0002B15B /* ScrollViewController6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController6.swift; sourceTree = "<group>"; };
 		9AF935EF2A1A70100002B15B /* ScrollViewController7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController7.swift; sourceTree = "<group>"; };
+		9AF935F12A1A7CB90002B15B /* CompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteViewController.swift; sourceTree = "<group>"; };
 		E1F1FC6319283DBA86EE1005 /* Pods_Survy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Survy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAC2768CE42E7DF5BCF61527 /* Pods-SurvyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SurvyTests.debug.xcconfig"; path = "Target Support Files/Pods-SurvyTests/Pods-SurvyTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F266BDB675BE90E308F32F23 /* Pods_SurvyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SurvyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -262,6 +264,7 @@
 				9A6114BD2A0500110051FF2B /* SingleChoiceResponseButton.swift */,
 				9A6114C12A050A100051FF2B /* MultipleChoiceResponseButton.swift */,
 				9A6114BF2A0508620051FF2B /* ResponseOptionStackView.swift */,
+				9AF935F12A1A7CB90002B15B /* CompleteViewController.swift */,
 			);
 			path = RespondingQuestion;
 			sourceTree = "<group>";
@@ -647,6 +650,7 @@
 				9ACD1C222A1278CD0085D43E /* SelectableTargetCell.swift in Sources */,
 				9ACD1C282A13AE320085D43E /* PostingService.swift in Sources */,
 				9A61151C2A092BF40051FF2B /* CategorySelectionController.swift in Sources */,
+				9AF935F22A1A7CB90002B15B /* CompleteViewController.swift in Sources */,
 				9A6114D72A07E5BA0051FF2B /* SelectableOptionFieldView.swift in Sources */,
 				9ACD1C752A15F62D0085D43E /* PersonFollowingTableViewCell.swift in Sources */,
 				9A6113D62A0134F80051FF2B /* SetExt+.swift in Sources */,

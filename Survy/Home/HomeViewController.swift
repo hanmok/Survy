@@ -9,11 +9,25 @@ import UIKit
 import SnapKit
 import Model
 
+struct CellHeight: Hashable {
+    let index: Int
+    let height: CGFloat
+    
+    public static func == (lhs: CellHeight, rhs: CellHeight) -> Bool {
+        return lhs.index == rhs.index
+    }
+}
+
 class HomeViewController: UIViewController, Coordinating {
     
     var participationService: ParticipationServiceType
     var userService: UserServiceType
     var coordinator: Coordinator?
+    
+    var surveyCellHeights = Set<CellHeight>()
+    var tableViewTotalHeight: CGFloat {
+        return surveyCellHeights.map { $0.height}.reduce(0, +)
+    }
     
     var hasCategoryPinnedToTheTop = false
     
@@ -91,11 +105,17 @@ class HomeViewController: UIViewController, Coordinating {
     }
     
     private func updateUI() {
+        surveyCellHeights.removeAll()
         var snapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
         snapshot.appendSections([.main])
         snapshot.appendItems(participationService.surveysToShow)
         
         self.surveyDataSource.apply(snapshot)
+        DispatchQueue.main.async {
+            self.surveyTableView.reloadData()
+        }
+        
+        print("updateUI Called")
     }
     
     private func setupTargets() {
@@ -184,7 +204,10 @@ class HomeViewController: UIViewController, Coordinating {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        wholeScrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: UIScreen.screenHeight * 3)
+        
+        wholeScrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: tableViewTotalHeight + 150)
+        print("tableViewTotalHeight applied: \(tableViewTotalHeight)")
+        print("viewDidAppear Called")
     }
     
     private let wholeScrollView: UIScrollView = {
@@ -276,12 +299,18 @@ extension HomeViewController: UITableViewDelegate {
         let sizes: CGFloat = 30
         let frameHeight = [estimatedFrame1, estimatedFrame2, estimatedFrame3].map { $0.height }.reduce(0, +)
         let heightSum = frameHeight + spacings + sizes
+
+        let cellHeight = CellHeight(index: indexPath.row, height: heightSum)
+        surveyCellHeights.insert(cellHeight)
+        print("tableViewTotalHeight: \(tableViewTotalHeight), indexPath: \(indexPath.row), addedAmount: \(heightSum)")
+        viewDidAppear(false)
         return heightSum
     }
 }
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        surveyCellHeights.removeAll()
         let result = userService.interestedCategories.count
         return result
     }
@@ -290,7 +319,6 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
 
-        // TODO: 이미 선택된 것들 고려하기.
         collectionViewCell.category = userService.interestedCategories[indexPath.row]
         collectionViewCell.categoryCellDelegate = self
         return collectionViewCell
@@ -315,12 +343,9 @@ extension HomeViewController: SurveyTableViewDelegate {
 extension HomeViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        scrollView.contentOffset
-        print("contentOffset: \(scrollView.contentOffset), scrollView: \(scrollView)")
         
         let edgeHeight: CGFloat = 24.0
         if scrollView.contentOffset.y > edgeHeight && hasCategoryPinnedToTheTop == false {
-            print("case 1")
             topCoverView.isHidden = false
             hasCategoryPinnedToTheTop = true
             
@@ -331,8 +356,6 @@ extension HomeViewController: UIScrollViewDelegate {
             }
             
             self.view.addSubview(topCoverView)
-            
-            
             
             categorySelectionButton.snp.makeConstraints { make in
                 make.top.equalToSuperview().offset(40)
@@ -347,10 +370,9 @@ extension HomeViewController: UIScrollViewDelegate {
                 make.width.equalTo(UIScreen.screenWidth * 5 / 6)
                 make.height.equalTo(categoryHeight)
             }
-            
         } else if scrollView.contentOffset.y <= edgeHeight && hasCategoryPinnedToTheTop == true {
             topCoverView.isHidden = true
-            print("case 2")
+
             hasCategoryPinnedToTheTop = false
             
             [categorySelectionButton, categoryCollectionView].forEach {
@@ -367,50 +389,10 @@ extension HomeViewController: UIScrollViewDelegate {
             
             categoryCollectionView.snp.makeConstraints { make in
                 make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
-//                make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
-//                make.width.equalTo(UIScreen.screenWidth - 24)
                 make.leading.equalTo(categorySelectionButton.snp.trailing)
                 make.width.equalTo(UIScreen.screenWidth * 5 / 6)
                 make.height.equalTo(categorySelectionButton.snp.height)
             }
-        }
-        
-        // Check if the animation is locked or not
-//        if !isAnimationInProgress {
-//
-//            guard let topViewHeightConstraint = topViewHeightConstraint
-//            else { return }
-//
-//            // Check if an animation is required
-//            if scrollView.contentOffset.y > .zero &&
-//                topViewHeightConstraint.constant > .zero {
-//
-//                topViewHeightConstraint.constant = .zero
-//                animateTopViewHeight()
-//            }
-//            else if scrollView.contentOffset.y <= .zero
-//                        && topViewHeightConstraint.constant <= .zero {
-//
-//                topViewHeightConstraint.constant = categoryHeight
-//                animateTopViewHeight()
-//            }
-//        }
-    }
-    
-    // Animate the top view
-    private func animateTopViewHeight() {
-        
-        // Lock the animation functionality
-        isAnimationInProgress = true
-        
-        UIView.animate(withDuration: 0.2) {
-            
-            self.view.layoutIfNeeded()
-            
-        } completion: { [weak self] (_) in
-            
-            // Unlock the animation functionality
-            self?.isAnimationInProgress = false
         }
     }
 }
