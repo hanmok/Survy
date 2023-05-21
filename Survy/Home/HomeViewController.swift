@@ -9,14 +9,7 @@ import UIKit
 import SnapKit
 import Model
 
-struct CellHeight: Hashable {
-    let index: Int
-    let height: CGFloat
-    
-    public static func == (lhs: CellHeight, rhs: CellHeight) -> Bool {
-        return lhs.index == rhs.index
-    }
-}
+
 
 class HomeViewController: UIViewController, Coordinating {
     
@@ -26,7 +19,7 @@ class HomeViewController: UIViewController, Coordinating {
     
     var surveyCellHeights = Set<CellHeight>()
     var tableViewTotalHeight: CGFloat {
-        return surveyCellHeights.map { $0.height}.reduce(0, +)
+        return surveyCellHeights.map { $0.height }.reduce(0, +)
     }
     
     var hasCategoryPinnedToTheTop = false
@@ -38,7 +31,7 @@ class HomeViewController: UIViewController, Coordinating {
     }
     
     var topViewHeightConstraint: NSLayoutConstraint?
-// viewheight: categoryHeight (50)
+
     
     private var isAnimationInProgress = false
     

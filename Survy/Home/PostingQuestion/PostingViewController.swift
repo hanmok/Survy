@@ -22,6 +22,11 @@ class PostingViewController: BaseViewController, Coordinating {
     
     var postingService: PostingServiceType
     
+    var questionCellHeights = Set<CellHeight>()
+    var tableViewTotalHeight: CGFloat {
+        return questionCellHeights.map { $0.height }.reduce(0, +)
+    }
+    
     private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
     private var tagDataSource: UICollectionViewDiffableDataSource<Section, Tag>!
     
@@ -37,8 +42,21 @@ class PostingViewController: BaseViewController, Coordinating {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: UIScreen.screenHeight * 3)
+        let wholeHeight = tableViewTotalHeight + 100 + 52 + 20 + 16 + 100
+//        scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: UIScreen.screenHeight * 3)
+        print("wholeHeight: \(wholeHeight)")
+        scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: wholeHeight)
+        
+        // FIXME: scroll to the bottom if new question has added
+        let bottomOffset = CGPoint(x: 0, y: scrollView.contentSize.height - scrollView.bounds.height)
+        
+        if wholeHeight > UIScreen.screenHeight - 100 {
+            scrollView.setContentOffset(bottomOffset, animated: false)
+        }
+        
+        
     }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     
@@ -93,7 +111,7 @@ class PostingViewController: BaseViewController, Coordinating {
 
         tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView) {
             (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-             return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
+            return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
         }
         
         let targetCellRegistration = UICollectionView.CellRegistration<TargetLabelCollectionViewCell, Target> {
@@ -108,7 +126,7 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     override func updateMyUI() {
-        
+        questionCellHeights.removeAll()
         if postingService.selectedTags != currentTags {
             currentTags = postingService.selectedTags
             var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
@@ -125,7 +143,6 @@ class PostingViewController: BaseViewController, Coordinating {
             targetSnapshot.appendItems(currentTargets)
             self.targetDataSource.apply(targetSnapshot, animatingDifferences: true)
         }
-        
     }
     
     
@@ -200,10 +217,7 @@ class PostingViewController: BaseViewController, Coordinating {
                 print("options: \($0.value)")
             }
         }
-        
         coordinator?.manipulate(.confirmation, command: .present)
-        
-//        coordinator?.move(to: .root) // toast Message
     }
     
     @objc func dismissTapped() {
@@ -233,7 +247,6 @@ class PostingViewController: BaseViewController, Coordinating {
         ].forEach {
             self.scrollView.addSubview($0)
         }
-        
         
         requestingButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -405,6 +418,7 @@ class PostingViewController: BaseViewController, Coordinating {
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        questionCellHeights.removeAll()
         return max(postingService.numberOfQuestions, 1)
     }
     
@@ -413,8 +427,13 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         cell.postingBlockCollectionViewDelegate = self
         cell.questionIndex = indexPath.row + 1
+        
+        let cellHeight = CellHeight(index: indexPath.row, height: 150 + 20) // spacing
+        self.questionCellHeights.insert(cellHeight)
+        viewDidAppear(false)
         let postingQuestion = postingService.postingQuestions[indexPath.row]
         cell.postingQuestion = postingQuestion
+        
         
         return cell
     }

@@ -18,6 +18,7 @@
 		9A6114452A02931C0051FF2B /* TestData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6114442A02931C0051FF2B /* TestData.swift */; };
 		9ACD1C2A2A13AF320085D43E /* Target.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C292A13AF320085D43E /* Target.swift */; };
 		9ACD1C2C2A13B8E80085D43E /* TargetSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C2B2A13B8E80085D43E /* TargetSection.swift */; };
+		9AF935F42A1A85080002B15B /* CellHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935F32A1A85080002B15B /* CellHeight.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -45,6 +46,7 @@
 		9A6114442A02931C0051FF2B /* TestData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestData.swift; sourceTree = "<group>"; };
 		9ACD1C292A13AF320085D43E /* Target.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Target.swift; sourceTree = "<group>"; };
 		9ACD1C2B2A13B8E80085D43E /* TargetSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetSection.swift; sourceTree = "<group>"; };
+		9AF935F32A1A85080002B15B /* CellHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellHeight.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 				9ACD1C2B2A13B8E80085D43E /* TargetSection.swift */,
 				9ACD1C292A13AF320085D43E /* Target.swift */,
 				9A6114442A02931C0051FF2B /* TestData.swift */,
+				9AF935F32A1A85080002B15B /* CellHeight.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -154,6 +157,7 @@
 				9ACD1C2C2A13B8E80085D43E /* TargetSection.swift in Sources */,
 				9A6114412A0291F50051FF2B /* Tag.swift in Sources */,
 				9A61143B2A0291D30051FF2B /* Section.swift in Sources */,
+				9AF935F42A1A85080002B15B /* CellHeight.swift in Sources */,
 				9A61142E2A0291780051FF2B /* Model.swift in Sources */,
 				9ACD1C2A2A13AF320085D43E /* Target.swift in Sources */,
 				9A61143F2A0291EA0051FF2B /* SelectableOption.swift in Sources */,

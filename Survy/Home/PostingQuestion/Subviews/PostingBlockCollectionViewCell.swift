@@ -64,7 +64,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             make.top.equalToSuperview().offset(12)
             make.leading.equalToSuperview().offset(20)
 //            make.width.equalTo(15)
-            make.width.equalTo(20)
+            make.width.equalTo(24)
         }
         
         questionTextField.snp.makeConstraints { make in
@@ -88,20 +88,13 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     private let indexLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-//        label.backgroundColor = .cyan
+        label.adjustsFontSizeToFitWidth = true
         return label
     }()
     
-//    public var questionTextField: UITextField = {
     public var questionTextField: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        
-//        textView.
-//        textView.
-//        textView.adjustsFontForContentSizeCategory
-//        textView.adjust
-//        textView.minimumZoomScale = 2
         
         textView.text = "질문을 입력해주세요."
         textView.textColor = UIColor.lightGray
