@@ -16,6 +16,7 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
 //    }
     
     var provider: ProviderType
+    
     init(provider: ProviderType, coordinator: Coordinator) {
         self.provider = provider
         self.coordinator = coordinator
@@ -47,17 +48,16 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
         
         tabBar.backgroundColor = UIColor.mainColor
         guard let coordinator = self.coordinator else { fatalError() }
-        let homeVC = HomeViewController(surveyService: self.provider.participationService)
+        let homeVC = HomeViewController(participationService: self.provider.participationService, userService: self.provider.userService)
+        
         homeVC.title = "홈"
         homeVC.coordinator = coordinator
-        
         
         let storeVC = StoreViewController()
         storeVC.title = "스토어"
         
         let myPageVC = MyPageViewController()
         myPageVC.title = "마이페이지"
-        
         
         let home = templateNavigationController(
             unselectedImage: UIImage.unselectedHomeIcon,
@@ -75,7 +75,6 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
             selectedImage: UIImage.selectedMyPageIcon,
             rootViewController: myPageVC)
 
-        
         viewControllers = [home, store, myPage]
     }
     
@@ -85,33 +84,9 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
         let nav = UINavigationController(rootViewController: rootViewController)
         nav.tabBarItem.image = unselectedImage
         
-//        nav.tabBarItem.selectedImage = selectedImage.withTintColor(.black, renderingMode: .alwaysOriginal)
-        
         // icon color
         nav.tabBarItem.selectedImage = selectedImage.withTintColor(.black, renderingMode: .alwaysOriginal)
         
-//        nav.tabBarItem.badgeColor = .black
-//        nav.tabBarItem.badgeColor = .green
-
         return nav
     }
 }
-
-
-
-
-//if let count = self.tabBar.items?.count {
-//        for i in 0...(count-1) {
-//            let imageNameForSelectedState   = arrayOfImageNameForSelectedState[i]
-//            let imageNameForUnselectedState = arrayOfImageNameForUnselectedState[i]
-//
-//            self.tabBar.items?[i].selectedImage = UIImage(named: imageNameForSelectedState)?.withRenderingMode(.alwaysOriginal)
-//            self.tabBar.items?[i].image = UIImage(named: imageNameForUnselectedState)?.withRenderingMode(.alwaysOriginal)
-//        }
-//    }
-//
-//    let selectedColor   = UIColor(red: 246.0/255.0, green: 155.0/255.0, blue: 13.0/255.0, alpha: 1.0)
-//    let unselectedColor = UIColor(red: 16.0/255.0, green: 224.0/255.0, blue: 223.0/255.0, alpha: 1.0)
-//
-//    UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: unselectedColor], for: .normal)
-//    UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: selectedColor], for: .selected)

@@ -11,74 +11,24 @@ import Model
 
 class HomeViewController: UIViewController, Coordinating {
     
-    var surveyService: ParticipationServiceType
+    var participationService: ParticipationServiceType
+    var userService: UserServiceType
     var coordinator: Coordinator?
+
+    var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
+    var currentSurveySnapshot: NSDiffableDataSourceSnapshot<Section, Survey>! = nil
     
     enum Section {
         case main
     }
     
-    init(surveyService: ParticipationServiceType) {
-        self.surveyService = surveyService
+    private let categoryHeight: CGFloat = 50
+    
+    init(participationService: ParticipationServiceType,
+         userService: UserServiceType) {
+        self.participationService = participationService
+        self.userService = userService
         super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    let surveys: [Survey] = [
-        Survey(id: 1, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
-        
-        Survey(id: 2, numOfParticipation: 273, participationGoal: 385, title: "애견인과 비애견인의 동물 관련 음식 소비패턴에 대한 조사입니다. 참여 부탁드려요!", rewardRange: [500], categories: ["애견", "음식"]),
-        
-        Survey(id: 3, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"])
-    ]
-    
-    var surveysToShow = [Survey]()
-    
-    let collectedMoney = 56000
-    let categories = ["애견", "운동", "음식", "피부"]
-    var selectedCategories = Set<String>()
-    
-    var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
-    var currentSurveySnapshot: NSDiffableDataSourceSnapshot<Section, Survey>! = nil
-    
-    private func configureDataSource() {
-        self.surveyDataSource = UITableViewDiffableDataSource<Section, Survey>(tableView: surveyTableView, cellProvider: { [weak self] tableView, indexPath, itemIdentifier -> UITableViewCell? in
-            guard let self = self else { return nil }
-            let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
-            cell.survey = surveysToShow[indexPath.row]
-            cell.surveyDelegate = self
-            return cell
-        })
-    }
-    
-    private func updateUI() {
-        currentSurveySnapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
-        
-        currentSurveySnapshot.appendSections([.main])
-    
-        if selectedCategories.isEmpty == true {
-            surveysToShow = surveys
-        } else {
-            surveysToShow = surveys.filter {
-                let categories = Set($0.categories)
-                return categories.intersection(selectedCategories).isEmpty == false
-            }
-        }
-        
-        currentSurveySnapshot.appendItems(surveysToShow)
-        
-        self.surveyDataSource.apply(currentSurveySnapshot)
-    }
-    
-    private func setupTargets() {
-        requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
-    }
-    
-    @objc func moveToPostSurvey() {
-        coordinator?.move(to: .postingController)
     }
     
     override func viewDidLoad() {
@@ -105,6 +55,16 @@ class HomeViewController: UIViewController, Coordinating {
         setupLayout()
     }
     
+    private func configureDataSource() {
+        self.surveyDataSource = UITableViewDiffableDataSource<Section, Survey>(tableView: surveyTableView, cellProvider: { [weak self] tableView, indexPath, itemIdentifier -> UITableViewCell? in
+            guard let self = self else { return nil }
+            let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
+            cell.survey = participationService.surveysToShow[indexPath.row]
+            cell.surveyDelegate = self
+            return cell
+        })
+    }
+    
     private func registerTableView() {
         surveyTableView.register(SurveyTableViewCell.self, forCellReuseIdentifier: SurveyTableViewCell.reuseIdentifier)
         surveyTableView.delegate = self
@@ -113,9 +73,32 @@ class HomeViewController: UIViewController, Coordinating {
         surveyTableView.tableFooterView = footerView
     }
     
+    private func setupCollectionView(){
+        categoryCollectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
+        categoryCollectionView.dataSource = self
+        categoryCollectionView.delegate = self
+    }
+    
+    private func updateUI() {
+        currentSurveySnapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
+        currentSurveySnapshot.appendSections([.main])
+        
+        currentSurveySnapshot.appendItems(participationService.surveysToShow)
+        
+        self.surveyDataSource.apply(currentSurveySnapshot)
+    }
+    
+    private func setupTargets() {
+        requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
+    }
+    
+    @objc func moveToPostSurvey() {
+        coordinator?.move(to: .postingController)
+    }
+    
     private func setupLayout() {
         navigationItem.titleView = UIView()
-        navigationController?.hidesBarsOnTap = true
+//        navigationController?.hidesBarsOnTap = true
         
         [
          collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView, requestingButton].forEach { self.view.addSubview($0) }
@@ -136,7 +119,7 @@ class HomeViewController: UIViewController, Coordinating {
         categoryCollectionView.snp.makeConstraints { make in
             make.centerY.equalTo(categorySelectionButton.snp.centerY)
             make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
-            make.trailing.equalToSuperview()
+            make.trailing.equalToSuperview().inset(12)
             make.height.equalTo(categorySelectionButton.snp.height)
         }
         
@@ -154,7 +137,7 @@ class HomeViewController: UIViewController, Coordinating {
         
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
-        guard let text = numberFormatter.string(from: collectedMoney as NSNumber) else { return }
+        guard let text = numberFormatter.string(from: userService.collectedMoney as NSNumber) else { return }
 
         collectedRewardLabel.addFrontImage(
             image: UIImage.coin, string: text + "P",
@@ -162,6 +145,7 @@ class HomeViewController: UIViewController, Coordinating {
             color: UIColor.blueTextColor)
     }
     
+    // MARK: - Views
     private let requestingButton: UIButton = {
         let button = UIButton()
         let attributedTitle = NSAttributedString(string: "설문 요청", attributes: [.font: UIFont.systemFont(ofSize: 20, weight: .semibold), .foregroundColor: UIColor.white, .paragraphStyle: NSMutableParagraphStyle.centerAlignment])
@@ -185,14 +169,6 @@ class HomeViewController: UIViewController, Coordinating {
         return label
     }()
     
-    // TODO: Make it CollectionView
-    
-    private func setupCollectionView(){
-        categoryCollectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
-        categoryCollectionView.dataSource = self
-        categoryCollectionView.delegate = self
-    }
-    
     private let categorySelectionButton: UIButton = {
         let button = UIButton()
         button.setTitle("선택", for: .normal)
@@ -200,13 +176,13 @@ class HomeViewController: UIViewController, Coordinating {
         return button
     }()
     
-    private let categoryHeight: CGFloat = 50
     private lazy var categoryCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 12
+        layout.minimumInteritemSpacing = 8
         layout.itemSize = CGSize(width: UIScreen.screenWidth / 6, height: categoryHeight)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .mainBackgroundColor
         return collectionView
     }()
     
@@ -216,18 +192,14 @@ class HomeViewController: UIViewController, Coordinating {
         tableView.backgroundColor = .clear
         return tableView
     }()
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
 
 
-//extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 extension HomeViewController: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
-//        cell.survey = surveysToShow[indexPath.row]
-//        cell.surveyDelegate = self
-//        return cell
-//    }
-//
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
         let approximatedWidthOfBioTextView = UIScreen.screenWidth - 16 * 2 - 12 * 2
@@ -245,31 +217,20 @@ extension HomeViewController: UITableViewDelegate {
         let heightSum = frameHeight + spacings + sizes
         return heightSum
     }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        surveysToShow = surveys.filter {
-//            let categories = Set($0.categories)
-//            return categories.intersection(selectedCategories).isEmpty == false
-//        }
-//        return surveysToShow.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: false)
-//    }
 }
 
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        let result = categories.count
+        let result = userService.interestedCategories.count
         return result
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
+
         // TODO: 이미 선택된 것들 고려하기.
-        collectionViewCell.category = categories[indexPath.row]
+        collectionViewCell.category = userService.interestedCategories[indexPath.row]
         collectionViewCell.categoryCellDelegate = self
         return collectionViewCell
     }
@@ -277,22 +238,16 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
 extension HomeViewController: CategoryCellDelegate {
     func categoryTapped(category: String, selected: Bool) {
-        
-        selectedCategories.toggle(category)
-//        DispatchQueue.main.async {
-//            self.surveyTableView.reloadData()
-//        }
-        
+        participationService.toggleCategory(category)
         updateUI()
+        
     }
 }
 
 extension HomeViewController: SurveyTableViewDelegate {
     func surveyTapped(_ cell: SurveyTableViewCell) {
-        
         guard let selectedSurvey = cell.survey else { fatalError() }
-        surveyService.currentSurvey = selectedSurvey
-        
+        participationService.currentSurvey = selectedSurvey
         coordinator?.move(to: .questionController)
     }
 }

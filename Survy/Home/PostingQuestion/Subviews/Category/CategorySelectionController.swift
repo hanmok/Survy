@@ -149,7 +149,6 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         let selectedTagsArr = Array(selectedTags)
         postingService.setTags(selectedTagsArr)
-        
         coordinator?.manipulate(.categorySelection, command: .dismiss)
     }
     
