@@ -23,6 +23,7 @@ class PostingViewController: BaseViewController, Coordinating {
     var postingService: PostingServiceType
     
     var questionCellHeights = Set<CellHeight>()
+    
     var tableViewTotalHeight: CGFloat {
         return questionCellHeights.map { $0.height }.reduce(0, +)
     }
@@ -290,25 +291,12 @@ class PostingViewController: BaseViewController, Coordinating {
             self.scrollView.addSubview($0)
         }
         
-//        [dismissButton, titleLabel].forEach {
-//            self.customNavBar.addSubview($0)
-//        }
-        
         customNavBar.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(50)
         }
         
-//        dismissButton.snp.makeConstraints { make in
-//            make.leading.equalToSuperview().inset(20)
-//            make.centerY.equalToSuperview()
-//            make.width.height.equalTo(50)
-//        }
-        
-//        titleLabel.snp.makeConstraints { make in
-//            make.center.equalToSuperview()
-//        }
         
         requestingButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -318,7 +306,7 @@ class PostingViewController: BaseViewController, Coordinating {
         
         expectedTimeResultLabel.snp.makeConstraints { make in
             make.trailing.equalTo(view.layoutMarginsGuide)
-            make.bottom.equalTo(requestingButton.snp.top).offset(-20)
+            make.bottom.equalTo(requestingButton.snp.top).offset(-5)
             make.width.equalTo(50)
         }
         
@@ -462,22 +450,25 @@ class PostingViewController: BaseViewController, Coordinating {
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        questionCellHeights.removeAll()
         return max(postingService.numberOfQuestions, 1)
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionViewCell
         
         cell.postingBlockCollectionViewDelegate = self
-        cell.questionIndex = indexPath.row + 1
+        cell.cellIndex = indexPath.row
         
-        let cellHeight = CellHeight(index: indexPath.row, height: 150 + 20) // spacing
+        let cellHeight = CellHeight(index: indexPath.row, height: 150 + 20)
+        
         self.questionCellHeights.insert(cellHeight)
-        viewDidAppear(false)
-        let postingQuestion = postingService.postingQuestions[indexPath.row]
-        cell.postingQuestion = postingQuestion
         
+        viewDidAppear(false)
+        
+        if postingService.postingQuestions.count > indexPath.row {
+            cell.postingQuestion = postingService.postingQuestions[indexPath.row]
+        }
         
         return cell
     }
@@ -507,22 +498,36 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        // selectableStackView 내 갯수에 따라 변할 수 있어야 함.
-//        return CGSize(width: UIScreen.screenWidth - 40, height: 240)
-        return CGSize(width: UIScreen.screenWidth - 40, height: 150)
+        
+        var height: CGFloat = 150
+        
+        if let first = questionCellHeights.first(where: { cellHeight in
+            cellHeight.index == indexPath.row })
+        {
+            height = first.height
+        }
+        
+        return CGSize(width: UIScreen.screenWidth - 40, height: height)
     }
 }
 
 extension PostingViewController: PostingBlockCollectionViewCellDelegate {
-    func questionTypeSelected(_ cell: PostingBlockCollectionViewCell, _ typeIndex: Int) {
-        switch typeIndex {
-            case 1: // 단일선택
-                break
-            case 2: // 다중선택
-                break
-            default: // 단답형, 서술형
-                break
-        }
+    func updateUI(with numberOfSelectableOptions: Int, cellIndex: Int, questionText: String, type: BriefQuestionType) {
+        // TODO: update Cell Height
+        
+        let postingQuestion = PostingQuestion(index: cellIndex, question: questionText, questionType: type, numberOfOptions: numberOfSelectableOptions)
+        
+        postingService.updateQuestion(postingQuestion: postingQuestion, index: cellIndex, type: type, questionText: questionText, numberOfOptions: numberOfSelectableOptions)
+        
+        guard let correspondingCellHeight = questionCellHeights.first(where: { $0.index == cellIndex }) else { fatalError() }
+        
+        questionCellHeights.remove(correspondingCellHeight)
+        
+        let newCellHeight = CellHeight(index: cellIndex, height: CGFloat(150 + numberOfSelectableOptions * 20)) // 각 selectableOption 의 크기 
+        
+        questionCellHeights.insert(newCellHeight)
+        postingBlockCollectionView.reloadItems(at: [IndexPath(row: cellIndex, section: 0)])
+        // TODO: Reload 했을 때, 입력한 값들이 그대로 유지된 채로 셀 크기만 업데이트 한 것 처럼 보이기.
     }
 }
 

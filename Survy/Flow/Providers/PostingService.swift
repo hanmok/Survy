@@ -13,32 +13,46 @@ protocol PostingServiceType: AnyObject {
     var selectedTags: [Tag] { get set }
     
     var postingQuestions: [PostingQuestion] { get set }
-    var numberOfQuestions: Int { get }
     
     var defaultMinimumCost: Int { get }
     var expectedTimeInMin: Int { get }
     var numberOfSpecimens: Int { get set }
     var totalCost: Int { get }
+    var numberOfQuestions: Int { get set }
+    
     
     func setTargets(_ targets: [Target])
     func setTags(_ tags: [Tag])
     func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
     func resetQuestions()
+    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String, numberOfOptions: Int)
 }
 
 class PostingService: PostingServiceType {
-    
+   
     var postingQuestions: [PostingQuestion] = []
+    
+    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String = "", numberOfOptions: Int) {
+        
+        if postingQuestions.count > index {
+            postingQuestions[index] = postingQuestion
+        } else {
+            let newPostingQuestion = PostingQuestion(index: index, question: questionText, questionType: type, numberOfOptions: numberOfOptions)
+            
+            postingQuestions.append(PostingQuestion(index: index, question: questionText, questionType: type, numberOfOptions: numberOfOptions))
+        }
+    }
     
     func resetQuestions() {
         postingQuestions = []
     }
     
     func addQuestion() {
-        let index = self.numberOfQuestions + 1
-        postingQuestions.append(PostingQuestion(index: index))
+//        let index = self.numberOfQuestions + 1
     }
+    
+    var numberOfQuestions: Int = 1
     
     var defaultMinimumCost: Int { return 300 }
     var expectedTimeInMin: Int { return 2 }
@@ -53,9 +67,9 @@ class PostingService: PostingServiceType {
         self.numberOfSpecimens = num
     }
     
-    var numberOfQuestions: Int {
-        return postingQuestions.count
-    }
+//    var numberOfQuestions: Int {
+//        return postingQuestions.count
+//    }
     
     var selectedTargets: [Target] = []
     var selectedTags: [Tag] = []
@@ -71,30 +85,24 @@ class PostingService: PostingServiceType {
 
 public class PostingQuestion {
     var index: Int
-    var question: String?
+    var question: String
+    var numberOfOptions: Int {
+        didSet {
+            guard selectableOptions.isEmpty else { fatalError() }
+            for i in 1 ..< numberOfOptions {
+                selectableOptions.append(SelectableOption(position: i))
+            }
+        }
+    }
     
-    var briefQuestionType: BriefQuestionType?
-    var selectableOptions: [SelectableOption]
+    var briefQuestionType: BriefQuestionType
+    var selectableOptions: [SelectableOption] = []
     
-     init(index: Int, question: String = "", questionType: BriefQuestionType? = nil, selectableOptions: [SelectableOption] = []) {
+    init(index: Int, question: String = "", questionType: BriefQuestionType, numberOfOptions: Int) {
         self.index = index
         self.question = question
         self.briefQuestionType = questionType
-        self.selectableOptions = selectableOptions
-    }
-    
-    init(question: String,
-         index: Int,
-         questionType: BriefQuestionType,
-         selectableOptions: [SelectableOption]) {
-        self.question = question
-        self.index = index
-        self.briefQuestionType = questionType
-        self.selectableOptions = selectableOptions
-    }
-    
-    public func updateQuestion(text: String) {
-        self.question = text
+        self.numberOfOptions = numberOfOptions
     }
     
     public func addSelectableOption(selectableOption: SelectableOption) {

@@ -44,6 +44,7 @@
 		9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */; };
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
 		9ACCC6EF2A1B522C006AE8CE /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6EE2A1B522C006AE8CE /* CustomNavigationBar.swift */; };
+		9ACCC6F12A1B7332006AE8CE /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6F02A1B7332006AE8CE /* Menu.swift */; };
 		9ACD1C1C2A112E840085D43E /* SelectableCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C1B2A112E840085D43E /* SelectableCategoryCell.swift */; };
 		9ACD1C1E2A1236470085D43E /* SelectedCategoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C1D2A1236470085D43E /* SelectedCategoryCell.swift */; };
 		9ACD1C222A1278CD0085D43E /* SelectableTargetCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C212A1278CD0085D43E /* SelectableTargetCell.swift */; };
@@ -135,6 +136,7 @@
 		9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewControllerExt+.swift"; sourceTree = "<group>"; };
 		9ACA894243BBFA2D37D1A82C /* Pods-Survy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Survy.debug.xcconfig"; path = "Target Support Files/Pods-Survy/Pods-Survy.debug.xcconfig"; sourceTree = "<group>"; };
 		9ACCC6EE2A1B522C006AE8CE /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
+		9ACCC6F02A1B7332006AE8CE /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		9ACD1C1B2A112E840085D43E /* SelectableCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableCategoryCell.swift; sourceTree = "<group>"; };
 		9ACD1C1D2A1236470085D43E /* SelectedCategoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedCategoryCell.swift; sourceTree = "<group>"; };
 		9ACD1C212A1278CD0085D43E /* SelectableTargetCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableTargetCell.swift; sourceTree = "<group>"; };
@@ -426,6 +428,7 @@
 				9ACD1C742A15F62D0085D43E /* PersonFollowingTableViewCell.swift */,
 				9ACD1C762A15F8140085D43E /* PersonFollowingTableViewCellViewModel.swift */,
 				9ACD1C722A15F5F30085D43E /* Models.swift */,
+				9ACCC6F02A1B7332006AE8CE /* Menu.swift */,
 				9AF935EC2A1A6F9D0002B15B /* ScrollViews */,
 			);
 			path = Tests;
@@ -672,6 +675,7 @@
 				9A61144B2A02964D0051FF2B /* Provider.swift in Sources */,
 				9AE2961429D83D7600387883 /* UILabelExt+.swift in Sources */,
 				9A6114492A0296310051FF2B /* Coordinating.swift in Sources */,
+				9ACCC6F12A1B7332006AE8CE /* Menu.swift in Sources */,
 				9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */,
 				9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */,
 				9AE295FF29D714E300387883 /* UITableViewCellExt+.swift in Sources */,
