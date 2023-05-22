@@ -316,6 +316,38 @@
             endingLineNumber = "190"
             landmarkName = "textFieldShouldReturn(_:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "AEFA75E5-1EB6-4B76-BCFD-262A4D32E52A - 566cab9e0dc80e0d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.PostingBlockCollectionViewCell.textFieldShouldReturn(__C.UITextField) -&gt; Swift.Bool"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/Subviews/PostingBlockCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "191"
+                  endingLineNumber = "191"
+                  offsetFromSymbolStart = "80">
+               </Location>
+               <Location
+                  uuid = "AEFA75E5-1EB6-4B76-BCFD-262A4D32E52A - 566cab9e0dc80e0d"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.PostingBlockCollectionViewCell.textFieldShouldReturn(__C.UITextField) -&gt; Swift.Bool"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/Subviews/PostingBlockCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "191"
+                  endingLineNumber = "191"
+                  offsetFromSymbolStart = "136">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -363,14 +395,46 @@
             startingLineNumber = "247"
             endingLineNumber = "247"
             landmarkName = "textViewShouldEndEditing(_:)"
-            landmarkType = "9">
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "35F7EF03-5576-46C4-A3AB-067C97726EA4 - d9199fa4097fe701"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.PostingBlockCollectionViewCell.textViewShouldEndEditing(__C.UITextView) -&gt; Swift.Bool"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/Subviews/PostingBlockCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "248"
+                  endingLineNumber = "248"
+                  offsetFromSymbolStart = "80">
+               </Location>
+               <Location
+                  uuid = "35F7EF03-5576-46C4-A3AB-067C97726EA4 - d9199fa4097fe701"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Survy.PostingBlockCollectionViewCell.textViewShouldEndEditing(__C.UITextView) -&gt; Swift.Bool"
+                  moduleName = "Survy"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/Survy/Home/PostingQuestion/Subviews/PostingBlockCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "248"
+                  endingLineNumber = "248"
+                  offsetFromSymbolStart = "136">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "1B53BE4D-270F-458A-8A18-40C483782CB7"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Survy/Home/PostingQuestion/PostingViewController.swift"
@@ -442,22 +506,6 @@
                   offsetFromSymbolStart = "276">
                </Location>
             </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "A981340C-A225-4C53-87F6-DC04187CADA9"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Survy/Home/PostingQuestion/PostingViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
-            landmarkName = "setupLayout()"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

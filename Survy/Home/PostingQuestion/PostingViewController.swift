@@ -53,13 +53,40 @@ class PostingViewController: BaseViewController, Coordinating {
         if wholeHeight > UIScreen.screenHeight - 100 {
             scrollView.setContentOffset(bottomOffset, animated: false)
         }
-        
-        
     }
+    
+    private let dismissButton: UIButton = {
+        let button = UIButton()
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        
+        imageView.image = UIImage.leftChevron
+        button.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalToSuperview().dividedBy(2)
+        }
+        
+        return button
+    }()
+
+    private let titleLabel: UILabel = {
+        let label = UILabel()
+        label.text = "설문 요청"
+        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+        label.textColor = .black
+        return label
+    }()
+    
+    private let customNavBar: UIView = {
+        let view = UIView()
+        view.backgroundColor = .mainBackgroundColor
+        return view
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         if postingService.numberOfQuestions == 0 {
             postingService.addQuestion()
         }
@@ -188,11 +215,19 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
+        
         targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
         categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
+        
+        dismissButton.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
     }
     
+    
     // MARK: - Button Actions
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
     
     @objc func otherViewTapped() {
         view.dismissKeyboard()
@@ -221,20 +256,20 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     @objc func dismissTapped() {
+        postingService.resetQuestions()
         self.navigationController?.popViewController(animated: true)
     }
     
     // MARK: - Layout
     
     private func setupLayout() {
+        navigationController?.setNavigationBarHidden(true, animated: false)
+        
         [
-//        targetButton, categoryButton,
-//         selectedTargetsCollectionView,
-//         selectedTagsCollectionView,
-//        postingBlockCollectionView,
+            customNavBar,
             scrollView,
-         expectedTimeGuideLabel, expectedTimeResultLabel,
-         requestingButton
+            expectedTimeGuideLabel, expectedTimeResultLabel,
+            requestingButton
          ].forEach {
             self.view.addSubview($0)
         }
@@ -246,6 +281,26 @@ class PostingViewController: BaseViewController, Coordinating {
             postingBlockCollectionView
         ].forEach {
             self.scrollView.addSubview($0)
+        }
+        
+        [dismissButton, titleLabel].forEach {
+            self.customNavBar.addSubview($0)
+        }
+        
+        customNavBar.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(50)
+        }
+        
+        dismissButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(20)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(50)
+        }
+        
+        titleLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
         }
         
         requestingButton.snp.makeConstraints { make in
@@ -266,40 +321,30 @@ class PostingViewController: BaseViewController, Coordinating {
         }
         
         scrollView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-//            make.leading.equalTo(view.layoutMarginsGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.leading.equalToSuperview()
-//            make.width.equalTo(UIScreen.screenWidth - 40)
             make.width.equalTo(UIScreen.screenWidth)
             make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
         }
         
-//        postingBlockCollectionView.collectionViewLayout.collectionViewContentSize.height
-        
         targetButton.snp.makeConstraints { make in
-//            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
-//            make.leading.equalTo(view.layoutMarginsGuide)
-//            make.top.leading.equalToSuperview()
-            make.top.equalToSuperview()
+            make.top.equalToSuperview().offset(20)
             make.leading.equalToSuperview().inset(20)
             make.height.equalTo(26)
         }
-        
+
         targetButton.addSmallerInsets()
         
         selectedTargetsCollectionView.snp.makeConstraints { make in
             make.top.equalTo(targetButton.snp.top)
             make.bottom.equalTo(targetButton.snp.bottom)
             make.leading.equalTo(targetButton.snp.trailing).offset(10)
-//            make.trailing.equalToSuperview().inset(10)
             make.width.equalTo(300)
         }
         selectedTargetsCollectionView.backgroundColor = .clear
         
         categoryButton.snp.makeConstraints { make in
             make.top.equalTo(targetButton.snp.bottom).offset(20)
-//            make.leading.equalTo(view.layoutMarginsGuide)
-//            make.leading.equalToSuperview()
             make.leading.equalToSuperview().inset(20)
             make.height.equalTo(26)
         }
@@ -310,20 +355,12 @@ class PostingViewController: BaseViewController, Coordinating {
             make.top.equalTo(categoryButton.snp.top)
             make.bottom.equalTo(categoryButton.snp.bottom)
             make.leading.equalTo(categoryButton.snp.trailing).offset(10)
-//            make.trailing.equalToSuperview().inset(10)
             make.width.equalTo(300)
         }
         selectedTagsCollectionView.backgroundColor = .clear
         
-        
-        
         postingBlockCollectionView.snp.makeConstraints { make in
-//            make.leading.trailing.equalToSuperview()
-//            make.leading.equalToSuperview()
-//            make.width.equalToSuperview()
-//            make.leading.equalToSuperview().inset(20)
             make.leading.equalToSuperview()
-//            make.width.equalTo(UIScreen.screenWidth - 40)
             make.width.equalTo(UIScreen.screenWidth)
             make.top.equalTo(categoryButton.snp.bottom).offset(16)
             make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
@@ -331,8 +368,8 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     private func setupNavigationBar() {
-        self.title = "설문 요청"
-        setupLeftNavigationBar()
+//        self.title = "설문 요청"
+//        setupLeftNavigationBar()
     }
     
     private func setupLeftNavigationBar() {

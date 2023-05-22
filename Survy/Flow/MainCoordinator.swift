@@ -46,16 +46,11 @@ class MainCoordinator: Coordinator {
                 initialController = PostingViewController(postingService: self.provider.postingService)
                 
             case .test:
-//                initialController = DiffableTablePracticeViewController()
-//                initialController = DiffableCollectionViewPractice()
-//                initialController = MVVMController()
-                
-//                initialController = ConfirmationController(postingService: self.provider.postingService)
-//                initialController = ViewController6()
                 initialController = ViewController6()
         }
         
         navigationController?.setViewControllers([initialController], animated: false)
+        
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
@@ -75,9 +70,8 @@ class MainCoordinator: Coordinator {
                 navigationController?.pushViewController(questionController, animated: true)
             case .root:
                 navigationController?.popToRootViewController(animated: true)
-                navigationController?.setNavigationBarHidden(false, animated: false)
+                
             case .postingController:
-//                let postingController = PostingViewController()
                 let postingController = PostingViewController(postingService: self.provider.postingService)
                 postingController.coordinator = self
                 navigationController?.pushViewController(postingController, animated: true)
@@ -132,7 +126,6 @@ class MainCoordinator: Coordinator {
                     }
                 } else {
                     postingViewController.updateMyUI()
-                    navigationController?.setNavigationBarHidden(false, animated: false)
                 }
         }
     }

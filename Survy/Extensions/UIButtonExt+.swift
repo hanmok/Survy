@@ -27,6 +27,10 @@ extension UIButton {
     }
     
     func addImage(image: UIImage) {
-        setBackgroundImage(image, for: .normal)
+        let imageView = UIImageView()
+        imageView.image = image
+        
+//        setBackgroundImage(image, for: .normal)
+        
     }
 }

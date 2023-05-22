@@ -124,7 +124,12 @@ class HomeViewController: UIViewController, Coordinating {
 //        navigationController?.hidesBarsOnTap = true
 //        navigationItem.titleView?.isHidden = true
         
+        // 이거 하면 지워지나.. ㅇㅇ..
         navigationController?.setNavigationBarHidden(true, animated: false)
+//        navigationController.setnavi
+        
+        // dma.. navigationBar 없애. 다 Customize 하기.
+        
         
         self.view.addSubview(wholeScrollView)
         self.view.addSubview(requestingButton)

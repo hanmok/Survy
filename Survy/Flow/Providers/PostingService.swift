@@ -24,16 +24,22 @@ protocol PostingServiceType: AnyObject {
     func setTags(_ tags: [Tag])
     func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
+    func resetQuestions()
 }
 
 class PostingService: PostingServiceType {
     
     var postingQuestions: [PostingQuestion] = []
     
+    func resetQuestions() {
+        postingQuestions = []
+    }
+    
     func addQuestion() {
         let index = self.numberOfQuestions + 1
         postingQuestions.append(PostingQuestion(index: index))
     }
+    
     var defaultMinimumCost: Int { return 300 }
     var expectedTimeInMin: Int { return 2 }
     
