@@ -55,38 +55,45 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
-    private let dismissButton: UIButton = {
-        let button = UIButton()
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        
-        imageView.image = UIImage.leftChevron
-        button.addSubview(imageView)
-        imageView.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.width.height.equalToSuperview().dividedBy(2)
-        }
-        
-        return button
-    }()
+//    private let dismissButton: UIButton = {
+//        let button = UIButton()
+//        let imageView = UIImageView()
+//        imageView.contentMode = .scaleAspectFit
+//
+//        imageView.image = UIImage.leftChevron
+//        button.addSubview(imageView)
+//        imageView.snp.makeConstraints { make in
+//            make.center.equalToSuperview()
+//            make.width.height.equalToSuperview().dividedBy(2)
+//        }
+//        return button
+//    }()
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "설문 요청"
-        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-        label.textColor = .black
-        return label
-    }()
+//    private let titleLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "설문 요청"
+//        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
+//        label.textColor = .black
+//        return label
+//    }()
     
-    private let customNavBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = .mainBackgroundColor
-        return view
+//    private let nav
+    
+//    private let customNavBar: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = .mainBackgroundColor
+//        return view
+//    }()
+    
+    private let customNavBar: CustomNavigationBar = {
+        let navBar = CustomNavigationBar(title: "설문 요청")
+        return navBar
     }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        customNavBar.delegate = self
         if postingService.numberOfQuestions == 0 {
             postingService.addQuestion()
         }
@@ -219,7 +226,7 @@ class PostingViewController: BaseViewController, Coordinating {
         targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
         categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
         
-        dismissButton.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
+//        dismissButton.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
     }
     
     
@@ -283,9 +290,9 @@ class PostingViewController: BaseViewController, Coordinating {
             self.scrollView.addSubview($0)
         }
         
-        [dismissButton, titleLabel].forEach {
-            self.customNavBar.addSubview($0)
-        }
+//        [dismissButton, titleLabel].forEach {
+//            self.customNavBar.addSubview($0)
+//        }
         
         customNavBar.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview()
@@ -293,15 +300,15 @@ class PostingViewController: BaseViewController, Coordinating {
             make.height.equalTo(50)
         }
         
-        dismissButton.snp.makeConstraints { make in
-            make.leading.equalToSuperview().inset(20)
-            make.centerY.equalToSuperview()
-            make.width.height.equalTo(50)
-        }
+//        dismissButton.snp.makeConstraints { make in
+//            make.leading.equalToSuperview().inset(20)
+//            make.centerY.equalToSuperview()
+//            make.width.height.equalTo(50)
+//        }
         
-        titleLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
+//        titleLabel.snp.makeConstraints { make in
+//            make.center.equalToSuperview()
+//        }
         
         requestingButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -525,5 +532,12 @@ extension PostingViewController: PostingBlockCollectionFooterDelegate {
         DispatchQueue.main.async {
             self.postingBlockCollectionView.reloadData()
         }
+    }
+}
+
+extension PostingViewController: CustomNavigationBarDelegate {
+    func dismiss() {
+        postingService.resetQuestions()
+        self.navigationController?.popViewController(animated: true)
     }
 }
