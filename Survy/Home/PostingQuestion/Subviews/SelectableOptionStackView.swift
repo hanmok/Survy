@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PostingSelectableOptionStackView: UIStackView {
+class SelectableOptionStackView: UIStackView {
     var briefQuestionType: BriefQuestionType? {
         didSet {
             guard let briefQuestionType = briefQuestionType else { return }

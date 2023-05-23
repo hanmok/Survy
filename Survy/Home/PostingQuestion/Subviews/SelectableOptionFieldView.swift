@@ -53,10 +53,10 @@ class SelectableOptionFieldView: UIView {
         switch briefQuestionType {
         case .singleSelection:
             optionSymbolImageView.image = UIImage.emptyCircle
-            selectableOptionTextField.placeholder = "항목을 입력해주세요."
+                selectableOptionTextField.placeholder = String.optionPlaceholder
         case .multipleSelection:
             optionSymbolImageView.image = UIImage.uncheckedSquare
-                selectableOptionTextField.placeholder = "항목을 입력해주세요."
+                selectableOptionTextField.placeholder = String.optionPlaceholder
         default:
             optionSymbolImageView.image = nil
             selectableOptionTextField.placeholder = "placeHolder"
@@ -70,7 +70,7 @@ class SelectableOptionFieldView: UIView {
     
     public let selectableOptionTextField: UITextField = {
         let textField = UITextField()
-        textField.placeholder = "항목을 입력해주세요."
+        textField.placeholder = String.optionPlaceholder
         return textField
     }()
     

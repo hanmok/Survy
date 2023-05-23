@@ -26,9 +26,15 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     private func configure(with postingQuestion: PostingQuestion?) {
         guard let postingQuestion = postingQuestion else { return }
         questionTextField.text = postingQuestion.question
+        
+        if postingQuestion.question != "질문을 입력해주세요." {
+            
+        }
+//        questionTextField.textColor = .black
+        questionTextField.textColor = postingQuestion.question == "질문을 입력해주세요." ? .lightGray : .black
         indexLabel.text = "\((postingQuestion.index + 1))."
         updateWithQuestionType(tag: postingQuestion.briefQuestionType.rawValue)
-        let numberOfOptionsText = "\(postingQuestion.numberOfOptions) 항목"
+        let numberOfOptionsText = "\(postingQuestion.numberOfOptions) 옵션"
         questionTypeOptionStackView.numberOfSelectableOptionButton.setTitle(numberOfOptionsText, for: .normal)
         
         // postingQuestion 의 selectableoptions 가 비어있을 때
@@ -124,6 +130,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .regular)
         label.adjustsFontSizeToFitWidth = true
+        label.textAlignment = .right
         return label
     }()
     
@@ -169,8 +176,8 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         return postingOptionStackView
     }()
     
-    public var selectableOptionStackView: PostingSelectableOptionStackView = {
-        let stackView = PostingSelectableOptionStackView()
+    public var selectableOptionStackView: SelectableOptionStackView = {
+        let stackView = SelectableOptionStackView()
         return stackView
     }()
     
@@ -195,30 +202,66 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
     }
     
     private func updateWithQuestionType(tag: Int) {
-        switch tag {
-            case BriefQuestionType.singleSelection.rawValue: // 단일선택
-                questionTypeOptionStackView.removeAllArrangedSubViewsExceptFor(tag: 1)
-                questionTypeOptionStackView.snp.remakeConstraints { make in
-                    make.leading.equalToSuperview().inset(12)
-                    make.width.equalTo(200)
-                    make.top.equalTo(questionTextField.snp.bottom).offset(14)
-                    make.height.equalTo(30)
+        guard let briefQuestionType = BriefQuestionType(rawValue: tag) else { fatalError() }
+        questionTypeOptionStackView.updateSelectedOption(briefType: briefQuestionType)
+//        switch briefQuestionType {
+//        case .singleSelection:break
+//        case .multipleSelection:break
+//        case .others:break
+//        }
+        
+        switch selectableOptionStackView.selectableOptionFieldViews.count {
+        case 0:
+            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: briefQuestionType, tag: 1)
+            selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
+            
+        case 1:
+            selectableOptionStackView.selectableOptionFieldViews.forEach {
+                $0.changeType(to: briefQuestionType)
+            }
+            // 여러개 -> 단답, 서술형으로 바꾼 경우
+        default:
+            if briefQuestionType == .others {
+                selectableOptionStackView.selectableOptionFieldViews.forEach {
+                    selectableOptionStackView.removeArrangedSubview($0)
+                    $0.removeFromSuperview()
                 }
-//                questionTypeOptionStackView.numberOfSelectableOptionButton.setTitle(, for: <#T##UIControl.State#>)
-                
-            case BriefQuestionType.multipleSelection.rawValue: // 다중선택
-                
-                questionTypeOptionStackView.removeAllArrangedSubViewsExceptFor(tag: 2)
-                questionTypeOptionStackView.snp.remakeConstraints { make in
-                    make.leading.equalToSuperview().inset(12)
-                    make.width.equalTo(200)
-                    make.top.equalTo(questionTextField.snp.bottom).offset(14)
-                    make.height.equalTo(30)
+            } else {
+                selectableOptionStackView.selectableOptionFieldViews.forEach {
+                    $0.changeType(to: briefQuestionType)
                 }
-            default: // 단답형, 서술형
-                let plain = SelectableOptionFieldView(briefQuestionType: .others, tag: 1)
-                selectableOptionStackView.addSelectableOptionView(plain)
+            }
         }
+        // TODO: Layout 도 수정해야함.
+        
+//        selectableOptionStackView
+        
+//        switch tag {
+//            case BriefQuestionType.singleSelection.rawValue: // 단일선택
+////                questionTypeOptionStackView.removeAllArrangedSubViewsExceptFor(tag: 1)
+////                questionTypeOptionStackView.snp.remakeConstraints { make in
+////                    make.leading.equalToSuperview().inset(12)
+////                    make.width.equalTo(200)
+////                    make.top.equalTo(questionTextField.snp.bottom).offset(14)
+////                    make.height.equalTo(30)
+////                }
+////                questionTypeOptionStackView.numberOfSelectableOptionButton.setTitle(, for: <#T##UIControl.State#>)
+//
+//            case BriefQuestionType.multipleSelection.rawValue: // 다중선택
+//
+////                questionTypeOptionStackView.removeAllArrangedSubViewsExceptFor(tag: 2)
+////                questionTypeOptionStackView.snp.remakeConstraints { make in
+////                    make.leading.equalToSuperview().inset(12)
+////                    make.width.equalTo(200)
+////                    make.top.equalTo(questionTextField.snp.bottom).offset(14)
+////                    make.height.equalTo(30)
+////                }
+//
+//            default: // 단답형, 서술형
+//                let plain = SelectableOptionFieldView(briefQuestionType: .others, tag: 1)
+//                selectableOptionStackView.addSelectableOptionView(plain)
+//        }
+        
     }
     
     // 한번만 호출
@@ -259,11 +302,11 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
 //        postingQuestion.selectableOptions.forEach {
 //            print($0.value)
 //        }
-//
+
 //        guard let selectedIndex = questionTypeOptionStackView.selectedIndex else { fatalError() }
 //        let currentNumberOfSelectableOptions = selectableOptionStackView.selectableOptionFieldViews.count
 //        let addedIndex = currentNumberOfSelectableOptions + 1
-//
+
 //        switch selectedIndex {
 //            case BriefQuestionType.singleSelection.rawValue: // 단일선택
 //                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .singleSelection, tag: addedIndex)
@@ -295,7 +338,8 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
         guard let text = textView.text else { return true }
         
         // FIXME: 음.. 질문을 입력한 후 return 을 눌러도 여기가 호출됨. 그리고, 중간 수정을 하는 경우 어떤 값인지 알 수가 없음. 따라서, Tag 를 넣어줘야함. question: tag: -1
-        guard let postingQuestion = postingQuestion else { fatalError() }
+//        guard let postingQuestion = postingQuestion else { fatalError() }
+        
         return dismissKeyboard()
     }
     
@@ -322,6 +366,36 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
 }
 
 extension PostingBlockCollectionViewCell: PostingQuestionOptionStackViewDelegate {
+    // FIXME: Something went wrong ...
+    // TODO: Change selectableOptions
+    func changeQuestionType(briefType: BriefQuestionType) {
+        print("type changed to \(briefType)")
+        guard let questionIndex = cellIndex else { fatalError() }
+        var numberOfOptions: Int
+        guard let postingQuestion = postingQuestion else { return }
+        let previousType = postingQuestion.briefQuestionType
+        print("previous: \(previousType), briefType: \(briefType)")
+        
+        switch (previousType, briefType) {
+//            case (_, .multipleSelection):
+                
+            case (.singleSelection, .multipleSelection), (.multipleSelection, .singleSelection):
+                selectableOptionStackView.selectableOptionFieldViews.forEach { $0.briefQuestionType = briefType }
+                numberOfOptions = selectableOptionStackView.subviews.count
+            case (_, .others):
+                let tobeRemoved = selectableOptionStackView.selectableOptionFieldViews
+                tobeRemoved.forEach {
+                    selectableOptionStackView.removeArrangedSubview($0)
+                    $0.removeFromSuperview()
+                }
+                numberOfOptions = 1
+            default:
+                numberOfOptions = 1
+        }
+        
+        postingBlockCollectionViewDelegate?.updateUI(with: numberOfOptions, cellIndex: questionIndex, questionText: questionTextField.text, type: briefType)
+    }
+    
     func makeSelectableOptions(numberOfOptions: Int, type: BriefQuestionType) {
         for i in 1 ... numberOfOptions {
             let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: type, tag: i)
