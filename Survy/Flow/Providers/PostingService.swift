@@ -93,8 +93,6 @@ public class PostingQuestion {
         return selectableOptions.count
     }
     
-    
-    
     func modifySelectableOption(index: Int, selectableOption: SelectableOption) {
         if selectableOptions.count > index {
             self.selectableOptions[index] = selectableOption
@@ -122,6 +120,7 @@ public class PostingQuestion {
 //        print("type: \(type(of: self)), numOfSelectableOptions: \(self.selectableOptions.count)")
 //        self.selectableOptions.append(selectableOption)
         self.selectableOptions.append(selectableOption)
+        print("addSelectableOption called, current number of options: \(self.selectableOptions.count)")
         
     }
 }

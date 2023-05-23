@@ -44,7 +44,6 @@ class PostingViewController: BaseViewController, Coordinating {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         let wholeHeight = tableViewTotalHeight + 100 + 52 + 20 + 16 + 100
-//        scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: UIScreen.screenHeight * 3)
         print("wholeHeight: \(wholeHeight)")
         scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: wholeHeight)
         
@@ -161,14 +160,15 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     override func updateMyUI() {
-        questionCellHeights.removeAll()
+        
+//        questionCellHeights.removeAll()
+        
         if postingService.selectedTags != currentTags {
             currentTags = postingService.selectedTags
             var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
             tagSnapshot.appendSections([.main])
             tagSnapshot.appendItems(currentTags)
             tagDataSource.apply(tagSnapshot)
-            
         }
         
         if postingService.selectedTargets != currentTargets {
@@ -506,6 +506,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         {
             height = first.height
         }
+        print("dequeueing height: \(height)")
         
         return CGSize(width: UIScreen.screenWidth - 40, height: height)
     }
@@ -514,17 +515,20 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
 extension PostingViewController: PostingBlockCollectionViewCellDelegate {
     func updateUI(cellIndex: Int, postingQuestion: PostingQuestion) {
         
-        let postingQuestion = PostingQuestion(index: cellIndex, question: postingQuestion.question, questionType: postingQuestion.briefQuestionType)
-        
-//        postingService.updateQuestion(postingQuestion: postingQuestion, index: cellIndex, type: type, questionText: questionText, numberOfOptions: numberOfSelectableOptions)
+//        let postingQuestion = PostingQuestion(index: cellIndex, question: postingQuestion.question, questionType: postingQuestion.briefQuestionType)
         
         guard let correspondingCellHeight = questionCellHeights.first(where: { $0.index == cellIndex }) else { fatalError() }
         
         questionCellHeights.remove(correspondingCellHeight)
         let numberOfSelectableOptions = postingQuestion.numberOfOptions
         let newCellHeight = CellHeight(index: cellIndex, height: CGFloat(150 + numberOfSelectableOptions * 20)) // 각 selectableOption 의 크기
-        
+        print("newCellHeight: \(newCellHeight)")
+        print("cellHeights: ")
+        questionCellHeights.forEach {
+            print("idx: \($0.index), height: \($0.height)")
+        }
         questionCellHeights.insert(newCellHeight)
+        print("umm ??")
         postingBlockCollectionView.reloadItems(at: [IndexPath(row: cellIndex, section: 0)])
         // TODO: Reload 했을 때, 입력한 값들이 그대로 유지된 채로 셀 크기만 업데이트 한 것 처럼 보이기.
     }
