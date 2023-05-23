@@ -17,6 +17,7 @@ enum BriefQuestionType: Int {
 class SelectableOptionFieldView: UIView {
     
     var briefQuestionType: BriefQuestionType
+    var selectableOption: SelectableOption
     
     public func changeType(to briefQuestionType: BriefQuestionType) {
         self.briefQuestionType = briefQuestionType
@@ -27,10 +28,14 @@ class SelectableOptionFieldView: UIView {
         selectableOptionTextField.delegate = self
     }
     
-    init(briefQuestionType: BriefQuestionType, tag: Int) {
+//    init(briefQuestionType: BriefQuestionType, position: Int) {
+    init(briefQuestionType: BriefQuestionType, selectableOption: SelectableOption) {
         self.briefQuestionType = briefQuestionType
+        self.selectableOption = selectableOption
+        
         super.init(frame: .zero)
-        self.tag = tag
+//        self.tag = position
+        
         setupDelegate()
         configureLayout()
         setupLayout()
@@ -84,12 +89,12 @@ class SelectableOptionFieldView: UIView {
 extension SelectableOptionFieldView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let text = textField.text else { return true }
-        selectableOptionFieldDelegate?.notifyReturnButtonTapped(text, self.tag)
+        selectableOptionFieldDelegate?.selectableOptionFieldReturnTapped(text, self.tag)
         return true
     }
 }
 
 protocol SelectableOptionFieldDelegate: AnyObject {
-    func notifyReturnButtonTapped(_ text: String, _ tag: Int)
+    func selectableOptionFieldReturnTapped(_ text: String, _ tag: Int)
 }
 

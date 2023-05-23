@@ -42,7 +42,8 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         let numToAdd = postingQuestion.numberOfOptions - selectableOptionStackView.arrangedSubviews.count
         if numToAdd > 0 {
             for idx in 0 ..< numToAdd {
-                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: postingQuestion.briefQuestionType, tag: idx)
+//                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: postingQuestion.briefQuestionType, position: idx)
+                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: postingQuestion.briefQuestionType, selectableOption: SelectableOption(position: idx))
                 selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
             }
         } else if numToAdd < 0 {
@@ -212,7 +213,8 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
         
         switch selectableOptionStackView.selectableOptionFieldViews.count {
         case 0:
-            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: briefQuestionType, tag: 1)
+//            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: briefQuestionType, position: 1)
+            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: briefQuestionType, selectableOption: SelectableOption(postion: 1))
             selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
             
         case 1:
@@ -290,43 +292,47 @@ extension PostingBlockCollectionViewCell: UITextFieldDelegate {
 extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
     
     // TODO: 다음 selectableOption 값으로 이동
-    func notifyReturnButtonTapped(_ text: String, _ tag: Int) {
+    func selectableOptionFieldReturnTapped(_ text: String, _ tag: Int) {
         // Selectable 에 대해서는 여기서 찍힘. 음..
         
-//        print("adding text: \(text)")
-//        let selectableOption = SelectableOption(postion: tag, value: text, placeHolder: nil)
-//        guard let postingQuestion = postingQuestion else { fatalError() }
-//        postingQuestion.addSelectableOption(selectableOption: selectableOption)
-//        print("current selectable options: ")
-//
-//        postingQuestion.selectableOptions.forEach {
-//            print($0.value)
-//        }
+        print("adding text: \(text)")
+        let selectableOption = SelectableOption(postion: tag, value: text, placeHolder: nil)
+        guard let postingQuestion = postingQuestion else { fatalError() }
+        postingQuestion.addSelectableOption(selectableOption: selectableOption)
+        print("current selectable options: ")
 
-//        guard let selectedIndex = questionTypeOptionStackView.selectedIndex else { fatalError() }
-//        let currentNumberOfSelectableOptions = selectableOptionStackView.selectableOptionFieldViews.count
-//        let addedIndex = currentNumberOfSelectableOptions + 1
+        postingQuestion.selectableOptions.forEach {
+            print($0.value)
+        }
 
-//        switch selectedIndex {
-//            case BriefQuestionType.singleSelection.rawValue: // 단일선택
-//                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .singleSelection, tag: addedIndex)
-//                selectableOptionFieldView.selectableOptionFieldDelegate = self
-//
-//                selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
-//
-//                numberOfSelectableOptions += 1
-//
-//            case BriefQuestionType.multipleSelection.rawValue: // 다중선택
-//                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .multipleSelection, tag: addedIndex)
-//                selectableOptionFieldView.selectableOptionFieldDelegate = self
-//
-//                selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
-//
-//                numberOfSelectableOptions += 1
-//
-//            default: // 단답형, 서술형
-//                dismissKeyboard() // dismissKeyboard
-//        }
+        guard let selectedIndex = questionTypeOptionStackView.selectedIndex else { fatalError() }
+        let currentNumberOfSelectableOptions = selectableOptionStackView.selectableOptionFieldViews.count
+        let addedIndex = currentNumberOfSelectableOptions + 1
+        
+        guard let briefQuestionType = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
+        
+        switch briefQuestionType {
+            case .singleSelection: // 단일선택
+//                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .singleSelection, position: addedIndex)
+                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .singleSelection, selectableOption: SelectableOption(position: addedIndex))
+                selectableOptionFieldView.selectableOptionFieldDelegate = self
+
+                selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
+
+                numberOfSelectableOptions += 1
+
+            case .multipleSelection: // 다중선택
+//                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .multipleSelection, position: addedIndex)
+                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: .multipleSelection, selectableOption: SelectableOption(position: addedIndex))
+                selectableOptionFieldView.selectableOptionFieldDelegate = self
+
+                selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
+
+                numberOfSelectableOptions += 1
+
+            default: // 단답형, 서술형
+                dismissKeyboard() // dismissKeyboard
+        }
         
     }
 }
@@ -398,7 +404,8 @@ extension PostingBlockCollectionViewCell: PostingQuestionOptionStackViewDelegate
     
     func makeSelectableOptions(numberOfOptions: Int, type: BriefQuestionType) {
         for i in 1 ... numberOfOptions {
-            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: type, tag: i)
+//            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: type, position: i)
+            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: type, selectableOption: SelectableOption(position: i))
             selectableOptionFieldView.selectableOptionFieldDelegate = self
             selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
         }
