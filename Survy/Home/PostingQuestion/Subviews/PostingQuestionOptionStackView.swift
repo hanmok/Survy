@@ -9,8 +9,8 @@ import UIKit
 import Model
 
 protocol PostingQuestionOptionStackViewDelegate: AnyObject {
-    func makeSelectableOptions(numberOfOptions: Int, type: BriefQuestionType)
-    func changeQuestionType(briefType: BriefQuestionType)
+//    func makeSelectableOptions(numberOfOptions: Int, type: BriefQuestionType)
+    func changeQuestionType(briefQuestionType: BriefQuestionType)
 }
 
 class PostingQuestionOptionStackView: UIStackView {
@@ -50,67 +50,68 @@ class PostingQuestionOptionStackView: UIStackView {
         
     }
     
-    public func removeAllArrangedSubViewsExceptFor(tag: Int) {
-        let buttons = questionTypeButtons.filter { $0.tag != tag }
-        guard let selectedButton = questionTypeButtons.first(where: {$0.tag == tag }) else { return }
-        
-        selectedButton.backgroundColor = UIColor.deeperMainColor
-        selectedButton.setTitleColor(.white, for: .normal)
-        
-        buttons.forEach {
-            self.removeArrangedSubview($0)
-            $0.removeFromSuperview()
-        }
-        
-        questionTypeButtons = [selectedButton]
-        
-        addArrangedSubview(numberOfSelectableOptionButton)
-        setupNumOfSelectableOptionMenu()
-        setupTypeOfQuestionMenu()
-        self.layoutSubviews()
-    }
+//    public func removeAllArrangedSubViewsExceptFor(tag: Int) {
+//        let buttons = questionTypeButtons.filter { $0.tag != tag }
+//        guard let selectedButton = questionTypeButtons.first(where: {$0.tag == tag }) else { return }
+//
+//        selectedButton.backgroundColor = UIColor.deeperMainColor
+//        selectedButton.setTitleColor(.white, for: .normal)
+//
+//        buttons.forEach {
+//            self.removeArrangedSubview($0)
+//            $0.removeFromSuperview()
+//        }
+//
+//        questionTypeButtons = [selectedButton]
+//        
+//        addArrangedSubview(numberOfSelectableOptionButton)
+////        setupNumOfSelectableOptionMenu()
+////        setupTypeOfQuestionMenu()
+//        self.layoutSubviews()
+//    }
     
-    private func setupTypeOfQuestionMenu() {
+//    private func setupTypeOfQuestionMenu() {
+//
+//        guard let firstButton = questionTypeButtons.first else { fatalError() }
+//        print("numberOfQuestionTypeButtons: \(questionTypeButtons.count)")
+//
+//        var children = [UIMenuElement]()
+//
+//        let options = ["단일 선택", "다중 선택", "단답형", "서술형"]
+//
+//        for option in options {
+//            let title = option
+//            children.append(UIAction(title: title, handler: { [weak self] handler in
+//                firstButton.setTitle(title, for: .normal)
+//                guard let selectedIndex = self?.selectedIndex else { fatalError() }
+//                guard let type = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
+//                self?.questionOptionStackViewDelegate?.changeQuestionType(briefType: type)
+//            }))
+//        }
+//        let menu = UIMenu(title: "", children: children)
+//        firstButton.removeTarget(nil, action: nil, for: .allEvents)
+//        firstButton.menu = menu
+//        firstButton.showsMenuAsPrimaryAction = true
+//    }
     
-        guard let firstButton = questionTypeButtons.first else { fatalError() }
-        print("numberOfQuestionTypeButtons: \(questionTypeButtons.count)")
-        
-        var children = [UIMenuElement]()
-        
-        let options = ["단일 선택", "다중 선택", "단답형", "서술형"]
-        
-        for option in options {
-            let title = option
-            children.append(UIAction(title: title, handler: { [weak self] handler in
-                firstButton.setTitle(title, for: .normal)
-                guard let selectedIndex = self?.selectedIndex else { fatalError() }
-                guard let type = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
-                self?.questionOptionStackViewDelegate?.changeQuestionType(briefType: type)
-            }))
-        }
-        let menu = UIMenu(title: "", children: children)
-        firstButton.removeTarget(nil, action: nil, for: .allEvents)
-        firstButton.menu = menu
-        firstButton.showsMenuAsPrimaryAction = true
-    }
+//    private func setupNumOfSelectableOptionMenu() {
+//        var children = [UIMenuElement]()
+//        for i in 1 ... 9 {
+//            let title = "\(i) 옵션"
+//            children.append(UIAction(title: title, handler: { [weak self] handler in
+//                self?.numberOfSelectableOptionButton.setTitle(title, for: .normal)
+//                guard let selectedIndex = self?.selectedIndex else { fatalError() }
+//                guard let type = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
+//
+//                self?.questionOptionStackViewDelegate?.makeSelectableOptions(numberOfOptions: i, type: type)
+//            }))
+//        }
+//
+//        let menu = UIMenu(title: "", children: children)
+//        numberOfSelectableOptionButton.menu = menu
+//        numberOfSelectableOptionButton.showsMenuAsPrimaryAction = true
+//    }
     
-    private func setupNumOfSelectableOptionMenu() {
-        var children = [UIMenuElement]()
-        for i in 1 ... 9 {
-            let title = "\(i) 옵션"
-            children.append(UIAction(title: title, handler: { [weak self] handler in
-                self?.numberOfSelectableOptionButton.setTitle(title, for: .normal)
-                guard let selectedIndex = self?.selectedIndex else { fatalError() }
-                guard let type = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
-                
-                self?.questionOptionStackViewDelegate?.makeSelectableOptions(numberOfOptions: i, type: type)
-            }))
-        }
-        
-        let menu = UIMenu(title: "", children: children)
-        numberOfSelectableOptionButton.menu = menu
-        numberOfSelectableOptionButton.showsMenuAsPrimaryAction = true
-    }
     
     public func addPostingSingleSelectionButton(_ button: PostingSelectionButton) {
         addArrangedSubview(button)
@@ -139,6 +140,8 @@ class PostingQuestionOptionStackView: UIStackView {
         isConditionFulfilled = true
         guard let selectedIndex = selectedIndex else { return }
         optionStackViewDelegate?.notifySelectionChange(to: selectedIndex)
+        guard let briefType = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
+        questionOptionStackViewDelegate?.changeQuestionType(briefQuestionType: briefType)
     }
 }
 

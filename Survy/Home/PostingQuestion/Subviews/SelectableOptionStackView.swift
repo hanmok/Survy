@@ -16,6 +16,8 @@ class SelectableOptionStackView: UIStackView {
         }
     }
     
+    var hasPressed = false
+    
     public var selectableOptionFieldViews: [SelectableOptionFieldView] = []
     
     public func addSelectableOptionView(_ selectableOptionFieldView: SelectableOptionFieldView) {
@@ -37,20 +39,21 @@ class SelectableOptionStackView: UIStackView {
     
     public func changeQuestionType(_ briefQuestionType: BriefQuestionType) {
         
-        switch briefQuestionType {
-            case .others:
-                while selectableOptionFieldViews.count != 1 {
-                    let last = selectableOptionFieldViews.removeLast()
-                    last.willMove(toSuperview: nil)
-                    last.removeFromSuperview()
-                    removeArrangedSubview(last)
-                }
-            default:
-                break
-        }
+//        switch briefQuestionType {
+//            case .others:
+//                while selectableOptionFieldViews.count != 1 {
+//                    let last = selectableOptionFieldViews.removeLast()
+//                    last.willMove(toSuperview: nil)
+//                    last.removeFromSuperview()
+//                    removeArrangedSubview(last)
+//                }
+//            default:
+//                break
+//        }
         
-        selectableOptionFieldViews.forEach {
-            $0.changeType(to: briefQuestionType)
-        }
+//        selectableOptionFieldViews.forEach {
+//            $0.changeType(to: briefQuestionType)
+//        }
+        
     }
 }

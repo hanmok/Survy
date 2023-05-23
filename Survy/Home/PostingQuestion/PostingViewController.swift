@@ -512,23 +512,28 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
 }
 
 extension PostingViewController: PostingBlockCollectionViewCellDelegate {
-    func updateUI(with numberOfSelectableOptions: Int, cellIndex: Int, questionText: String, type: BriefQuestionType) {
-        // TODO: update Cell Height
+    func updateUI(cellIndex: Int, postingQuestion: PostingQuestion) {
         
-        let postingQuestion = PostingQuestion(index: cellIndex, question: questionText, questionType: type, numberOfOptions: numberOfSelectableOptions)
+        let postingQuestion = PostingQuestion(index: cellIndex, question: postingQuestion.question, questionType: postingQuestion.briefQuestionType)
         
-        postingService.updateQuestion(postingQuestion: postingQuestion, index: cellIndex, type: type, questionText: questionText, numberOfOptions: numberOfSelectableOptions)
+//        postingService.updateQuestion(postingQuestion: postingQuestion, index: cellIndex, type: type, questionText: questionText, numberOfOptions: numberOfSelectableOptions)
         
         guard let correspondingCellHeight = questionCellHeights.first(where: { $0.index == cellIndex }) else { fatalError() }
         
         questionCellHeights.remove(correspondingCellHeight)
-        
-        let newCellHeight = CellHeight(index: cellIndex, height: CGFloat(150 + numberOfSelectableOptions * 20)) // 각 selectableOption 의 크기 
+        let numberOfSelectableOptions = postingQuestion.numberOfOptions
+        let newCellHeight = CellHeight(index: cellIndex, height: CGFloat(150 + numberOfSelectableOptions * 20)) // 각 selectableOption 의 크기
         
         questionCellHeights.insert(newCellHeight)
         postingBlockCollectionView.reloadItems(at: [IndexPath(row: cellIndex, section: 0)])
         // TODO: Reload 했을 때, 입력한 값들이 그대로 유지된 채로 셀 크기만 업데이트 한 것 처럼 보이기.
     }
+    
+    func setPostingQuestionToIndex(postingQuestion: PostingQuestion, index: Int) {
+        postingService.setPostingQuestion(postingQuestion: postingQuestion, index: index)
+    }
+    
+    
 }
 
 extension PostingViewController: PostingBlockCollectionFooterDelegate {
@@ -546,3 +551,5 @@ extension PostingViewController: CustomNavigationBarDelegate {
         self.navigationController?.popViewController(animated: true)
     }
 }
+
+

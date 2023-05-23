@@ -27,9 +27,17 @@ protocol PostingServiceType: AnyObject {
     func addQuestion()
     func resetQuestions()
     func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String, numberOfOptions: Int)
+    func setPostingQuestion(postingQuestion: PostingQuestion, index: Int)
 }
 
 class PostingService: PostingServiceType {
+    func setPostingQuestion(postingQuestion: PostingQuestion, index: Int) {
+        if self.postingQuestions.count > index {
+            self.postingQuestions[index] = postingQuestion
+        } else {
+            self.postingQuestions.append(postingQuestion)
+        }
+    }
    
     var postingQuestions: [PostingQuestion] = []
     
@@ -38,9 +46,8 @@ class PostingService: PostingServiceType {
         if postingQuestions.count > index {
             postingQuestions[index] = postingQuestion
         } else {
-            let newPostingQuestion = PostingQuestion(index: index, question: questionText, questionType: type, numberOfOptions: numberOfOptions)
-            
-            postingQuestions.append(PostingQuestion(index: index, question: questionText, questionType: type, numberOfOptions: numberOfOptions))
+            let newPostingQuestion = PostingQuestion(index: index, question: questionText, questionType: type)
+            postingQuestions.append(PostingQuestion(index: index, question: questionText, questionType: type))
         }
     }
     
@@ -67,10 +74,6 @@ class PostingService: PostingServiceType {
         self.numberOfSpecimens = num
     }
     
-//    var numberOfQuestions: Int {
-//        return postingQuestions.count
-//    }
-    
     var selectedTargets: [Target] = []
     var selectedTags: [Tag] = []
     
@@ -87,26 +90,38 @@ public class PostingQuestion {
     var index: Int
     var question: String
     var numberOfOptions: Int {
-        didSet {
-            guard selectableOptions.isEmpty else { fatalError() }
-            for i in 1 ..< numberOfOptions {
-                selectableOptions.append(SelectableOption(position: i))
-            }
+        return selectableOptions.count
+    }
+    
+    
+    
+    func modifySelectableOption(index: Int, selectableOption: SelectableOption) {
+        if selectableOptions.count > index {
+            self.selectableOptions[index] = selectableOption
+        } else {
+            let numberOfCurrentOptions = self.selectableOptions.count
+            print("modifyCalled, adding \(numberOfCurrentOptions), count: \(selectableOptions.count), index: \(index)")
+            self.selectableOptions.append(SelectableOption(postion: numberOfCurrentOptions))
         }
+    }
+    
+    func modifyQuestionType(briefQuestionType: BriefQuestionType) {
+        self.briefQuestionType = briefQuestionType
     }
     
     var briefQuestionType: BriefQuestionType
     var selectableOptions: [SelectableOption] = []
     
-    init(index: Int, question: String = "", questionType: BriefQuestionType, numberOfOptions: Int) {
+    init(index: Int, question: String = "", questionType: BriefQuestionType) {
         self.index = index
         self.question = question
         self.briefQuestionType = questionType
-        self.numberOfOptions = numberOfOptions
     }
     
     public func addSelectableOption(selectableOption: SelectableOption) {
-        print("type: \(type(of: self)), numOfSelectableOptions: \(self.selectableOptions.count)")
+//        print("type: \(type(of: self)), numOfSelectableOptions: \(self.selectableOptions.count)")
+//        self.selectableOptions.append(selectableOption)
         self.selectableOptions.append(selectableOption)
+        
     }
 }

@@ -9,7 +9,7 @@ import UIKit
 import Model
 
 enum BriefQuestionType: Int {
-    case singleSelection = 1
+    case singleSelection = 0
     case multipleSelection
     case others
 }
@@ -28,13 +28,11 @@ class SelectableOptionFieldView: UIView {
         selectableOptionTextField.delegate = self
     }
     
-//    init(briefQuestionType: BriefQuestionType, position: Int) {
     init(briefQuestionType: BriefQuestionType, selectableOption: SelectableOption) {
         self.briefQuestionType = briefQuestionType
         self.selectableOption = selectableOption
         
         super.init(frame: .zero)
-//        self.tag = position
         
         setupDelegate()
         configureLayout()
@@ -55,6 +53,8 @@ class SelectableOptionFieldView: UIView {
     }
     
     private func configureLayout() {
+        print("configureLayout called, type: \(briefQuestionType), value: \(selectableOption.value)")
+        
         switch briefQuestionType {
         case .singleSelection:
             optionSymbolImageView.image = UIImage.emptyCircle
@@ -65,6 +65,12 @@ class SelectableOptionFieldView: UIView {
         default:
             optionSymbolImageView.image = nil
             selectableOptionTextField.placeholder = "placeHolder"
+        }
+        
+        if selectableOption.value != nil {
+            selectableOptionTextField.text = selectableOption.value
+        } else {
+            selectableOptionTextField.placeholder = "옵션"
         }
     }
     
@@ -88,13 +94,16 @@ class SelectableOptionFieldView: UIView {
 
 extension SelectableOptionFieldView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
         guard let text = textField.text else { return true }
-        selectableOptionFieldDelegate?.selectableOptionFieldReturnTapped(text, self.tag)
+        
+        selectableOptionFieldDelegate?.selectableOptionFieldReturnTapped(text, self.selectableOption.position)
+        
         return true
     }
 }
 
 protocol SelectableOptionFieldDelegate: AnyObject {
-    func selectableOptionFieldReturnTapped(_ text: String, _ tag: Int)
+    func selectableOptionFieldReturnTapped(_ text: String, _ position: Int)
 }
 
