@@ -117,8 +117,6 @@ public class PostingQuestion {
     }
     
     public func addSelectableOption(selectableOption: SelectableOption) {
-//        print("type: \(type(of: self)), numOfSelectableOptions: \(self.selectableOptions.count)")
-//        self.selectableOptions.append(selectableOption)
         self.selectableOptions.append(selectableOption)
         print("addSelectableOption called, current number of options: \(self.selectableOptions.count)")
         

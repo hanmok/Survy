@@ -19,6 +19,8 @@ class PostingViewController: BaseViewController, Coordinating {
     var coordinator: Coordinator?
     
     var numOfSpecimen: Int = 100
+    private let selectableOptionHeight: CGFloat = 27
+    private let defaultCellHeight: CGFloat = 120
     
     var postingService: PostingServiceType
     
@@ -460,9 +462,12 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         cell.postingBlockCollectionViewDelegate = self
         cell.cellIndex = indexPath.row
         
-        let cellHeight = CellHeight(index: indexPath.row, height: 150 + 20)
+//        let cellHeight = CellHeight(index: indexPath.row, height: 150 + 20)
+        let cellHeight = CellHeight(index: indexPath.row, height: defaultCellHeight + 20)
+        if self.questionCellHeights.filter { $0.index == indexPath.row }.isEmpty {
+            self.questionCellHeights.insert(cellHeight)
+        }
         
-        self.questionCellHeights.insert(cellHeight)
         
         viewDidAppear(false)
         
@@ -499,7 +504,8 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        var height: CGFloat = 150
+//        var height: CGFloat = 150
+        var height: CGFloat = defaultCellHeight
         
         if let first = questionCellHeights.first(where: { cellHeight in
             cellHeight.index == indexPath.row })
@@ -521,7 +527,9 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
         
         questionCellHeights.remove(correspondingCellHeight)
         let numberOfSelectableOptions = postingQuestion.numberOfOptions
-        let newCellHeight = CellHeight(index: cellIndex, height: CGFloat(150 + numberOfSelectableOptions * 20)) // 각 selectableOption 의 크기
+//        let newCellHeight = CellHeight(index: cellIndex, height: CGFloat(150 + numberOfSelectableOptions * 22)) // 각 selectableOption 의 크기
+        let newCellHeight = CellHeight(index: cellIndex, height: defaultCellHeight + CGFloat(numberOfSelectableOptions) * self.selectableOptionHeight)
+        // 각 selectableOption 의 크기
         print("newCellHeight: \(newCellHeight)")
         print("cellHeights: ")
         questionCellHeights.forEach {

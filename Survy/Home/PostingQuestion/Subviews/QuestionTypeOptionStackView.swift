@@ -8,15 +8,16 @@
 import UIKit
 import Model
 
-protocol PostingQuestionOptionStackViewDelegate: AnyObject {
+protocol QuestionTypeOptionStackViewDelegate: AnyObject {
 //    func makeSelectableOptions(numberOfOptions: Int, type: BriefQuestionType)
+    
     func changeQuestionType(briefQuestionType: BriefQuestionType)
 }
 
-class PostingQuestionOptionStackView: UIStackView {
+class QuestionTypeOptionStackView: UIStackView {
     
     weak var optionStackViewDelegate: OptionStackViewDelegate?
-    weak var questionOptionStackViewDelegate: PostingQuestionOptionStackViewDelegate?
+    weak var questionOptionStackViewDelegate: QuestionTypeOptionStackViewDelegate?
     
     public var selectedIndex: Int?
     
@@ -43,11 +44,17 @@ class PostingQuestionOptionStackView: UIStackView {
     }
     
     public func updateSelectedOption(briefType: BriefQuestionType) {
-//        let buttons = questionTypeButtons.filter { $0.tag != tag }
         guard let selectedButton = questionTypeButtons.first(where: {$0.tag == briefType.rawValue }) else { return }
+        print("selectedButtonTag: \(selectedButton.tag), briefTypeRawValue: \(briefType.rawValue)")
         selectedButton.backgroundColor = UIColor.deeperMainColor
         selectedButton.setTitleColor(.white, for: .normal)
+        // TODO: 다른 버튼들 색상 원상태로.
         
+        let otherButtons = questionTypeButtons.filter { $0.tag != briefType.rawValue }
+        otherButtons.forEach {
+            $0.backgroundColor = UIColor.blurredMainColor
+            $0.setTitleColor(.blurredTextColor, for: .normal)
+        }
     }
     
 //    public func removeAllArrangedSubViewsExceptFor(tag: Int) {
@@ -138,9 +145,11 @@ class PostingQuestionOptionStackView: UIStackView {
         sender.buttonSelected(true)
         selectedIndex = sender.tag
         isConditionFulfilled = true
-        guard let selectedIndex = selectedIndex else { return }
+        guard let selectedIndex = selectedIndex,
+              let briefType = BriefQuestionType(rawValue: selectedIndex)
+        else { fatalError() }
+        
         optionStackViewDelegate?.notifySelectionChange(to: selectedIndex)
-        guard let briefType = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
         
         questionOptionStackViewDelegate?.changeQuestionType(briefQuestionType: briefType)
     }

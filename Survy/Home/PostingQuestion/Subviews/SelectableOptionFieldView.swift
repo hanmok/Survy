@@ -11,7 +11,8 @@ import Model
 enum BriefQuestionType: Int {
     case singleSelection = 0
     case multipleSelection
-    case others
+    case short
+    case essay
 }
 
 class SelectableOptionFieldView: UIView {
@@ -73,6 +74,8 @@ class SelectableOptionFieldView: UIView {
             selectableOptionTextField.placeholder = "옵션"
         }
     }
+    
+    
     
     private let optionSymbolImageView: UIImageView = {
         let imageView = UIImageView()
