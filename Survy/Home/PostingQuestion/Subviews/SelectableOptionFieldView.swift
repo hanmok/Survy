@@ -54,7 +54,6 @@ class SelectableOptionFieldView: UIView {
     }
     
     private func configureLayout() {
-        print("configureLayout called, type: \(briefQuestionType), value: \(selectableOption.value)")
         
         switch briefQuestionType {
         case .singleSelection:

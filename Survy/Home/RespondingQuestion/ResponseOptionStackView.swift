@@ -143,7 +143,6 @@ class ResponseOptionStackView: UIStackView {
 }
 
 protocol OptionStackViewDelegate: AnyObject {
-    var hasPressed: Bool { get set }
     func notifyConditionChange(to condition: Bool)
     func notifySelectionChange(to index: Int)
 }

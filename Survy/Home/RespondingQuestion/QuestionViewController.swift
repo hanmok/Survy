@@ -12,7 +12,6 @@ import Model
 // Coordinator pattern 필요할 것 같은데 ??
 
 class QuestionViewController: BaseViewController, Coordinating {
-    var hasPressed: Bool = false
     
     @objc func otherViewTapped() {
         view.dismissKeyboard()
