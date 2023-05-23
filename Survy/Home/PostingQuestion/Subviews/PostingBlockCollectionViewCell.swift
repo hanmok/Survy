@@ -93,7 +93,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     private func setupDelegate() {
         questionTextField.delegate = self
         questionTypeOptionStackView.optionStackViewDelegate = self
-//        questionTypeOptionStackView.questionOptionStackViewDelegate = self
+        questionTypeOptionStackView.questionOptionStackViewDelegate = self
     }
     
     override func layoutSubviews() {

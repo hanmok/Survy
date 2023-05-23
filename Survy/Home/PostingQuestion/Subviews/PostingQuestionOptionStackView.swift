@@ -16,7 +16,7 @@ protocol PostingQuestionOptionStackViewDelegate: AnyObject {
 class PostingQuestionOptionStackView: UIStackView {
     
     weak var optionStackViewDelegate: OptionStackViewDelegate?
-//    weak var questionOptionStackViewDelegate: PostingQuestionOptionStackViewDelegate?
+    weak var questionOptionStackViewDelegate: PostingQuestionOptionStackViewDelegate?
     
     public var selectedIndex: Int?
     
@@ -142,7 +142,7 @@ class PostingQuestionOptionStackView: UIStackView {
         optionStackViewDelegate?.notifySelectionChange(to: selectedIndex)
         guard let briefType = BriefQuestionType(rawValue: selectedIndex) else { fatalError() }
         
-//        questionOptionStackViewDelegate?.changeQuestionType(briefQuestionType: briefType)
+        questionOptionStackViewDelegate?.changeQuestionType(briefQuestionType: briefType)
     }
 }
 
