@@ -52,7 +52,7 @@ class CategorySelectionFooterCell: UICollectionReusableView {
     let button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .magenta
-        button.setTitle("추가하기", for: .normal)
+        button.setTitle("추가요청하기", for: .normal)
         button.setTitleColor(.white, for: .normal)
         return button
     }()

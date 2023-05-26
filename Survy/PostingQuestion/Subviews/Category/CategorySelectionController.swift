@@ -25,6 +25,8 @@ class CategorySelectionController: UIViewController, Coordinating {
     
     private var selectedTags = Set<Tag>()
     
+    // TODO: API Call 로 바꾸기.
+    
     public let testTags = [
         Tag(id: 1, name: "운동"),
         Tag(id: 2, name: "필라테스"),
@@ -284,6 +286,21 @@ class CategorySelectionController: UIViewController, Coordinating {
     private var selectedCategoryCollectionView: UICollectionView!
     
     private var categoryListCollectionView: UICollectionView!
+    
+    private func addCategoryAction() {
+        let alertController = UIAlertController(title: "관심사 추가 요청", message: nil, preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.placeholder = "New Category Name"
+        }
+        let saveAction = UIAlertAction(title: "요청", style: .default) { alert -> Void in
+            guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
+            print("input text: \(text)")
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        self.present(alertController, animated: true)
+    }
 }
 
 extension CategorySelectionController {
@@ -318,9 +335,6 @@ extension CategorySelectionController {
         selectedTagDataSource = UICollectionViewDiffableDataSource<SelectedSection, Tag>(collectionView: selectedCategoryCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
             return collectionView.dequeueConfiguredReusableCell(using: selectedCellRegistration, for: indexPath, item: identifier)
          }
-        
-        
-        
     }
 }
 
@@ -366,6 +380,6 @@ extension CategorySelectionController: SelectableCategoryCellDelegate {
 
 extension CategorySelectionController: CategorySelectionFooterCellDelegate {
     func categorySelectionFooterCellTapped() {
-        print("hi")
+        addCategoryAction()
     }
 }
