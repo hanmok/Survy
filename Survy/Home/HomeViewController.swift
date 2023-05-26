@@ -133,14 +133,14 @@ class HomeViewController: UIViewController, Coordinating {
         
         self.view.addSubview(wholeScrollView)
         self.view.addSubview(requestingButton)
-        self.view.addSubview(topCoverView)
-        topCoverView.snp.makeConstraints { make in
+        self.view.addSubview(safeAreaCoveringView)
+        safeAreaCoveringView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(40)
         }
         
         [
-         collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView].forEach {
+         categorySelectionCoveringView, collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView].forEach {
              self.wholeScrollView.addSubview($0)
          }
         
@@ -155,19 +155,24 @@ class HomeViewController: UIViewController, Coordinating {
             make.top.equalToSuperview()
         }
         
+        categorySelectionCoveringView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.width.equalTo(UIScreen.screenWidth)
+            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
+            make.height.equalTo(categoryHeight)
+        }
+        
         categorySelectionButton.snp.makeConstraints { make in
             make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview()
+            make.leading.equalToSuperview().offset(12)
             make.width.equalTo(UIScreen.screenWidth / 6)
             make.height.equalTo(categoryHeight)
         }
         
         categoryCollectionView.snp.makeConstraints { make in
             make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
-//            make.leading.equalTo(categorySelectionButton.snp.trailing).offset(12)
-//            make.width.equalTo(UIScreen.screenWidth - 24)
-            make.leading.equalTo(categorySelectionButton.snp.trailing)
-            make.width.equalTo(UIScreen.screenWidth * 5 / 6)
+            make.leading.equalTo(categorySelectionButton.snp.trailing).offset(8)
+            make.width.equalTo(UIScreen.screenWidth * 5 / 6 - 32)
             make.height.equalTo(categorySelectionButton.snp.height)
         }
         
@@ -239,7 +244,8 @@ class HomeViewController: UIViewController, Coordinating {
     private let categorySelectionButton: UIButton = {
         let button = UIButton()
         button.setTitle("선택", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+//        button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .mainBackgroundColor
 //        button.inset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
 //        button.addInsets(top: 8, bottom: 12, left: 8, right: 12)
@@ -268,10 +274,16 @@ class HomeViewController: UIViewController, Coordinating {
         return tableView
     }()
     
-    private let topCoverView: UIView = {
+    private let safeAreaCoveringView: UIView = {
         let view = UIView()
         view.backgroundColor = .mainBackgroundColor
         view.isHidden = true
+        return view
+    }()
+    
+    private let categorySelectionCoveringView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .mainBackgroundColor
         return view
     }()
     
@@ -344,51 +356,67 @@ extension HomeViewController: UIScrollViewDelegate {
         
         let edgeHeight: CGFloat = 24.0
         if scrollView.contentOffset.y > edgeHeight && hasCategoryPinnedToTheTop == false {
-            topCoverView.isHidden = false
+            safeAreaCoveringView.isHidden = false
             hasCategoryPinnedToTheTop = true
             
             // TODO: pin to the top
-            [categorySelectionButton, categoryCollectionView].forEach {
+            [categorySelectionCoveringView, categorySelectionButton, categoryCollectionView ].forEach {
                 $0.removeFromSuperview()
                 self.view.addSubview($0)
             }
             
-            self.view.addSubview(topCoverView)
+            self.view.addSubview(safeAreaCoveringView)
+            
+            categorySelectionCoveringView.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(40)
+                make.leading.equalToSuperview()
+                make.width.equalTo(UIScreen.screenWidth)
+                make.height.equalTo(categoryHeight)
+            }
             
             categorySelectionButton.snp.makeConstraints { make in
                 make.top.equalToSuperview().offset(40)
-                make.leading.equalToSuperview()
+                make.leading.equalToSuperview().offset(12)
                 make.width.equalTo(UIScreen.screenWidth / 6)
                 make.height.equalTo(categoryHeight)
             }
             
             categoryCollectionView.snp.makeConstraints { make in
                 make.top.equalToSuperview().offset(40)
-                make.leading.equalTo(categorySelectionButton.snp.trailing)
-                make.width.equalTo(UIScreen.screenWidth * 5 / 6)
+                make.leading.equalTo(categorySelectionButton.snp.trailing).offset(8)
+                make.width.equalTo(UIScreen.screenWidth * 5 / 6 - 32)
                 make.height.equalTo(categoryHeight)
             }
+            
         } else if scrollView.contentOffset.y <= edgeHeight && hasCategoryPinnedToTheTop == true {
-            topCoverView.isHidden = true
+            
+            safeAreaCoveringView.isHidden = true
 
             hasCategoryPinnedToTheTop = false
             
-            [categorySelectionButton, categoryCollectionView].forEach {
+            [categorySelectionCoveringView, categorySelectionButton, categoryCollectionView].forEach {
                 $0.removeFromSuperview()
                 self.wholeScrollView.addSubview($0)
             }
             
-            categorySelectionButton.snp.makeConstraints { make in
+            categorySelectionCoveringView.snp.makeConstraints { make in
                 make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
                 make.leading.equalToSuperview()
+                make.width.equalTo(UIScreen.screenWidth)
+                make.height.equalTo(categoryHeight)
+            }
+            
+            categorySelectionButton.snp.makeConstraints { make in
+                make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
+                make.leading.equalToSuperview().offset(12)
                 make.width.equalTo(UIScreen.screenWidth / 6)
                 make.height.equalTo(categoryHeight)
             }
             
             categoryCollectionView.snp.makeConstraints { make in
                 make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
-                make.leading.equalTo(categorySelectionButton.snp.trailing)
-                make.width.equalTo(UIScreen.screenWidth * 5 / 6)
+                make.leading.equalTo(categorySelectionButton.snp.trailing).offset(8)
+                make.width.equalTo(UIScreen.screenWidth * 5 / 6 - 32)
                 make.height.equalTo(categorySelectionButton.snp.height)
             }
         }

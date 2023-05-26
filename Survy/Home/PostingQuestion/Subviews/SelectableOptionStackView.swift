@@ -36,5 +36,6 @@ class SelectableOptionStackView: UIStackView {
     }
     
     public func changeQuestionType(_ briefQuestionType: BriefQuestionType) {
+        
     }
 }
