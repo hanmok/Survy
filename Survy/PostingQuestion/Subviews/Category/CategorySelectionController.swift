@@ -89,10 +89,11 @@ class CategorySelectionController: UIViewController, Coordinating {
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
             
             group.interItemSpacing = .fixed(spacing)
-
+            
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = spacing
             section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+
             return section
         }
         
@@ -113,11 +114,27 @@ class CategorySelectionController: UIViewController, Coordinating {
             
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
             
+            let headerFooterSize = NSCollectionLayoutSize(
+//              widthDimension: .fractionalWidth(1.0),
+                widthDimension: .absolute(UIScreen.screenWidth - 64),
+//              heightDimension: .estimated(100)
+              heightDimension: .absolute(40)
+            )
+            
+            let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
+                layoutSize: headerFooterSize,
+                elementKind: UICollectionView.elementKindSectionFooter,
+                alignment: .bottom
+              )
+            
             group.interItemSpacing = .fixed(spacing)
 
             let section = NSCollectionLayoutSection(group: group)
             section.interGroupSpacing = spacing
-            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10)
+            section.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 20, trailing: 10)
+            
+            section.boundarySupplementaryItems = [sectionFooter]
+            
             return section
         }
         
@@ -271,6 +288,8 @@ class CategorySelectionController: UIViewController, Coordinating {
 
 extension CategorySelectionController {
     func configureDataSource() {
+        registerSupplementaryView()
+        
         let selectableCellRegistration = UICollectionView.CellRegistration<SelectableCategoryCell, Tag> { (cell, indexPath, category) in
             cell.categoryTag = category
             cell.delegate = self
@@ -280,6 +299,17 @@ extension CategorySelectionController {
             return collectionView.dequeueConfiguredReusableCell(using: selectableCellRegistration, for: indexPath, item: identifier)
          }
         
+        selectableTagDataSource.supplementaryViewProvider = {
+            collectionView, kind, indexPath -> UICollectionReusableView? in
+            guard kind == UICollectionView.elementKindSectionFooter else { return nil }
+                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategorySelectionFooterCell.reuseIdentifier, for: indexPath) as? CategorySelectionFooterCell
+            view?.footerCellDelegate = self
+//                view?.label.text = "추가하기"
+            
+            return view
+        }
+        
+        
         let selectedCellRegistration = UICollectionView.CellRegistration<SelectedCategoryCell, Tag> { (cell, indexPath, category) in
             cell.categoryTag = category
             cell.delegate = self
@@ -288,6 +318,9 @@ extension CategorySelectionController {
         selectedTagDataSource = UICollectionViewDiffableDataSource<SelectedSection, Tag>(collectionView: selectedCategoryCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
             return collectionView.dequeueConfiguredReusableCell(using: selectedCellRegistration, for: indexPath, item: identifier)
          }
+        
+        
+        
     }
 }
 
@@ -306,6 +339,11 @@ extension CategorySelectionController: UISearchBarDelegate {
     }
 }
 
+extension CategorySelectionController {
+    func registerSupplementaryView() {
+        categoryListCollectionView.register(CategorySelectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: CategorySelectionFooterCell.reuseIdentifier)
+    }
+}
 extension CategorySelectionController: SelectableCategoryCellDelegate {
     func selectableCategoryCellTapped(_ cell: SelectableCategoryCell) {
         cell.isTagSelected = !cell.isTagSelected
@@ -323,5 +361,11 @@ extension CategorySelectionController: SelectableCategoryCellDelegate {
         snapshot.appendSections([.main])
         snapshot.appendItems(selectedTagArr)
         selectedTagDataSource.apply(snapshot, animatingDifferences: true)
+    }
+}
+
+extension CategorySelectionController: CategorySelectionFooterCellDelegate {
+    func categorySelectionFooterCellTapped() {
+        print("hi")
     }
 }

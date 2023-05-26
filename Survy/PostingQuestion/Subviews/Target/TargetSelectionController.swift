@@ -77,9 +77,6 @@ class TargetSelectionController: UIViewController, Coordinating {
         setupInitialValues()
     }
     
-    
-    
-    
     func createSelectableTagLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
@@ -102,17 +99,15 @@ class TargetSelectionController: UIViewController, Coordinating {
             
             let headerFooterSize = NSCollectionLayoutSize(
               widthDimension: .fractionalWidth(1.0),
-//              heightDimension: .estimated(100)
               heightDimension: .absolute(40)
             )
-            
-//            let someSize = NSCollectionlayoutsize
             
             let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(
               layoutSize: headerFooterSize,
               elementKind: UICollectionView.elementKindSectionHeader,
               alignment: .top
             )
+            
             section.boundarySupplementaryItems = [sectionHeader]
             
             return section
@@ -242,12 +237,14 @@ class TargetSelectionController: UIViewController, Coordinating {
 
 extension TargetSelectionController {
     
-    func registerHeader() {
+    func registerSupplementaryView() {
         selectableTargetCollectionView.register(TargetSelectionHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TargetSelectionHeaderCell.reuseIdentifier)
+        
+//        selectableTargetCollectionView.register(TargetSelectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: TargetSelectionFooterCell.reuseIdentifier)
     }
     
     func configureDataSource() {
-        registerHeader()
+        registerSupplementaryView()
         
         let selectableCellRegistration = UICollectionView.CellRegistration<SelectableTargetCell, Target> { (cell, indexPath, category) in
             cell.target = category
@@ -257,16 +254,16 @@ extension TargetSelectionController {
         selectableTargetDataSource = UICollectionViewDiffableDataSource<TargetSection, Target>(collectionView: selectableTargetCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Target) -> UICollectionViewCell? in
             return collectionView.dequeueConfiguredReusableCell(using: selectableCellRegistration, for: indexPath, item: identifier)
          }
+
+//        selectableTargetDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> TargetSelectionHeaderCell? in
         
-        selectableTargetDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> TargetSelectionHeaderCell? in
+        selectableTargetDataSource.supplementaryViewProvider = { collectionView, kind, indexPath -> UICollectionReusableView? in
             
             guard kind == UICollectionView.elementKindSectionHeader else { return nil }
-            
             let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TargetSelectionHeaderCell.reuseIdentifier, for: indexPath) as? TargetSelectionHeaderCell
 
             let targetSection = TargetSection.allCases[indexPath.section]
             view?.label.attributedText = NSAttributedString(string: targetSection.rawValue, attributes: [.font: UIFont.systemFont(ofSize: 18, weight: .semibold), .foregroundColor: UIColor.black])
-
             return view
         }
     }
