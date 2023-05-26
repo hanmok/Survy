@@ -9,9 +9,8 @@ import UIKit
 import SnapKit
 import Model
 
-
-
-class HomeViewController: UIViewController, Coordinating {
+//class HomeViewController: UIViewController, Coordinating {
+class HomeViewController: TabController, Coordinating {
     
     var participationService: ParticipationServiceType
     var userService: UserServiceType
@@ -38,11 +37,13 @@ class HomeViewController: UIViewController, Coordinating {
     
     private let categoryHeight: CGFloat = 50
     
-    init(participationService: ParticipationServiceType,
+    init(index: Int, participationService: ParticipationServiceType,
          userService: UserServiceType) {
         self.participationService = participationService
         self.userService = userService
-        super.init(nibName: nil, bundle: nil)
+        super.init(index: index)
+//        self.index = index
+//        super.init(nibName: nil, bundle: nil)
     }
     
     override func viewDidLoad() {
@@ -113,6 +114,12 @@ class HomeViewController: UIViewController, Coordinating {
     
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
+        
+        categorySelectionButton.addTarget(self, action: #selector(categorySelectionButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func categorySelectionButtonTapped() {
+        coordinator?.manipulate(.categorySelection, command: .present)
     }
     
     @objc func moveToPostSurvey() {
@@ -126,7 +133,6 @@ class HomeViewController: UIViewController, Coordinating {
         
         // 이거 하면 지워지나.. ㅇㅇ..
         navigationController?.setNavigationBarHidden(true, animated: false)
-//        navigationController.setnavi
         
         // dma.. navigationBar 없애. 다 Customize 하기.
         

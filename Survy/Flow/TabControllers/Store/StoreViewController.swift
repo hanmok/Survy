@@ -7,11 +7,19 @@
 
 import UIKit
 
-class StoreViewController: BaseViewController {
+class StoreViewController: TabController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.titleView = UIView()
+    }
+    
+    override init(index: Int) {
+        super.init(index: index)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
 

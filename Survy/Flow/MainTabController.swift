@@ -34,29 +34,28 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
         configureViewControllers()
 //        selectedIndex = 2
         self.selectedIndex = 0
-        
-//        let selectedColor   = UIColor(red: 246.0/255.0, green: 155.0/255.0, blue: 13.0/255.0, alpha: 1.0)
-//        let unselectedColor = UIColor(red: 16.0/255.0, green: 224.0/255.0, blue: 223.0/255.0, alpha: 1.0)
-
-//        UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: unselectedColor], for: .normal)
+        self.provider.commonService.setSelectedIndex(0)
         
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .selected)
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.black], for: .normal)
     }
     
+    
+    
     func configureViewControllers() {
         
         tabBar.backgroundColor = UIColor.mainColor
         guard let coordinator = self.coordinator else { fatalError() }
-        let homeVC = HomeViewController(participationService: self.provider.participationService, userService: self.provider.userService)
+        
+        let homeVC = HomeViewController(index: 0, participationService: self.provider.participationService, userService: self.provider.userService)
         
         homeVC.title = "홈"
         homeVC.coordinator = coordinator
         
-        let storeVC = StoreViewController()
+        let storeVC = StoreViewController(index: 1)
         storeVC.title = "스토어"
         
-        let myPageVC = MyPageViewController()
+        let myPageVC = MyPageViewController(index: 2)
         myPageVC.title = "마이페이지"
         
         let home = templateNavigationController(
@@ -76,17 +75,27 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
             rootViewController: myPageVC)
 
         viewControllers = [home, store, myPage]
+        
     }
     
     func templateNavigationController(unselectedImage: UIImage,
                                       selectedImage: UIImage,
                                       rootViewController: UIViewController) -> UINavigationController {
         let nav = UINavigationController(rootViewController: rootViewController)
+        
         nav.tabBarItem.image = unselectedImage
         
         // icon color
         nav.tabBarItem.selectedImage = selectedImage.withTintColor(.black, renderingMode: .alwaysOriginal)
         
         return nav
+    }
+    
+    override func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        guard let items = self.tabBar.items,
+              let idx = items.firstIndex(of: item) else {
+                  fatalError()
+              }
+        provider.commonService.setSelectedIndex(idx)
     }
 }

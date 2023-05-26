@@ -64,13 +64,11 @@ class MainCoordinator: Coordinator {
     func move(to destination: Destination) {
         switch destination {
             case .questionController:
-                
                 let questionController = QuestionViewController(surveyService: provider.participationService)
                 questionController.coordinator = self
                 navigationController?.pushViewController(questionController, animated: true)
             case .root:
                 navigationController?.popToRootViewController(animated: true)
-                
             case .postingController:
                 let postingController = PostingViewController(postingService: self.provider.postingService)
                 postingController.coordinator = self
@@ -81,11 +79,13 @@ class MainCoordinator: Coordinator {
     var navigationController: StartingNavigationController?
     
     func manipulate(_ childView: ChildView, command: Command) {
+        
+        let currentTabIndex = provider.commonService.selectedIndex
+        
         switch (childView, command) {
                 
             case (let type, .present):
                 var vc: UIViewController & Coordinating
-                // 나중에 또 쓰일 수 있으므로 if 로 분리해놓음.
 
                 switch type {
                     case .categorySelection:
@@ -98,17 +98,33 @@ class MainCoordinator: Coordinator {
                 
                 vc.coordinator = self
                 
-                guard let topViewController = navigationController?.topViewController else { return }
+                guard var topViewController = navigationController?.topViewController else { fatalError() }
+                
+                if let mainTab = topViewController as? MainTabController, let wrappedNav = mainTab.viewControllers?[currentTabIndex] as? UINavigationController {
+                    topViewController = wrappedNav.topViewController!
+                    topViewController.tabBarController?.tabBar.isHidden = true
+                }
+                
                 topViewController.view.backgroundColor = UIColor(white: 0.2, alpha: 0.9)
+                print("presentingViewController: \(topViewController)")
                 
                 topViewController.addChild(vc)
                 topViewController.view.addSubview(vc.view)
+                
                 vc.view.snp.makeConstraints { make in
                     make.edges.equalToSuperview()
                 }
                 
             case (let type, .dismiss):
-                guard let topViewController = navigationController?.topViewController else { fatalError() }
+                // MainTabController 면 곤란함.. 다르게 처리해야해. How ?
+                guard var topViewController = navigationController?.topViewController else { fatalError() }
+                
+                if let mainTab = topViewController as? MainTabController, let nav = mainTab.viewControllers![currentTabIndex] as? UINavigationController {
+                    topViewController = nav.topViewController!
+                    topViewController.tabBarController?.tabBar.isHidden = false
+                }
+                
+                print("topViewController: \(topViewController)")
                 
                 topViewController.view.backgroundColor = UIColor.postingVCBackground
                 topViewController.children.forEach {
@@ -117,7 +133,7 @@ class MainCoordinator: Coordinator {
                     $0.removeFromParent()
                 }
                 
-                guard let postingViewController = topViewController as? BaseViewController else { fatalError() }
+//                guard let postingViewController = topViewController as? BaseViewController else { fatalError() }
                 
                 if type == .confirmation {
                     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
@@ -125,6 +141,7 @@ class MainCoordinator: Coordinator {
                         self.navigationController?.toastMessage(title: "설문이 요청되었습니다.")
                     }
                 } else {
+                    guard let postingViewController = topViewController as? BaseViewController else { return }
                     postingViewController.updateMyUI()
                 }
         }

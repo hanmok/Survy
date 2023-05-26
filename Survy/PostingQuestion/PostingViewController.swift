@@ -57,35 +57,6 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
-//    private let dismissButton: UIButton = {
-//        let button = UIButton()
-//        let imageView = UIImageView()
-//        imageView.contentMode = .scaleAspectFit
-//
-//        imageView.image = UIImage.leftChevron
-//        button.addSubview(imageView)
-//        imageView.snp.makeConstraints { make in
-//            make.center.equalToSuperview()
-//            make.width.height.equalToSuperview().dividedBy(2)
-//        }
-//        return button
-//    }()
-
-//    private let titleLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "설문 요청"
-//        label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
-//        label.textColor = .black
-//        return label
-//    }()
-    
-//    private let nav
-    
-//    private let customNavBar: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = .mainBackgroundColor
-//        return view
-//    }()
     
     private let customNavBar: CustomNavigationBar = {
         let navBar = CustomNavigationBar(title: "설문 요청")
@@ -182,7 +153,6 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
-    
     private func setupInitialSnapshot() {
         var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
         tagSnapshot.appendSections([.main])
@@ -229,7 +199,6 @@ class PostingViewController: BaseViewController, Coordinating {
         targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
         categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
         
-//        dismissButton.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
     }
     
     
@@ -245,17 +214,22 @@ class PostingViewController: BaseViewController, Coordinating {
     
     @objc func targetTapped(_ sender: UIButton) {
         view.dismissKeyboard()
+        
         coordinator?.manipulate(.targetSelection, command: .present)
+        
     }
     
     @objc func categoryTapped(_ sender: UIButton) {
         view.dismissKeyboard()
+        
         coordinator?.manipulate(.categorySelection, command: .present)
+        
     }
     
     @objc func requestSurveyTapped(_ sender: UIButton) {
         print("current PostingQuestions: ")
         print("number of Questions: \(postingService.numberOfQuestions)")
+        
         postingService.postingQuestions.forEach {
             print("question: \($0.question), questionType: \($0.briefQuestionType)")
             $0.selectableOptions.forEach {
@@ -298,7 +272,6 @@ class PostingViewController: BaseViewController, Coordinating {
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(50)
         }
-        
         
         requestingButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
@@ -387,8 +360,6 @@ class PostingViewController: BaseViewController, Coordinating {
     private lazy var postingBlockCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 12
-//        layout.scrollDirection = .vertical
-        
         
         let configuration = UICollectionLayoutListConfiguration(appearance: .plain)
         let anotherLayout = UICollectionViewCompositionalLayout.list(using: configuration)

@@ -7,6 +7,7 @@
 
 import UIKit
 import Model
+import SnapKit
 
 class CategorySelectionController: UIViewController, Coordinating {
     
@@ -65,7 +66,8 @@ class CategorySelectionController: UIViewController, Coordinating {
     private let wholeContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-        view.applyCornerRadius(on: .top, radius: 10)
+//        view.applyCornerRadius(on: .top, radius: 10)
+        view.applyCornerRadius(on: .all, radius: 10)
         return view
     }()
     
@@ -161,8 +163,13 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         [topViewLabel, exitButton].forEach { self.topViewContainer.addSubview($0) }
         
+        print("view.layoutMarginsGuide: \(view.layoutMarginsGuide)")
+//        let some = UIApplication.shared.delegate?.window??.safeAreaLayoutGuide.topAnchor ?? view.safeAreaLayoutGuide.topAnchor
+//        let topConstraint = UIApplication.shared.delegate?.window??.safeAreaLayoutGuide.topAnchor ?? view.safeAreaLayoutGuide.topAnchor
+        
         wholeContainerView.snp.makeConstraints { make in
-            make.edges.equalTo(view.layoutMarginsGuide)
+            make.top.equalToSuperview().inset(UIScreen.safeAreaInsetTop)
+            make.leading.trailing.bottom.equalToSuperview().inset(20)
         }
         
         topViewContainer.snp.makeConstraints { make in

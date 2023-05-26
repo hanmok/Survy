@@ -8,7 +8,7 @@
 import SnapKit
 import UIKit
 
-class MyPageViewController: UIViewController {
+class MyPageViewController: TabController {
 
     let collectedMoney = 56000
     
@@ -18,6 +18,14 @@ class MyPageViewController: UIViewController {
         Info(text: "고객센터", nextViewController: UIViewController()),
         Info(text: "회원탈퇴", nextViewController: UIViewController())
     ]
+    
+    override init(index: Int) {
+        super.init(index: index)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
