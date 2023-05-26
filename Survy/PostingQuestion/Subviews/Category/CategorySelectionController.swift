@@ -27,12 +27,32 @@ class CategorySelectionController: UIViewController, Coordinating {
     
     // TODO: API Call 로 바꾸기.
     
-    public let testTags = [
-        Tag(id: 1, name: "운동"),
-        Tag(id: 2, name: "필라테스"),
-        Tag(id: 3, name: "PT"),
-        Tag(id: 4, name: "애견")
-    ]
+//    private var testTags = [
+////        Tag(id: 1, name: "운동"),
+////        Tag(id: 2, name: "필라테스"),
+////        Tag(id: 3, name: "PT"),
+////        Tag(id: 4, name: "애견")
+//    ]
+    private var testTags = [Tag]()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let url = URL(string: "https://dearsurvy.herokuapp.com/tags")!
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard error == nil, let data = data else {
+                print(error)
+                return
+            }
+
+            let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: data)
+            let tags = tagsDic["tags"]!
+            for tag in tags.sorted(by: < ) {
+                self?.testTags.append(tag)
+            }
+            self?.updateTags()
+            print("tags: \(tags)")
+            
+        }.resume()
+    }
     
     enum SelectableSection {
         case main
@@ -49,10 +69,6 @@ class CategorySelectionController: UIViewController, Coordinating {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        view.backgroundColor = .white
-        
-//        view.layer.cornerRadius = 10
-//        view.clipsToBounds = true
         view.backgroundColor = UIColor(white: 0.2, alpha: 0.9)
         
         setupNavigationBar()
@@ -182,10 +198,6 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         [topViewLabel, exitButton].forEach { self.topViewContainer.addSubview($0) }
         
-        print("view.layoutMarginsGuide: \(view.layoutMarginsGuide)")
-//        let some = UIApplication.shared.delegate?.window??.safeAreaLayoutGuide.topAnchor ?? view.safeAreaLayoutGuide.topAnchor
-//        let topConstraint = UIApplication.shared.delegate?.window??.safeAreaLayoutGuide.topAnchor ?? view.safeAreaLayoutGuide.topAnchor
-        
         wholeContainerView.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(UIScreen.safeAreaInsetTop)
             make.leading.trailing.bottom.equalToSuperview().inset(20)
@@ -245,6 +257,13 @@ class CategorySelectionController: UIViewController, Coordinating {
         snapshot.appendSections([.main])
         snapshot.appendItems(tagsToShow)
         selectableTagDataSource.apply(snapshot, animatingDifferences: true)
+    }
+    
+    private func updateTags() {
+        var snapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(testTags)
+        selectableTagDataSource.apply(snapshot, animatingDifferences: false)
     }
     
     private let completeButton: UIButton = {
@@ -343,7 +362,6 @@ extension CategorySelectionController: SelectedCategoryCellDelegate {
     func selectedCategoryCellTapped(_ cell: SelectedCategoryCell) {
         // TODO: Update Snapshot to remove selected tag
         
-        // 뭘 할 수가 없는데..??
     }
 }
 
@@ -358,6 +376,7 @@ extension CategorySelectionController {
         categoryListCollectionView.register(CategorySelectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: CategorySelectionFooterCell.reuseIdentifier)
     }
 }
+
 extension CategorySelectionController: SelectableCategoryCellDelegate {
     func selectableCategoryCellTapped(_ cell: SelectableCategoryCell) {
         cell.isTagSelected = !cell.isTagSelected
