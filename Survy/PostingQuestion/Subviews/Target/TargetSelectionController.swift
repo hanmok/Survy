@@ -194,7 +194,6 @@ class TargetSelectionController: UIViewController, Coordinating {
         button.setTitle("완료", for: .normal)
         button.setTitleColor(.black, for: .normal)
         button.backgroundColor = UIColor.mainColor
-//        button.backgroundColor = UIColor.deeperMainColor
         button.layer.cornerRadius = 7
         button.clipsToBounds = true
         return button
@@ -239,8 +238,6 @@ extension TargetSelectionController {
     
     func registerSupplementaryView() {
         selectableTargetCollectionView.register(TargetSelectionHeaderCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TargetSelectionHeaderCell.reuseIdentifier)
-        
-//        selectableTargetCollectionView.register(TargetSelectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: TargetSelectionFooterCell.reuseIdentifier)
     }
     
     func configureDataSource() {
@@ -289,12 +286,5 @@ extension TargetSelectionController: SelectableTargetCellDelegate {
         } else {
             selectedTargets.remove(target)
         }
-        
-//        let selectedTargetArr = Array(selectedTargets)
-//        var snapshot = NSDiffableDataSourceSnapshot<SelectedTargetSection, Target>()
-//        snapshot.appendSections([.main])
-//        snapshot.appendItems(selectedTargetArr)
-////        selectedTargetDataSource.apply(snapshot, animatingDifferences: true)
-//        selectableTargetDataSource.apply(snapshot, animatingDifferences: true)
     }
 }

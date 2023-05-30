@@ -8,9 +8,11 @@
 import UIKit
 import Model
 import SnapKit
+import API
 
 class CategorySelectionController: UIViewController, Coordinating {
     
+//    let provider = MoyaProvider<Tag>()
     var coordinator: Coordinator?
     var postingService: PostingServiceType
     
@@ -33,25 +35,38 @@ class CategorySelectionController: UIViewController, Coordinating {
 ////        Tag(id: 3, name: "PT"),
 ////        Tag(id: 4, name: "애견")
 //    ]
+    
     private var testTags = [Tag]()
     
     override func viewWillAppear(_ animated: Bool) {
-        let url = URL(string: "https://dearsurvy.herokuapp.com/tags")!
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            guard error == nil, let data = data else {
-                print(error)
-                return
-            }
-
-            let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: data)
-            let tags = tagsDic["tags"]!
-            for tag in tags.sorted(by: < ) {
+//        let some =
+//        APIManager.shared.provider.request(Tag, completion: <#T##Completion##Completion##(_ result: Result<Response, MoyaError>) -> Void#>)
+        
+//        let url = URL(string: "https://dearsurvy.herokuapp.com/tags")!
+//        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+//            guard error == nil, let data = data else {
+//                print(error)
+//                return
+//            }
+//
+//            let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: data)
+//            let tags = tagsDic["tags"]!
+//            for tag in tags.sorted(by: < ) {
+//                self?.testTags.append(tag)
+//            }
+//            self?.updateTags()
+//            print("tags: \(tags)")
+//
+//        }.resume()
+        
+        APIService.shared.fetchTags { [weak self] tags in
+            for tag in tags.sorted(by: <) {
                 self?.testTags.append(tag)
             }
             self?.updateTags()
-            print("tags: \(tags)")
-            
-        }.resume()
+        }
+        
+//        let provider = MoyaProvider
     }
     
     enum SelectableSection {
