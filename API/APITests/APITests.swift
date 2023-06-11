@@ -36,6 +36,20 @@ final class APITests: XCTestCase {
     func test_sth() {
         APIService.shared.fetchTagsMoya { tags in
             XCTAssertNotNil(tags)
+            XCTAssertNil(tags)
         }
+    }
+    
+    func test_postTag() { // why is it not working ??
+        let expectation = self.expectation(description: "post")
+        APIService.shared.requestTag(tagName: "달리기") { result in
+//        APIService.shared.requestTagMoya(requestingTagName: "프렌차이즈") { result in
+            
+        
+            print("myAPIResult: \(result)")
+            XCTAssertNil(result)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 10)
     }
 }

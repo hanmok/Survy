@@ -73,10 +73,7 @@ class CategorySelectionController: UIViewController, Coordinating {
                 self?.testTags.append(tag)
             }
             self?.updateTags()
-            
         }
-//        let provider = MoyaProvider
-        
         
     }
     

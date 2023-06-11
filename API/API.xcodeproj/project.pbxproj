@@ -44,6 +44,7 @@
 		9AFE34DA2A358DB5009CCE6D /* UsingDictionary.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = UsingDictionary.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = BasicEncodingDecoding.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = NameDismatches.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = BasicPosting.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +98,7 @@
 				9ACCC7442A20CA6F006AE8CE /* APIService.swift */,
 				9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */,
 				9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */,
+				9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */,
 				9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */,
 				9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */,
 				9AFE34DA2A358DB5009CCE6D /* UsingDictionary.playground */,

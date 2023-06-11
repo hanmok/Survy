@@ -491,5 +491,224 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3EB49332-B6B5-465D-89AC-7A47D3AD98EC"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "API/API/APIService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "159"
+            endingLineNumber = "159"
+            landmarkName = "requestTagMoya(requestingTagName:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3EB49332-B6B5-465D-89AC-7A47D3AD98EC - f53d55e7e7c158b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Moya.Response, Moya.MoyaError&gt;) -&gt; () in API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162"
+                  offsetFromSymbolStart = "266">
+               </Location>
+               <Location
+                  uuid = "3EB49332-B6B5-465D-89AC-7A47D3AD98EC - efd71201fbb957e0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "API.APIService.requestTag(tagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "159"
+                  endingLineNumber = "159"
+                  offsetFromSymbolStart = "936">
+               </Location>
+               <Location
+                  uuid = "3EB49332-B6B5-465D-89AC-7A47D3AD98EC - f53d55e7e7c15c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Moya.Response, Moya.MoyaError&gt;) -&gt; () in API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "160"
+                  endingLineNumber = "160"
+                  offsetFromSymbolStart = "240">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F7A697AC-E59B-4EA6-BE05-B4EA0CED7540"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "API/API/APIService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
+            landmarkName = "requestTagMoya(requestingTagName:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F7A697AC-E59B-4EA6-BE05-B4EA0CED7540 - 1398b612561e3c08"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "157"
+                  endingLineNumber = "157"
+                  offsetFromSymbolStart = "87">
+               </Location>
+               <Location
+                  uuid = "F7A697AC-E59B-4EA6-BE05-B4EA0CED7540 - efd71201fbb95764"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "API.APIService.requestTag(tagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "155"
+                  endingLineNumber = "155"
+                  offsetFromSymbolStart = "688">
+               </Location>
+               <Location
+                  uuid = "F7A697AC-E59B-4EA6-BE05-B4EA0CED7540 - 1398b612561e3c4a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "155"
+                  endingLineNumber = "155"
+                  offsetFromSymbolStart = "80">
+               </Location>
+               <Location
+                  uuid = "F7A697AC-E59B-4EA6-BE05-B4EA0CED7540 - f53d55e7e7c15c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Moya.Response, Moya.MoyaError&gt;) -&gt; () in API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "160"
+                  endingLineNumber = "160"
+                  offsetFromSymbolStart = "240">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D69D281C-C69E-4FE4-B4CC-A32620B156FB"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "API/API/APIService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "163"
+            endingLineNumber = "163"
+            landmarkName = "requestTagMoya(requestingTagName:completion:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D69D281C-C69E-4FE4-B4CC-A32620B156FB - efd71201fbb9586c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "API.APIService.requestTag(tagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "163"
+                  endingLineNumber = "163"
+                  offsetFromSymbolStart = "1000">
+               </Location>
+               <Location
+                  uuid = "D69D281C-C69E-4FE4-B4CC-A32620B156FB - f53d55e7e7c1a49"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Moya.Response, Moya.MoyaError&gt;) -&gt; () in API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "164"
+                  endingLineNumber = "164"
+                  offsetFromSymbolStart = "1070">
+               </Location>
+               <Location
+                  uuid = "D69D281C-C69E-4FE4-B4CC-A32620B156FB - f53d55e7e7c1a0f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Moya.Response, Moya.MoyaError&gt;) -&gt; () in API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "166"
+                  endingLineNumber = "166"
+                  offsetFromSymbolStart = "1070">
+               </Location>
+               <Location
+                  uuid = "D69D281C-C69E-4FE4-B4CC-A32620B156FB - f53d55e7e7c1a0f"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "closure #1 (Swift.Result&lt;Moya.Response, Moya.MoyaError&gt;) -&gt; () in API.APIService.requestTagMoya(requestingTagName: Swift.String, completion: (Swift.Optional&lt;Swift.String&gt;) -&gt; ()) -&gt; ()"
+                  moduleName = "API"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "166"
+                  endingLineNumber = "166"
+                  offsetFromSymbolStart = "812">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

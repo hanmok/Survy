@@ -1,3 +1,4 @@
+
 //
 //  APIManager.swift
 //  Survy
@@ -113,6 +114,64 @@ public class APIService {
                     print("error: \(error.localizedDescription)")
                     completion(nil)
             }
+        }
+    }
+    
+    public func requestTag(tagName: String, completion: @escaping ((String)?) -> Void) {
+//        let url = URL(string: "https://dearsurvy.herokuapp.com/tags")
+        
+        guard let url = URL(string: "https://dearsurvy.herokuapp.com/tags") else { return }
+        
+        var request = URLRequest(url: url)
+        // method, body, headers
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        let body: [String: AnyHashable] = [
+            "name": tagName
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                return
+            }
+            
+            do {
+                let response = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
+                print("Success: \(response)")
+                completion("success")
+            } catch {
+                print(error)
+                completion(error.localizedDescription)
+            }
+        }
+        task.resume()
+    }
+    
+    
+    public func requestTagMoya(requestingTagName: String, completion: @escaping ((String)?) -> Void) {
+        
+        tagProvider.request(.create(requestingTagName)) { result in
+//        tagProvider.request(.create(requestingTagName)) { [weak self] result in
+            
+            switch result {
+                    
+            case .success(let result):
+                    let responseDic = try! JSONSerialization.jsonObject(with: result.data, options: .allowFragments)
+                    print("someDic: \(responseDic)")
+//                    "message": "something went really wrong"
+//                    "name": "Error"
+//                    "
+                    completion("hi")
+                    
+            case .failure(let error):
+                print("error: \(error.localizedDescription)")
+                completion(nil)
+            }
+        
+            // 어떻게 요청하지 ?? 이름을 어떻게 정하지 ?? 이미 정했을걸?
+            
         }
     }
 }
