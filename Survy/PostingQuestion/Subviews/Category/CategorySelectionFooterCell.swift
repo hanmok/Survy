@@ -56,5 +56,4 @@ class CategorySelectionFooterCell: UICollectionReusableView {
         button.setTitleColor(.white, for: .normal)
         return button
     }()
-    
 }

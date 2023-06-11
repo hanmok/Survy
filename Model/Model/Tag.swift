@@ -18,6 +18,12 @@ public struct Tag: Decodable {
     public let name: String
 }
 
+//extension Tag: Hashable {
+//    public static func == (lhs: Tag, rhs: Tag) -> Bool {
+//        return lhs.id == rhs.id
+//    }
+//}
+
 public struct TagResponse: Decodable {
     public let tags: [Tag]?
 }

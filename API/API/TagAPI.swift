@@ -53,7 +53,15 @@ extension TagAPI: BaseAPIType {
     // 음.. body 와 parameter 를 어떻게 구분하지 ?? 나중에 필요할 때 혀
     public var task: Moya.Task { // body part
         guard let parameters = parameters else { return .requestPlain }
-        return .requestParameters(parameters: parameters, encoding: parameterEncoding)
+//        return .requestParameters(parameters: parameters, encoding: parameterEncoding)
+//        return .
+        
+        switch self {
+            case .create:
+                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+            default:
+                return .requestParameters(parameters: parameters, encoding: parameterEncoding)
+        }
     }
 
     public var parameterEncoding: ParameterEncoding {

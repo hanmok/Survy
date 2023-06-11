@@ -36,7 +36,8 @@ class CategorySelectionController: UIViewController, Coordinating {
 ////        Tag(id: 4, name: "애견")
 //    ]
     
-    private var testTags = [Tag]()
+//    private var testTags = [Tag]()
+    private var testTags = Set<Tag>()
     
     override func viewWillAppear(_ animated: Bool) {
 //        let some =
@@ -66,15 +67,20 @@ class CategorySelectionController: UIViewController, Coordinating {
 //            self?.updateTags()
 //        }
     
+        fetchTags()
+    }
+    
+    private func fetchTags() {
         APIService.shared.fetchTagsMoya { [weak self] tags in
-            guard let tags = tags else { fatalError() }
+            guard let tags = tags, let self = self else { fatalError() }
             print("hi!!")
+            self.testTags = []
             for tag in tags.sorted(by: <) {
-                self?.testTags.append(tag)
+//                self?.testTags.append(tag)
+                self.testTags.insert(tag)
             }
-            self?.updateTags()
+            self.updateTags()
         }
-        
     }
     
     enum SelectableSection {
@@ -273,7 +279,9 @@ class CategorySelectionController: UIViewController, Coordinating {
                 return tag1.name < tag2.name
             })
         } else {
-            tagsToShow = testTags
+            let sortedTags = Array(testTags).sorted()
+//            tagsToShow = testTags
+            tagsToShow = sortedTags
         }
         
         var snapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
@@ -283,9 +291,13 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     private func updateTags() {
+        
         var snapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(testTags)
+        let sortedTags = Array(testTags).sorted()
+        snapshot.appendItems(sortedTags)
+        print("updateTags called, current number: \(sortedTags.count)")
+//        snapshot.appendItems(testTags)
         selectableTagDataSource.apply(snapshot, animatingDifferences: false)
     }
     
@@ -337,7 +349,12 @@ class CategorySelectionController: UIViewController, Coordinating {
         let saveAction = UIAlertAction(title: "요청", style: .default) { alert -> Void in
             guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
             print("input text: \(text)")
+            
+            APIService.shared.requestTagMoya(requestingTagName: text) { [weak self] result in
+                self?.fetchTags()
+            }
         }
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
         alertController.addAction(cancelAction)
         alertController.addAction(saveAction)
