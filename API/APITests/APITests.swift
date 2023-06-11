@@ -33,4 +33,9 @@ final class APITests: XCTestCase {
         }
     }
 
+    func test_sth() {
+        APIService.shared.fetchTagsMoya { tags in
+            XCTAssertNotNil(tags)
+        }
+    }
 }

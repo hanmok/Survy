@@ -19,22 +19,29 @@ public class APIService {
         return provider
     }()
     
-    public func request(_ type: BaseAPIType, completion: @escaping (Result<String, Error>) -> Void) {
-        let multiTarget = MultiTarget(type)
-        provider.request(multiTarget) { result in
-            switch result {
-                case .success(let response):
-                    do {
-                        let data = try response.map(<#T##type: Decodable.Protocol##Decodable.Protocol#>)
-//                        let ret = result.map(multiTarget)
-                    }
-                    
-                case .failure(let error):
-                    break
-                    
-            }
-        }
-    }
+//    public func request(_ type: BaseAPIType, completion: @escaping (Result<String, Error>) -> Void) {
+//        let multiTarget = MultiTarget(type)
+//        provider.request(multiTarget) { result in
+//            switch result {
+//                case .success(let response):
+//                    do {
+//                        let data = try response.map(<#T##type: Decodable.Protocol##Decodable.Protocol#>)
+////                        let ret = result.map(multiTarget)
+//                    }
+//
+//                case .failure(let error):
+//                    break
+//
+//            }
+//        }
+//    }
+    
+    
+    private let tagProvider = MoyaProvider<TagAPI>()
+    
+   
+    
+    
     
     
 //    func testCall() {
@@ -92,10 +99,23 @@ public class APIService {
             
         }.resume()
     }
+    
+    public func fetchTagsMoya(completion: @escaping ([Tag]?) -> Void) {
+        tagProvider.request(.fetchAll) { [weak self] result in
+            switch result {
+                case .success(let result):
+                    print("result: \(result)")
+                    let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: result.data)
+                    let tags = tagsDic["tags"]
+                    completion(tags)
+                    
+                case .failure(let error):
+                    print("error: \(error.localizedDescription)")
+                    completion(nil)
+            }
+        }
+    }
 }
-
-
-
 
 class DefaultAlamofireManager: Session {
     static let shareManager: DefaultAlamofireManager = {

@@ -59,14 +59,25 @@ class CategorySelectionController: UIViewController, Coordinating {
 //
 //        }.resume()
         
-        APIService.shared.fetchTags { [weak self] tags in
+//        APIService.shared.fetchTags { [weak self] tags in
+//            for tag in tags.sorted(by: <) {
+//                self?.testTags.append(tag)
+//            }
+//            self?.updateTags()
+//        }
+    
+        APIService.shared.fetchTagsMoya { [weak self] tags in
+            guard let tags = tags else { fatalError() }
+            print("hi!!")
             for tag in tags.sorted(by: <) {
                 self?.testTags.append(tag)
             }
             self?.updateTags()
+            
         }
-        
 //        let provider = MoyaProvider
+        
+        
     }
     
     enum SelectableSection {

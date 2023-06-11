@@ -16,7 +16,6 @@ public enum TagAPI  {
 }
 
 
-
 extension TagAPI: BaseAPIType {
 
     struct Super: BaseAPIType {}
