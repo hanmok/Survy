@@ -40,6 +40,7 @@ class CategorySelectionController: UIViewController, Coordinating {
     private var testTags = Set<Tag>()
     
     override func viewWillAppear(_ animated: Bool) {
+        
 //        let some =
 //        APIManager.shared.provider.request(Tag, completion: <#T##Completion##Completion##(_ result: Result<Response, MoyaError>) -> Void#>)
         
@@ -77,7 +78,6 @@ class CategorySelectionController: UIViewController, Coordinating {
             print("hi!!")
             self.testTags = []
             for tag in tags.sorted(by: <) {
-//                self?.testTags.append(tag)
                 self.testTags.insert(tag)
             }
             self.updateTags()
@@ -292,7 +292,6 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     private func updateTags() {
-        
         var snapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
         snapshot.appendSections([.main])
         let sortedTags = Array(testTags).sorted()
@@ -383,11 +382,9 @@ extension CategorySelectionController {
             guard kind == UICollectionView.elementKindSectionFooter else { return nil }
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategorySelectionFooterCell.reuseIdentifier, for: indexPath) as? CategorySelectionFooterCell
             view?.footerCellDelegate = self
-//                view?.label.text = "추가하기"
             
             return view
         }
-        
         
         let selectedCellRegistration = UICollectionView.CellRegistration<SelectedCategoryCell, Tag> { (cell, indexPath, category) in
             cell.categoryTag = category
@@ -422,11 +419,17 @@ extension CategorySelectionController {
 
 extension CategorySelectionController: SelectableCategoryCellDelegate {
     func selectableCategoryCellTapped(_ cell: SelectableCategoryCell) {
+        guard selectedTags.count < 4 else {
+            coordinator?.navigationController?.toastMessage(title: "관심 카테고리는 4개까지 선택 가능합니다.")
+            return
+        }
+        
         cell.isTagSelected = !cell.isTagSelected
         
         guard let category = cell.categoryTag else { return }
 
         if cell.isTagSelected {
+//            if selectedTags.count
             _ = selectedTags.insert(category)
         } else {
             selectedTags.remove(category)

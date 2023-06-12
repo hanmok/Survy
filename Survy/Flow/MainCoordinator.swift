@@ -76,6 +76,10 @@ class MainCoordinator: Coordinator {
         }
     }
     
+    func toastMessage(title: String, message: String) {
+        navigationController?.toastMessage(title: title, message: message)
+    }
+    
     var navigationController: StartingNavigationController?
     
     func manipulate(_ childView: ChildView, command: Command) {
