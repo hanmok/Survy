@@ -151,10 +151,9 @@ public class APIService {
     
     
     public func requestTagMoya(requestingTagName: String, completion: @escaping ((String)?) -> Void) {
-        
+            
         // TODO: - StatusCode 500 이면 에러 처리.
         tagProvider.request(.create(requestingTagName)) { result in
-//        tagProvider.request(.create(requestingTagName)) { [weak self] result in
             
             switch result {
                     
@@ -162,11 +161,6 @@ public class APIService {
                     // 이게 무슨코드야? json 으로 만드는 코드.
                     let responseDic = try! JSONSerialization.jsonObject(with: result.data, options: .allowFragments)
                     print("someDic: \(responseDic)")
-                    
-//                    "message": "something went really wrong"
-//                    "name": "Error"
-//                    "
-                    
                     completion("hi")
                     
             case .failure(let error):

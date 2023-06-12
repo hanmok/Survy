@@ -25,16 +25,16 @@ class MainCoordinator: Coordinator {
         testSetup()
     }
     
+    func setIndicatorSpinning(_ shouldSpin: Bool) {
+        navigationController?.setIndicatorSpin(shouldSpin)
+    }
+    
     func start() {
         
         var initialScreen: InitialScreen = .mainTab
         var initialController: UIViewController
-        
-//        initialScreen = .postingQuestion
 
         initialScreen = .mainTab
-
-//        initialScreen = .test
         
         switch initialScreen {
             case .mainTab:

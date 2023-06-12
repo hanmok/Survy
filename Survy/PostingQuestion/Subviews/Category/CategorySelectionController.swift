@@ -71,6 +71,7 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     private func fetchTags() {
+        self.coordinator?.setIndicatorSpinning(true)
         APIService.shared.fetchTagsMoya { [weak self] tags in
             guard let tags = tags, let self = self else { fatalError() }
             print("hi!!")
@@ -297,8 +298,8 @@ class CategorySelectionController: UIViewController, Coordinating {
         let sortedTags = Array(testTags).sorted()
         snapshot.appendItems(sortedTags)
         print("updateTags called, current number: \(sortedTags.count)")
-//        snapshot.appendItems(testTags)
         selectableTagDataSource.apply(snapshot, animatingDifferences: false)
+        self.coordinator?.setIndicatorSpinning(false)
     }
     
     private let completeButton: UIButton = {
@@ -346,11 +347,13 @@ class CategorySelectionController: UIViewController, Coordinating {
         alertController.addTextField { textField in
             textField.placeholder = "New Category Name"
         }
+        
         let saveAction = UIAlertAction(title: "요청", style: .default) { alert -> Void in
             guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
             print("input text: \(text)")
-            
+            self.coordinator?.setIndicatorSpinning(true)
             APIService.shared.requestTagMoya(requestingTagName: text) { [weak self] result in
+                self?.coordinator?.setIndicatorSpinning(false)
                 self?.fetchTags()
             }
         }
