@@ -15,12 +15,13 @@ class ConfirmationController: UIViewController, Coordinating {
         super.viewDidLoad()
 
         view.backgroundColor = UIColor(white: 0.2, alpha: 0.9)
-        setupTargets()
+        
         setupDelegate()
         setupNavigationBar()
         configureLayout()
         setupLayout()
         setupNotifications()
+        setupTargets()
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
         view.addGestureRecognizer(tapGesture)
@@ -45,12 +46,36 @@ class ConfirmationController: UIViewController, Coordinating {
         self.numberOfSpecimenTextField.delegate = self
     }
     
+    @objc func exitTapped() {
+        coordinator?.manipulate(.confirmation, command: .dismiss(nil))
+    }
+    
     private func setupTargets() {
         completeButton.addTarget(self, action: #selector(completeTapped), for: .touchUpInside)
+        
+        exitButton.addTarget(self, action: #selector(exitTapped), for: .touchUpInside)
+        
+        
+        priceSegmentedControl.insertSegment(action: UIAction(title: "Free", handler: { [weak self] freeAction in
+            guard let self = self else { return }
+            self.expectedCostLabel.text = "0원"
+        }), at: 0, animated: false)
+        
+        priceSegmentedControl.insertSegment(action: UIAction(title: "Paid", handler: { [weak self] freeAction in
+            guard let self = self else { return }
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = .decimal
+            let costString = numberFormatter.string(from: self.postingService.totalCost as NSNumber)!
+            self.expectedCostLabel.text = "\(costString)원"
+        }), at: 1, animated: false)
+        
+        // TODO: get from User Information // 이거,.. User Default 로 빼도 될 것 같은데?
+        priceSegmentedControl.selectedSegmentIndex = 0
+        self.expectedCostLabel.text = "0원"
     }
     
     @objc func completeTapped() {
-        coordinator?.manipulate(.confirmation, command: .dismiss)
+        coordinator?.manipulate(.confirmation, command: .dismiss(true))
     }
     
     private func setupNavigationBar() {
@@ -76,18 +101,25 @@ class ConfirmationController: UIViewController, Coordinating {
         return view
     }()
     
+    
+    private let priceSegmentedControl = UISegmentedControl()
+    
+    
     private func setupLayout() {
         self.view.addSubview(wholeContainerView)
         self.view.addSubview(completeButton)
         
-        [topViewContainer, guideStackView, resultStackView].forEach { self.wholeContainerView.addSubview($0)}
+        [topViewContainer, guideStackView, resultStackView, priceSegmentedControl,
+        expectedCostGuideLabel, expectedCostLabel
+        ].forEach { self.wholeContainerView.addSubview($0)}
         
         topViewContainer.addSubview(topViewLabel)
+        topViewContainer.addSubview(exitButton)
         
         wholeContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
             make.centerY.equalToSuperview().offset(-75)
-            make.height.equalTo(view.frame.height / 3.5)
+            make.height.equalTo(view.frame.height / 3.0)
         }
         
         topViewContainer.snp.makeConstraints { make in
@@ -99,18 +131,25 @@ class ConfirmationController: UIViewController, Coordinating {
             make.center.equalToSuperview()
         }
         
-        self.guideStackView.addArrangedSubviews([expectedTimeInMinGuideLabel,
-                                                 numberOfSpecimenLabel,
-                                                 expectedCostGuideLabel])
+        exitButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(12)
+            make.width.height.equalTo(24)
+            make.centerY.equalToSuperview()
+        }
         
-        self.resultStackView.addArrangedSubviews([expectedTimeInMinLabel,
-                                                  numberOfSpecimenTextField,
-                                                  expectedCostLabel])
+        
+        self.guideStackView.addArrangedSubviews([expectedTimeInMinGuideLabel
+                                                 ,numberOfSpecimenLabel
+                                                ])
+        
+        self.resultStackView.addArrangedSubviews([expectedTimeInMinLabel
+                                                  ,numberOfSpecimenTextField
+                                                 ])
         
         guideStackView.snp.makeConstraints { make in
             make.leading.equalToSuperview().inset(20)
             make.top.equalTo(topViewContainer.snp.bottom).offset(12)
-            make.height.equalTo(150)
+            make.height.equalTo(100)
             make.width.equalTo(150)
         }
         
@@ -121,10 +160,31 @@ class ConfirmationController: UIViewController, Coordinating {
             make.width.equalTo(150)
         }
         
+        priceSegmentedControl.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(20)
+            make.top.equalTo(guideStackView.snp.bottom).offset(20)
+            make.height.equalTo(40)
+            make.trailing.equalTo(resultStackView.snp.trailing)
+        }
+        
         completeButton.snp.makeConstraints { make in
             make.leading.trailing.equalTo(wholeContainerView)
             make.height.equalTo(50)
             make.top.equalTo(wholeContainerView.snp.bottom)
+        }
+        
+        expectedCostGuideLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().inset(20)
+            make.width.equalTo(150)
+            make.height.equalTo(50)
+            make.bottom.equalTo(completeButton.snp.top).offset(-12)
+        }
+        
+        expectedCostLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(resultStackView.snp.trailing)
+            make.height.equalTo(40)
+            make.width.equalTo(150)
+            make.bottom.equalTo(completeButton.snp.top).offset(-12)
         }
     }
     
@@ -142,6 +202,8 @@ class ConfirmationController: UIViewController, Coordinating {
         return label
     }()
     
+    
+    
     private let expectedTimeInMinGuideLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18, weight: .semibold)
@@ -155,6 +217,12 @@ class ConfirmationController: UIViewController, Coordinating {
         label.text = "설문 참여 인원"
         label.textAlignment = .center
         return label
+    }()
+    
+    private let exitButton: UIButton = {
+        let button = UIButton()
+        button.setBackgroundImage(UIImage.multiply.withTintColor(.black, renderingMode: .alwaysOriginal), for: .normal)
+        return button
     }()
     
     private let expectedCostGuideLabel: UILabel = {

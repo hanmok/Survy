@@ -119,7 +119,7 @@ class MainCoordinator: Coordinator {
                     make.edges.equalToSuperview()
                 }
                 
-            case (let type, .dismiss):
+            case (let type, .dismiss(let isCompleted)):
                 // MainTabController 면 곤란함.. 다르게 처리해야해. How ?
                 guard var topViewController = navigationController?.topViewController else { fatalError() }
                 
@@ -137,9 +137,7 @@ class MainCoordinator: Coordinator {
                     $0.removeFromParent()
                 }
                 
-//                guard let postingViewController = topViewController as? BaseViewController else { fatalError() }
-                
-                if type == .confirmation {
+                if type == .confirmation && isCompleted == true {
                     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                         self.move(to: .root)
                         self.navigationController?.toastMessage(title: "설문이 요청되었습니다.")

@@ -208,7 +208,7 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     @objc func exitTapped() {
-        coordinator?.manipulate(.categorySelection, command: .dismiss)
+        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
     }
     
     @objc func completeTapped(_ sender: UIButton) {
@@ -216,7 +216,7 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         let selectedTagsArr = Array(selectedTags)
         postingService.setTags(selectedTagsArr)
-        coordinator?.manipulate(.categorySelection, command: .dismiss)
+        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
     }
     
     private func setupLayout() {
@@ -429,7 +429,6 @@ extension CategorySelectionController: SelectableCategoryCellDelegate {
         guard let category = cell.categoryTag else { return }
 
         if cell.isTagSelected {
-//            if selectedTags.count
             _ = selectedTags.insert(category)
         } else {
             selectedTags.remove(category)

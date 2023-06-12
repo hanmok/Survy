@@ -22,7 +22,7 @@ protocol Coordinator {
     
     func setIndicatorSpinning(_ shouldSpin: Bool)
     
-    func toastMessage(title: String, message: String) 
+    func toastMessage(title: String, message: String)
 }
 
 enum ChildView {
@@ -34,5 +34,5 @@ enum ChildView {
 
 enum Command {
     case present
-    case dismiss
+    case dismiss(Bool?)
 }
