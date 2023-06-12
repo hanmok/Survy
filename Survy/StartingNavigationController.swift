@@ -17,13 +17,35 @@ class StartingNavigationController: UINavigationController {
         self.view.makeToast(title, duration: 3, position: .top, title: nil, image: nil, style: .init()) { didTap in }
     }
     
+    public let indicatorView = UIActivityIndicatorView()
+    
+    private func setupLayout() {
+        self.view.addSubview(indicatorView)
+        indicatorView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(60)
+        }
+        indicatorView.color = .deeperMainColor
+        indicatorView.transform = CGAffineTransform(scaleX: 2.0, y: 2.0)
+    }
+    
+    public func setIndicatorSpin(_ shouldSpin: Bool) {
+        if shouldSpin {
+            indicatorView.startAnimating()
+        } else {
+            indicatorView.stopAnimating()
+        }
+    }
+    
     // MARK: - Properties
-
-
+        
+        
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        setupLayout()
         
 //        self.view.addSubview(spinner)
 //        spinner.snp.makeConstraints { make in

@@ -19,10 +19,13 @@ protocol Coordinator {
     func manipulate(_ childView: ChildView, command: Command)
     
     func testSetup()
+    
+    func setIndicatorSpinning(_ shouldSpin: Bool)
 }
 
 enum ChildView {
     case categorySelection
+    
     case targetSelection
     case confirmation
 }

@@ -8,6 +8,7 @@
 import Foundation
 
 public struct Tag: Decodable {
+    
     public init(id: Int, name: String) {
         self.id = id
         self.name = name
@@ -16,6 +17,12 @@ public struct Tag: Decodable {
     public let id: Int
     public let name: String
 }
+
+//extension Tag: Hashable {
+//    public static func == (lhs: Tag, rhs: Tag) -> Bool {
+//        return lhs.id == rhs.id
+//    }
+//}
 
 public struct TagResponse: Decodable {
     public let tags: [Tag]?
@@ -32,6 +39,9 @@ extension Tag: Comparable {
         return lhs.name < rhs.name
     }
 }
+
+
+//extension Tag:
 
 // 이거 먼저 Decode 해보기.
 
