@@ -19,7 +19,7 @@ protocol ParticipationServiceType: AnyObject {
     var selectedIndex: Int? { get set }
     var textAnswer: String? { get set }
     
-    var availableSurveys: [Survey] { get }
+    var availableSurveys: [Survey] { get set }
     var surveysToShow: [Survey] { get }
     var selectedCategories: Set<String> { get set }
 
@@ -27,20 +27,29 @@ protocol ParticipationServiceType: AnyObject {
     func initializeSurvey()
     func postAnswer()
     func toggleCategory(_ category: String)
+    func getSurveys()
 }
 
 class ParticipationService: ParticipationServiceType {
     var selectedIndexes: Set<Int>?
 
     var selectedIndex: Int?
+    
     func toggleCategory(_ category: String) {
         selectedCategories.toggle(category)
     }
+    
+    func getSurveys() {
+        
+    }
+    
     var textAnswer: String?
     
     func postAnswer() {
         
     }
+    
+    var availableSurveys: [Survey] = []
     
     func initializeSurvey() {
         currentSurvey = nil
@@ -80,23 +89,21 @@ class ParticipationService: ParticipationServiceType {
     }
     
     // Test Data
-    var availableSurveys:[Survey] {
-        return [
-            Survey(id: 1, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
-            
-            Survey(id: 2, numOfParticipation: 273, participationGoal: 385, title: "애견인과 비애견인의 동물 관련 음식 소비패턴에 대한 조사입니다. 참여 부탁드려요!", rewardRange: [500], categories: ["애견", "음식"]),
-            
-            Survey(id: 3, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"]),
-            
-            Survey(id: 4, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
-            
-            Survey(id: 5, numOfParticipation: 273, participationGoal: 385, title: "애견인과 비애견인의 동물 관련 음식 소비패턴에 대한 조사입니다. 참여 부탁드려요!", rewardRange: [500], categories: ["애견", "음식"]),
-            
-            Survey(id: 6, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"])
-            
-            
-        ]
-    }
+//    var availableSurveys:[Survey] {
+//        return [
+//            Survey(id: 1, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
+//
+//            Survey(id: 2, numOfParticipation: 273, participationGoal: 385, title: "애견인과 비애견인의 동물 관련 음식 소비패턴에 대한 조사입니다. 참여 부탁드려요!", rewardRange: [500], categories: ["애견", "음식"]),
+//
+//            Survey(id: 3, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"]),
+//
+//            Survey(id: 4, numOfParticipation: 153, participationGoal: 200, title: "체형 교정 운동을 추천해주세요", rewardRange: [100], categories: ["운동"]),
+//
+//            Survey(id: 5, numOfParticipation: 273, participationGoal: 385, title: "애견인과 비애견인의 동물 관련 음식 소비패턴에 대한 조사입니다. 참여 부탁드려요!", rewardRange: [500], categories: ["애견", "음식"]),
+//
+//            Survey(id: 6, numOfParticipation: 132, participationGoal: 1000, title: "다이어트 운동, 약물에 대한 간단한 통계 조사입니다.", rewardRange: [100], categories: ["운동", "다이어트"])
+//        ]
+//    }
     
     var selectedCategories = Set<String>()
     
@@ -105,7 +112,9 @@ class ParticipationService: ParticipationServiceType {
             return availableSurveys
         } else {
             return availableSurveys.filter {
-                let categories = Set($0.categories)
+//                let categories = Set(arrayLiteral: $0.categories) // categories: [String]
+//                let some = Set($0.categories.map)
+                let categories = Set($0.categories) // Set<String>
                 return categories.intersection(selectedCategories).isEmpty == false
             }
         }

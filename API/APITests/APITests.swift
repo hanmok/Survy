@@ -43,13 +43,21 @@ final class APITests: XCTestCase {
     func test_postTag() { // why is it not working ??
         let expectation = self.expectation(description: "post")
         APIService.shared.requestTag(tagName: "달리기") { result in
-//        APIService.shared.requestTagMoya(requestingTagName: "프렌차이즈") { result in
-            
-        
             print("myAPIResult: \(result)")
             XCTAssertNil(result)
             expectation.fulfill()
         }
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_fetchSurveys() {
+        let expectation = self.expectation(description: "post")
+        APIService.shared.getAllSurveys { result in
+            print("myAPIResult: \(result)")
+            XCTAssertNil(result)
+            expectation.fulfill()
+        }
+        XCTFail("It took too long to get surveys")
         waitForExpectations(timeout: 10)
     }
 }

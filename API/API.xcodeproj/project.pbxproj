@@ -19,6 +19,7 @@
 		9ACCC75C2A21F181006AE8CE /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 9ACCC75B2A21F181006AE8CE /* RxMoya */; };
 		9ACCC75E2A21F1B1006AE8CE /* TagAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */; };
 		9ACCC7602A21F349006AE8CE /* BaseAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */; };
+		9AD647842A36E7F900ED6DC0 /* SurveyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */; };
 		9AFE34E12A35AE5D009CCE6D /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFE34E02A35AE5D009CCE6D /* Test.swift */; };
 /* End PBXBuildFile section */
 
@@ -41,6 +42,7 @@
 		9ACCC74E2A20CD12006AE8CE /* libModel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libModel.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagAPI.swift; sourceTree = "<group>"; };
 		9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAPIType.swift; sourceTree = "<group>"; };
+		9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyAPI.swift; sourceTree = "<group>"; };
 		9AFE34D92A358D87009CCE6D /* DecodingArray.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DecodingArray.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DA2A358DB5009CCE6D /* UsingDictionary.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = UsingDictionary.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = BasicEncodingDecoding.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -100,6 +102,7 @@
 				9ACCC7442A20CA6F006AE8CE /* APIService.swift */,
 				9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */,
 				9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */,
+				9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */,
 				9AFE34E02A35AE5D009CCE6D /* Test.swift */,
 				9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */,
 				9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */,
@@ -249,6 +252,7 @@
 			files = (
 				9ACCC7602A21F349006AE8CE /* BaseAPIType.swift in Sources */,
 				9AFE34E12A35AE5D009CCE6D /* Test.swift in Sources */,
+				9AD647842A36E7F900ED6DC0 /* SurveyAPI.swift in Sources */,
 				9ACCC75E2A21F1B1006AE8CE /* TagAPI.swift in Sources */,
 				9ACCC7452A20CA6F006AE8CE /* APIService.swift in Sources */,
 			);

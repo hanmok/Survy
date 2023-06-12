@@ -20,30 +20,33 @@ public class APIService {
         return provider
     }()
     
-//    public func request(_ type: BaseAPIType, completion: @escaping (Result<String, Error>) -> Void) {
-//        let multiTarget = MultiTarget(type)
-//        provider.request(multiTarget) { result in
-//            switch result {
-//                case .success(let response):
-//                    do {
-//                        let data = try response.map(<#T##type: Decodable.Protocol##Decodable.Protocol#>)
-////                        let ret = result.map(multiTarget)
-//                    }
-//
-//                case .failure(let error):
-//                    break
-//
-//            }
-//        }
-//    }
-    
-    
     private let tagProvider = MoyaProvider<TagAPI>()
+    private let surveyProvider = MoyaProvider<SurveyAPI>()
     
-   
+    //    public func request(_ type: BaseAPIType, completion: @escaping (Result<String, Error>) -> Void) {
+    //        let multiTarget = MultiTarget(type)
+    //        provider.request(multiTarget) { result in
+    //            switch result {
+    //                case .success(let response):
+    //                    do {
+    //                        let data = try response.map(<#T##type: Decodable.Protocol##Decodable.Protocol#>)
+    ////                        let ret = result.map(multiTarget)
+    //                    }
+    //
+    //                case .failure(let error):
+    //                    break
+    //
+    //            }
+    //        }
+    //    }
     
     
     
+}
+
+// MARK: - Tag
+
+extension APIService {
     
 //    func testCall() {
 //
@@ -102,7 +105,7 @@ public class APIService {
     }
     
     public func fetchTagsMoya(completion: @escaping ([Tag]?) -> Void) {
-        tagProvider.request(.fetchAll) { [weak self] result in
+        tagProvider.request(.fetchAll) { result in
             switch result {
                 case .success(let result):
                     print("fetched result: \(result)")
@@ -118,8 +121,6 @@ public class APIService {
     }
     
     public func requestTag(tagName: String, completion: @escaping ((String)?) -> Void) {
-//        let url = URL(string: "https://dearsurvy.herokuapp.com/tags")
-        
         guard let url = URL(string: "https://dearsurvy.herokuapp.com/tags") else { return }
         
         var request = URLRequest(url: url)
@@ -172,6 +173,29 @@ public class APIService {
             
         }
     }
+}
+
+extension APIService {
+    public func getAllSurveys(completion: @escaping ([Survey]?) -> Void ) {
+        surveyProvider.request(.fetchAll) { result in
+            switch result {
+                case .success(let result):
+//                    let surveysDic = try! JSONDecoder().decode([String: [Survey]].self, from: result.data)
+//                    let surveysDic = try! JSONDecoder().decode([String: SurveyResponse].self, from: result.data)
+//                    let surveysResult = try! JSONDecoder().decode(SurveyResponse.self, from: result.data)
+                    let 
+//                    guard let surveys = surveysDic["surveys"] else { fatalError("There's no surveys in dictionary~")}
+                    print("surveysResult: \(surveysResult)")
+                    
+                    
+                case .failure(let error):
+                    fatalError(error.localizedDescription)
+//                    completion(nil)
+            }
+        }
+    }
+    
+//    public func
 }
 
 class DefaultAlamofireManager: Session {
