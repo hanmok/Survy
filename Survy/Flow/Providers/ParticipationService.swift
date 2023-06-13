@@ -116,20 +116,14 @@ class ParticipationService: ParticipationServiceType {
                     }
                 } else {
                     fatalError()
-//                    ret.append(survey)
                 }
             }
             return ret
         } else {
             return allSurveys.filter {
-                // TODO: 선택된 것들만 보여주기
-                
-//                let categories = Set(arrayLiteral: $0.categories) // categories: [String]
-//                let some = Set($0.categories.map)
-//                let categories = Set($0.categories) // Set<String>
-                
-                let categories = Set($0.categories ?? ["운동"])
-                return categories.intersection(selectedCategories).isEmpty == false
+                guard let validCategories = $0.categories else { fatalError() }
+                let categorySet = Set(validCategories)
+                return categorySet.intersection(selectedCategories).isEmpty == false
             }
         }
     }
