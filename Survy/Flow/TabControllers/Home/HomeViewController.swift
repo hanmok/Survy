@@ -48,19 +48,23 @@ class HomeViewController: TabController, Coordinating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.mainBackgroundColor
+        self.registerTableView()
         
-        registerTableView()
+        self.configureDataSource()
+
+        self.setupDelegates()
+        self.setupTargets()
+        self.setupCategoryCollectionView()
+        self.setupLayout()
+        coordinator?.setIndicatorSpinning(true)
         
-        configureDataSource()
-        updateUI()
-        
-        setupDelegates()
-        setupTargets()
-        setupCollectionView()
-        setupLayout()
-        
-        view.backgroundColor = UIColor.mainBackgroundColor
+        participationService.getSurveys(completion: {
+            self.coordinator?.setIndicatorSpinning(false)
+            self.updateUI()
+        })
     }
+    
     private func setupDelegates() {
         wholeScrollView.delegate = self
     }
@@ -92,7 +96,7 @@ class HomeViewController: TabController, Coordinating {
         surveyTableView.tableFooterView = footerView
     }
     
-    private func setupCollectionView(){
+    private func setupCategoryCollectionView(){
         categoryCollectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
         categoryCollectionView.dataSource = self
         categoryCollectionView.delegate = self

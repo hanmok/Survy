@@ -7,6 +7,7 @@
 
 import Foundation
 import Model
+import API
 
 protocol ParticipationServiceType: AnyObject {
     var currentSurvey: Survey? { get set }
@@ -27,10 +28,11 @@ protocol ParticipationServiceType: AnyObject {
     func initializeSurvey()
     func postAnswer()
     func toggleCategory(_ category: String)
-    func getSurveys()
+    func getSurveys(completion: @escaping () -> Void)
 }
 
 class ParticipationService: ParticipationServiceType {
+    
     var selectedIndexes: Set<Int>?
 
     var selectedIndex: Int?
@@ -39,8 +41,12 @@ class ParticipationService: ParticipationServiceType {
         selectedCategories.toggle(category)
     }
     
-    func getSurveys() {
-        
+    func getSurveys(completion: @escaping () -> Void) {
+        APIService.shared.getAllSurveys { surveys in
+            guard let surveys = surveys else { return }
+            self.availableSurveys = surveys
+            completion()
+        }
     }
     
     var textAnswer: String?
@@ -114,7 +120,8 @@ class ParticipationService: ParticipationServiceType {
             return availableSurveys.filter {
 //                let categories = Set(arrayLiteral: $0.categories) // categories: [String]
 //                let some = Set($0.categories.map)
-                let categories = Set($0.categories) // Set<String>
+//                let categories = Set($0.categories) // Set<String>
+                let categories = Set($0.categories ?? ["hi"])
                 return categories.intersection(selectedCategories).isEmpty == false
             }
         }

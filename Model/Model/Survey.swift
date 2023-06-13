@@ -14,7 +14,7 @@ public struct Survey: Hashable, Decodable {
                 numOfParticipation: Int,
                 participationGoal: Int,
                 title: String
-//                ,rewardRange: String?
+                ,rewardRange: String?
                 ,categories: [String]?
     )
     {
@@ -22,20 +22,19 @@ public struct Survey: Hashable, Decodable {
         self.title = title
         self.numOfParticipation = numOfParticipation
         self.participationGoal = participationGoal
-//        self.rewardRange = rewardRange
+        self.rewardRange = rewardRange
         self.categories = ["테스트1", "테스트2"]
     }
     
-    public let id: Int?
-    public let title: String?
-    public let numOfParticipation: Int?
-    public let participationGoal: Int?
-//    public var endedAt: Date? = nil
+    public let id: Int
+    public let title: String
+    public let numOfParticipation: Int
+    public let participationGoal: Int
+    public let rewardRange: String?
 //    public var createdAt: Date? = nil
     
-//    public let rewardRange: String?
-    
     // need to get from Survey-Tag API
+    
     public var categories: [String]?
     
     public enum CodingKeys: String, CodingKey {
@@ -43,9 +42,8 @@ public struct Survey: Hashable, Decodable {
         case title
         case numOfParticipation
         case participationGoal
-//        case endedAt = "ended_at"
 //        case createdAt = "created_at"
-//        case rewardRange = "reward_range"
+        case rewardRange = "reward_range"
         case categories
     }
 }
@@ -55,8 +53,17 @@ extension Survey {
             return [self.numOfParticipation ?? 0, participationGoal ?? 1]
         }
         
-//        public var rewardString: String? {
-//            guard let rewardRange = rewardRange else { fatalError() }
+        public var rewardString: String? {
+//            let rewardRange = rewardRange ?? "100"
+//
+////            guard let components = rewardRange.split(separator: ","), components.count <= 2 else { return }
+//
+////            switch components.count {
+////                case
+////            }
+//
+//
+//
 //            if rewardRange.count == 1 {
 //                return "\(rewardRange.first!)"
 //            }
@@ -64,17 +71,27 @@ extension Survey {
 //               let max = rewardRange.max() {
 //                return "\(min) ~ \(max)"
 //            } else { return nil }
-//        }
+            
+            
+            guard let rewardRange = rewardRange else { return nil }
+            return separateRange(rewardRange)
+        }
     
-//    public func getRewardString() -> String? {
-//        if rewardRange.count == 1 {
-//            return "\(rewardRange.first!)"
-//        }
-//        if let min = rewardRange.min(),
-//           let max = rewardRange.max() {
-//            return "\(min) ~ \(max)"
-//        } else { return nil }
-//    }
+    func separateRange(_ range: String) -> String {
+        
+        let components = range.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces)}
+        guard components.count <= 2 else { fatalError() }
+                
+        switch components.count {
+            case 1:
+                if components[0] == "0" { return "Free" }
+                return String(components[0])
+            case 2:
+                return "\(components[0]) ~ \(components[1])"
+            default:
+                fatalError()
+        }
+    }
 }
 
 

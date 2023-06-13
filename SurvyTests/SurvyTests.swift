@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import Alamofire
+
 @testable import Survy
 
 final class SurvyTests: XCTestCase {
@@ -40,6 +40,32 @@ final class SurvyTests: XCTestCase {
         numberFormatter.numberStyle = .decimal
         let text = numberFormatter.string(from: collectedMoney as NSNumber)
         XCTAssertEqual(text, "56,000")
+    }
+    
+    func test_separation() {
+        let rewardRange1 = "0"
+        let rewardRange2 = "100"
+        let rewardRange3 = "100, 200"
+        
+        XCTAssertEqual(separateRange(rewardRange1), "Free")
+        XCTAssertEqual(separateRange(rewardRange2), "100")
+        XCTAssertEqual(separateRange(rewardRange3), "100 ~ 200")
+    }
+    
+    func separateRange(_ range: String) -> String {
+        
+        let components = range.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces)}
+        guard components.count <= 2 else { fatalError() }
+                
+        switch components.count {
+            case 1:
+                if components[0] == "0" { return "Free" }
+                return String(components[0])
+            case 2:
+                return "\(components[0]) ~ \(components[1])"
+            default:
+                fatalError()
+        }
     }
 }
 

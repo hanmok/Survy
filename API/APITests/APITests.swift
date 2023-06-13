@@ -55,10 +55,9 @@ final class APITests: XCTestCase {
         
         APIService.shared.getAllSurveys { result in
             print("myAPIResult: \(result)")
-            XCTAssertNil(result)
+            XCTAssertNotNil(result)
             expectation.fulfill()
         }
-        XCTFail("It took too long to get surveys")
         waitForExpectations(timeout: 10)
     }
 }

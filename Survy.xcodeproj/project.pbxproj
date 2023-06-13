@@ -10,7 +10,6 @@
 		9A6113B729F515FF0051FF2B /* QuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113B629F515FF0051FF2B /* QuestionViewController.swift */; };
 		9A6113B929F51F5B0051FF2B /* UIScreenExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113B829F51F5B0051FF2B /* UIScreenExt+.swift */; };
 		9A6113BB29F521910051FF2B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113BA29F521910051FF2B /* BaseViewController.swift */; };
-		9A6113CA29FBD1140051FF2B /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 9A6113C929FBD1140051FF2B /* Alamofire */; };
 		9A6113CE2A00C8860051FF2B /* APITest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113CD2A00C8860051FF2B /* APITest.swift */; };
 		9A6113D02A00D5F40051FF2B /* NSMutableParagraphStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113CF2A00D5F40051FF2B /* NSMutableParagraphStyle.swift */; };
 		9A6113D22A010B840051FF2B /* CategoryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6113D12A010B840051FF2B /* CategoryCollectionViewCell.swift */; };
@@ -212,7 +211,6 @@
 				9ACCC7472A20CB3B006AE8CE /* API.framework in Frameworks */,
 				9AE295F629D702EF00387883 /* SnapKit in Frameworks */,
 				9A6114432A02923E0051FF2B /* libModel.a in Frameworks */,
-				9A6113CA29FBD1140051FF2B /* Alamofire in Frameworks */,
 				9A6114DC2A08C83A0051FF2B /* Toast in Frameworks */,
 				A888A22CB2C6F95DB56C25D4 /* Pods_Survy.framework in Frameworks */,
 				9AF935E92A1916D70002B15B /* IQKeyboardManagerSwift in Frameworks */,
@@ -501,7 +499,6 @@
 			name = Survy;
 			packageProductDependencies = (
 				9AE295F529D702EF00387883 /* SnapKit */,
-				9A6113C929FBD1140051FF2B /* Alamofire */,
 				9A6114DB2A08C83A0051FF2B /* Toast */,
 				9AF935E82A1916D70002B15B /* IQKeyboardManagerSwift */,
 			);
@@ -1027,11 +1024,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9A6113C929FBD1140051FF2B /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9A6113C829FBD1140051FF2B /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
 		9A6114DB2A08C83A0051FF2B /* Toast */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9A6114DA2A08C83A0051FF2B /* XCRemoteSwiftPackageReference "Toast-Swift" */;

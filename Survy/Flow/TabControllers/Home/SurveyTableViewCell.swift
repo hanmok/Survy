@@ -51,8 +51,10 @@ class SurveyTableViewCell: UITableViewCell {
     
     private func configureLayout() {
         guard let survey = survey else { return }
+        let categories = survey.categories ?? ["운동"]
         
-        let categoriesText = survey.categories.joined(separator: " • ")
+//        let categoriesText = survey.categories.joined(separator: " • ")
+        let categoriesText = categories.joined(separator: " • ")
         categoryLabel.text = categoriesText
         
         let participants = survey.participants.map { String($0)}.joined(separator: " / ")

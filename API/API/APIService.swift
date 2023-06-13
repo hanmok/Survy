@@ -192,14 +192,16 @@ extension APIService {
 //                    let surveysResponse = try! JSONDecoder().decode([String: [Survey]].self, from: result.data)
 //                    let surveys = surveysResponse["surveys"]
 //                    completion(surveys)
-                    completion(surveysResponse.surveys)
                     print("surveysResponse: \(surveysResponse)")
+                    completion(surveysResponse.surveys)
+                    
                     
                     
 //                    SurveyResponse
                     
                 case .failure(let error):
-                    fatalError(error.localizedDescription)
+                    completion(nil)
+//                    fatalError(error.localizedDescription)
 //                    completion(nil)
             }
         }
