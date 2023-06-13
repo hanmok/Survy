@@ -8,7 +8,7 @@
 import Foundation
 
 protocol UserServiceType: AnyObject {
-    var interestedCategories: [String] { get set }
+    var lastSelectedCategories: [String] { get }
     
     var collectedMoney: Int { get }
     
@@ -17,7 +17,11 @@ protocol UserServiceType: AnyObject {
 
 class UserService: UserServiceType {
     
-    var interestedCategories: [String] = ["애견", "운동", "음식", "피부"]
+//    var lastSelectedCategories: [String] = ["애견", "운동", "음식", "피부"]
+    
+    var lastSelectedCategories: [String] {
+        return UserDefaults.standard.lastSelectedCategories.cutStringInOrder()
+    }
     
     var collectedMoney: Int { return 56000 }
     

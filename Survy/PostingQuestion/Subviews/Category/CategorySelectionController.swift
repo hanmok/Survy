@@ -10,10 +10,12 @@ import Model
 import SnapKit
 import API
 
+
+
 class CategorySelectionController: UIViewController, Coordinating {
     
-//    let provider = MoyaProvider<Tag>()
     var coordinator: Coordinator?
+    
     var postingService: PostingServiceType
     
     public init(postingService: PostingServiceType) {
@@ -27,62 +29,10 @@ class CategorySelectionController: UIViewController, Coordinating {
     
     private var selectedTags = Set<Tag>()
     
-    // TODO: API Call 로 바꾸기.
+    private var selectableTags = Set<Tag>()
     
-//    private var testTags = [
-////        Tag(id: 1, name: "운동"),
-////        Tag(id: 2, name: "필라테스"),
-////        Tag(id: 3, name: "PT"),
-////        Tag(id: 4, name: "애견")
-//    ]
-    
-//    private var testTags = [Tag]()
-    private var testTags = Set<Tag>()
-    
-    override func viewWillAppear(_ animated: Bool) {
-        
-//        let some =
-//        APIManager.shared.provider.request(Tag, completion: <#T##Completion##Completion##(_ result: Result<Response, MoyaError>) -> Void#>)
-        
-//        let url = URL(string: "https://dearsurvy.herokuapp.com/tags")!
-//        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-//            guard error == nil, let data = data else {
-//                print(error)
-//                return
-//            }
-//
-//            let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: data)
-//            let tags = tagsDic["tags"]!
-//            for tag in tags.sorted(by: < ) {
-//                self?.testTags.append(tag)
-//            }
-//            self?.updateTags()
-//            print("tags: \(tags)")
-//
-//        }.resume()
-        
-//        APIService.shared.fetchTags { [weak self] tags in
-//            for tag in tags.sorted(by: <) {
-//                self?.testTags.append(tag)
-//            }
-//            self?.updateTags()
-//        }
-    
-        fetchTags()
-    }
-    
-    private func fetchTags() {
-        self.coordinator?.setIndicatorSpinning(true)
-        APIService.shared.fetchTagsMoya { [weak self] tags in
-            guard let tags = tags, let self = self else { fatalError() }
-            print("hi!!")
-            self.testTags = []
-            for tag in tags.sorted(by: <) {
-                self.testTags.insert(tag)
-            }
-            self.updateTags()
-        }
-    }
+    var selectedTagDataSource: UICollectionViewDiffableDataSource<SelectedSection, Tag>!
+    var selectableTagDataSource: UICollectionViewDiffableDataSource<SelectableSection, Tag>!
     
     enum SelectableSection {
         case main
@@ -92,9 +42,37 @@ class CategorySelectionController: UIViewController, Coordinating {
         case main
     }
     
-    var selectedTagDataSource: UICollectionViewDiffableDataSource<SelectedSection, Tag>!
+    override func viewWillAppear(_ animated: Bool) {
+        fetchTags()
+    }
     
-    var selectableTagDataSource: UICollectionViewDiffableDataSource<SelectableSection, Tag>!
+    private func fetchTags() {
+        self.coordinator?.setIndicatorSpinning(true)
+        APIService.shared.fetchTagsMoya { [weak self] tags in
+            guard let tags = tags, let self = self else { fatalError() }
+            print("hi!!")
+            self.selectableTags = []
+            for tag in tags.sorted(by: <) {
+                self.selectableTags.insert(tag)
+            }
+            
+            let lastSelectedCategoryNames = UserDefaults.standard.lastSelectedCategories.cutStringInOrder()
+            
+            selectedTags = Set(selectableTags.filter { lastSelectedCategoryNames.contains($0.name) }) // Set<Tag>
+            
+            // 해당 Cell 을 어떻게 .. 선택된 상태로 만들 수 있을까 ?
+            // SelectableCategoryCell
+            
+//            selectedTags.forEach {
+//                selectable
+//            }
+            
+            print("selectedTags: \(selectedTags.sorted())")
+            print("selectableTags: \(selectableTags)")
+            
+            self.updateTags()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,12 +87,12 @@ class CategorySelectionController: UIViewController, Coordinating {
         setupLayout()
         
         performQuery(with: nil)
+        
     }
     
     private let wholeContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .white
-//        view.applyCornerRadius(on: .top, radius: 10)
         view.applyCornerRadius(on: .all, radius: 10)
         return view
     }()
@@ -124,14 +102,11 @@ class CategorySelectionController: UIViewController, Coordinating {
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
             
             let contentSize = layoutEnvironment.container.effectiveContentSize
-//            let columns = contentSize.width > 800 ? 3 : 2
             let columns = 4
             let spacing = CGFloat(10)
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                   heightDimension: .fractionalHeight(1.0))
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
-//            let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-//                                                   heightDimension: .absolute(32))
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                    heightDimension: .absolute(20))
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
@@ -163,9 +138,7 @@ class CategorySelectionController: UIViewController, Coordinating {
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
             
             let headerFooterSize = NSCollectionLayoutSize(
-//              widthDimension: .fractionalWidth(1.0),
                 widthDimension: .absolute(UIScreen.screenWidth - 64),
-//              heightDimension: .estimated(100)
               heightDimension: .absolute(40)
             )
             
@@ -216,6 +189,8 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         let selectedTagsArr = Array(selectedTags)
         postingService.setTags(selectedTagsArr)
+        UserDefaults.standard.lastSelectedCategories = selectedTagsArr.map { $0.name }.joined(separator: ",")
+        
         coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
     }
     
@@ -273,14 +248,15 @@ class CategorySelectionController: UIViewController, Coordinating {
         }
     }
     
+    // TODO: 대소문자 구분 없애기.
     private func performQuery(with text: String?) {
         var tagsToShow = [Tag]()
         if let text = text, text != "" {
-            tagsToShow = testTags.filter { $0.name.contains(text)}.sorted(by: { tag1, tag2 in
+            tagsToShow = selectableTags.filter { $0.name.contains(text)}.sorted(by: { tag1, tag2 in
                 return tag1.name < tag2.name
             })
         } else {
-            let sortedTags = Array(testTags).sorted()
+            let sortedTags = Array(selectableTags).sorted()
 //            tagsToShow = testTags
             tagsToShow = sortedTags
         }
@@ -292,13 +268,25 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     private func updateTags() {
-        var snapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
-        snapshot.appendSections([.main])
-        let sortedTags = Array(testTags).sorted()
-        snapshot.appendItems(sortedTags)
+        print("updateTags Called")
+        var selectableSnapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
+        selectableSnapshot.appendSections([.main])
+        let sortedTags = Array(selectableTags).sorted()
+        selectableSnapshot.appendItems(sortedTags)
         print("updateTags called, current number: \(sortedTags.count)")
-        selectableTagDataSource.apply(snapshot, animatingDifferences: false)
+        selectableTagDataSource.apply(selectableSnapshot, animatingDifferences: false)
+        
+        var selectedSnapshot = NSDiffableDataSourceSnapshot<SelectedSection, Tag>()
+        selectedSnapshot.appendSections([.main])
+        let sortedSelectedTags = Array(selectedTags).sorted()
+        selectedSnapshot.appendItems(sortedSelectedTags)
+        selectedTagDataSource.apply(selectedSnapshot, animatingDifferences: false)
+        
+        
         self.coordinator?.setIndicatorSpinning(false)
+        
+        
+        
     }
     
     private let completeButton: UIButton = {
@@ -369,6 +357,11 @@ extension CategorySelectionController {
         registerSupplementaryView()
         
         let selectableCellRegistration = UICollectionView.CellRegistration<SelectableCategoryCell, Tag> { (cell, indexPath, category) in
+            // 여기서 처리하면 좋을 것 같은데..
+            if self.selectedTags.contains(category) {
+                cell.isTagSelected = true
+            }
+            
             cell.categoryTag = category
             cell.delegate = self
         }
@@ -419,7 +412,15 @@ extension CategorySelectionController {
 
 extension CategorySelectionController: SelectableCategoryCellDelegate {
     func selectableCategoryCellTapped(_ cell: SelectableCategoryCell) {
-        guard selectedTags.count < 4 else {
+        
+        // count == 4, isSelected == false
+        // 4개 선택된 상태에서, 새로 선택한게 이미 선택된 상태가 아니어야함.
+//        guard selectedTags.count < 4 && cell.isTagSelected == true else {
+//            coordinator?.navigationController?.toastMessage(title: "관심 카테고리는 4개까지 선택 가능합니다.")
+//            return
+//        }
+        
+        if selectedTags.count == 4 && cell.isTagSelected == false {
             coordinator?.navigationController?.toastMessage(title: "관심 카테고리는 4개까지 선택 가능합니다.")
             return
         }

@@ -10,3 +10,10 @@ import Foundation
 extension String {
     public static let optionPlaceholder = "옵션"
 }
+
+extension String {
+    public func cutStringInOrder() -> [String] {
+        let split = self.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces)}
+        return split.sorted()
+    }
+}

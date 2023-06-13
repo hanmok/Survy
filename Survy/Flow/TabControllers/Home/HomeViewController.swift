@@ -9,8 +9,12 @@ import UIKit
 import SnapKit
 import Model
 
-//class HomeViewController: UIViewController, Coordinating {
 class HomeViewController: TabController, Coordinating {
+
+    override func updateMyUI() {
+        updateSurveys()
+        categoryCollectionView.reloadData()
+    }
     
     var participationService: ParticipationServiceType
     var userService: UserServiceType
@@ -61,7 +65,7 @@ class HomeViewController: TabController, Coordinating {
         
         participationService.getSurveys(completion: {
             self.coordinator?.setIndicatorSpinning(false)
-            self.updateUI()
+            self.updateSurveys()
         })
     }
     
@@ -102,7 +106,7 @@ class HomeViewController: TabController, Coordinating {
         categoryCollectionView.delegate = self
     }
     
-    private func updateUI() {
+    private func updateSurveys() {
         surveyCellHeights.removeAll()
         var snapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
         snapshot.appendSections([.main])
@@ -131,15 +135,7 @@ class HomeViewController: TabController, Coordinating {
     }
     
     private func setupLayout() {
-//        navigationItem.titleView = UIView()
-//        navigationController?.hidesBarsOnTap = true
-//        navigationItem.titleView?.isHidden = true
-        
-        // 이거 하면 지워지나.. ㅇㅇ..
         navigationController?.setNavigationBarHidden(true, animated: false)
-        
-        // dma.. navigationBar 없애. 다 Customize 하기.
-        
         
         self.view.addSubview(wholeScrollView)
         self.view.addSubview(requestingButton)
@@ -189,15 +185,12 @@ class HomeViewController: TabController, Coordinating {
         requestingButton.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-tabbarHeight)
             make.height.equalTo(50)
-//            make.leading.trailing.equalToSuperview()
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth)
         }
         
         surveyTableView.snp.makeConstraints { make in
-//            make.top.equalTo(categoryCollectionView.snp.bottom).offset(20)
             make.top.equalTo(collectedRewardLabel.snp.bottom).offset(categoryHeight + 20)
-//            make.leading.trailing.equalToSuperview()
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth)
             make.bottom.equalTo(requestingButton.snp.top)
@@ -255,10 +248,7 @@ class HomeViewController: TabController, Coordinating {
         let button = UIButton()
         button.setTitle("선택", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
-//        button.setTitleColor(.black, for: .normal)
         button.backgroundColor = .mainBackgroundColor
-//        button.inset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
-//        button.addInsets(top: 8, bottom: 12, left: 8, right: 12)
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         return button
     }()
@@ -271,7 +261,6 @@ class HomeViewController: TabController, Coordinating {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .mainBackgroundColor
         collectionView.isScrollEnabled = false
-//        collectionView.contentInset = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
         return collectionView
     }()
     
@@ -302,16 +291,14 @@ class HomeViewController: TabController, Coordinating {
     }
 }
 
-
 extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-
         let approximatedWidthOfBioTextView = UIScreen.screenWidth - 16 * 2 - 12 * 2
         let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
         let estimatedFrame1 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 12)], context: nil)
 
         let estimatedFrame2 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 13)], context: nil)
-
+        
         let estimatedFrame3 = NSString(string: participationService.surveysToShow[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
         
         // 12 + 10 + 12 + 20 + 12
@@ -331,7 +318,7 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         surveyCellHeights.removeAll()
-        let result = userService.interestedCategories.count
+        let result = userService.lastSelectedCategories.count
         return result
     }
     
@@ -339,7 +326,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
 
-        collectionViewCell.category = userService.interestedCategories[indexPath.row]
+        collectionViewCell.category = userService.lastSelectedCategories[indexPath.row]
+        print("lastSelectedCategories: \(userService.lastSelectedCategories[indexPath.row])")
         collectionViewCell.categoryCellDelegate = self
         return collectionViewCell
     }
@@ -348,7 +336,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 extension HomeViewController: CategoryCellDelegate {
     func categoryTapped(category: String, selected: Bool) {
         participationService.toggleCategory(category)
-        updateUI()
+        updateSurveys()
     }
 }
 

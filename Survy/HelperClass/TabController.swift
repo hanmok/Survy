@@ -8,7 +8,7 @@
 import UIKit
 
 
-class TabController: UIViewController {
+class TabController: BaseViewController {
     var index: Int
     
     init(index: Int) {

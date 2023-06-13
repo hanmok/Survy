@@ -10,12 +10,14 @@ import Foundation
 
 public struct Survey: Hashable, Decodable {
     
+    // API 호출 시 여기에서 생성되는게 아니구나?
+    
     public init(id: Int,
                 numOfParticipation: Int,
                 participationGoal: Int,
-                title: String
-                ,rewardRange: String?
-                ,categories: [String]?
+                title: String,
+                rewardRange: String?,
+                categories: [String]?
     )
     {
         self.id = id
@@ -23,7 +25,12 @@ public struct Survey: Hashable, Decodable {
         self.numOfParticipation = numOfParticipation
         self.participationGoal = participationGoal
         self.rewardRange = rewardRange
-        self.categories = ["테스트1", "테스트2"]
+        self.categories = ["운동", "테스트2"]
+        print("survey init called")
+    }
+    
+    public mutating func setCategories(categories: [String]) {
+        self.categories = categories
     }
     
     public let id: Int
@@ -35,7 +42,8 @@ public struct Survey: Hashable, Decodable {
     
     // need to get from Survey-Tag API
     
-    public var categories: [String]?
+    // FIXME: 처리하기..
+    public var categories: [String]? = ["운동", "애견"]
     
     public enum CodingKeys: String, CodingKey {
         case id

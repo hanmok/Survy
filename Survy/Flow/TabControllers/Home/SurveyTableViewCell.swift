@@ -51,7 +51,9 @@ class SurveyTableViewCell: UITableViewCell {
     
     private func configureLayout() {
         guard let survey = survey else { return }
-        let categories = survey.categories ?? ["운동"]
+        
+        // 왜.. 아무것도 없냐?
+        let categories = survey.categories ?? ["일반"]
         
 //        let categoriesText = survey.categories.joined(separator: " • ")
         let categoriesText = categories.joined(separator: " • ")
