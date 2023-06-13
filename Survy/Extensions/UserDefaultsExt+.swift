@@ -31,8 +31,8 @@ extension UserDefaults {
         }
     }
     
-    public var lastSelectedCategoriesSet: Set<String> {
-        return Set(lastSelectedCategories.cutStringInOrder())
+    public var lastSelectedCategoriesSet: Set<Int> {
+        return lastSelectedCategories.makeIntSet() // set of tag Id
     }
     
     private func string(forKey key: Key) -> String? {

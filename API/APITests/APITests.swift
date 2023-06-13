@@ -34,10 +34,14 @@ final class APITests: XCTestCase {
     }
 
     func test_sth() {
+        let expectation = self.expectation(description: "post")
         APIService.shared.fetchTagsMoya { tags in
+            print("fetched Tags: \(tags)")
             XCTAssertNotNil(tags)
             XCTAssertNil(tags)
+            expectation.fulfill()
         }
+        waitForExpectations(timeout: 10)
     }
     
     func test_postTag() { // why is it not working ??

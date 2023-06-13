@@ -38,6 +38,7 @@
 		9A6114DC2A08C83A0051FF2B /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = 9A6114DB2A08C83A0051FF2B /* Toast */; };
 		9A61151A2A0926530051FF2B /* TargetSelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6115192A0926530051FF2B /* TargetSelectionController.swift */; };
 		9A61151C2A092BF40051FF2B /* CategorySelectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A61151B2A092BF40051FF2B /* CategorySelectionController.swift */; };
+		9A6BC7862A38988D009CC23B /* CommonService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC7852A38988D009CC23B /* CommonService.swift */; };
 		9ABBC35529DC6405006980E6 /* MoreInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */; };
 		9ABBC35729DC6E71006980E6 /* UIViewExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */; };
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
@@ -148,6 +149,7 @@
 		9A6114D82A07F1F80051FF2B /* SelectableOptionStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableOptionStackView.swift; sourceTree = "<group>"; };
 		9A6115192A0926530051FF2B /* TargetSelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetSelectionController.swift; sourceTree = "<group>"; };
 		9A61151B2A092BF40051FF2B /* CategorySelectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionController.swift; sourceTree = "<group>"; };
+		9A6BC7852A38988D009CC23B /* CommonService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonService.swift; sourceTree = "<group>"; };
 		9ABBC35429DC6405006980E6 /* MoreInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreInfoTableViewCell.swift; sourceTree = "<group>"; };
 		9ABBC35629DC6E71006980E6 /* UIViewExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewExt+.swift"; sourceTree = "<group>"; };
 		9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewControllerExt+.swift"; sourceTree = "<group>"; };
@@ -272,6 +274,7 @@
 				9A61144E2A0296940051FF2B /* UserService.swift */,
 				9A6114502A0296E90051FF2B /* ParticipationService.swift */,
 				9ACD1C272A13AE320085D43E /* PostingService.swift */,
+				9A6BC7852A38988D009CC23B /* CommonService.swift */,
 			);
 			path = Providers;
 			sourceTree = "<group>";
@@ -689,6 +692,7 @@
 				9ACD1C6E2A152C560085D43E /* TargetLabelCollectionViewCell.swift in Sources */,
 				9ACCC6EF2A1B522C006AE8CE /* CustomNavigationBar.swift in Sources */,
 				9A6113D22A010B840051FF2B /* CategoryCollectionViewCell.swift in Sources */,
+				9A6BC7862A38988D009CC23B /* CommonService.swift in Sources */,
 				9AE295F129D6FB4A00387883 /* UIImageExt+.swift in Sources */,
 				9ACCC6FA2A20B4E1006AE8CE /* CategorySelectionFooterCell.swift in Sources */,
 				9ACD1C6C2A1525D40085D43E /* DiffableCollectionViewPractice.swift in Sources */,

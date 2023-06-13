@@ -19,41 +19,34 @@ protocol ParticipationServiceType: AnyObject {
     var selectedIndexes: Set<Int>? { get set }
     var selectedIndex: Int? { get set }
     var textAnswer: String? { get set }
-    
     var allSurveys: [Survey] { get set }
     var surveysToShow: [Survey] { get }
-    var selectedCategories: Set<String> { get set }
-
+    var selectedCategories: Set<Int> { get set }
+    
     func moveToNextQuestion()
     func initializeSurvey()
     func postAnswer()
-    func toggleCategory(_ category: String)
+    func toggleCategory(_ categoryId: Int)
     func getSurveys(completion: @escaping () -> Void)
 }
 
 class ParticipationService: ParticipationServiceType {
     
+    
+    
+    
     var selectedIndexes: Set<Int>?
 
     var selectedIndex: Int?
     
-    func toggleCategory(_ category: String) {
-        selectedCategories.toggle(category)
+    func toggleCategory(_ categoryId: Int) {
+        selectedCategories.toggle(categoryId)
     }
     
     func getSurveys(completion: @escaping () -> Void) {
         APIService.shared.getAllSurveys { surveys in
-            guard var surveys = surveys else { return }
-            var newSurveys = [Survey]()
-            
-            surveys.forEach {
-                var newSurvey = $0
-                newSurvey.setCategories(categories: ["일반"])
-                newSurveys.append(newSurvey)
-            }
-            
-            print("allSurveys: \(surveys)")
-            self.allSurveys = newSurveys
+            guard let surveys = surveys else { return }
+            self.allSurveys = surveys
             completion()
         }
     }
@@ -97,32 +90,34 @@ class ParticipationService: ParticipationServiceType {
             questionIndex = 0
         }
     }
+    
     var questionIndex: Int?
     var percentage: CGFloat? {
         guard let questionsToConduct = questionsToConduct, let questionIndex = questionIndex else { return 0 }
         return CGFloat(questionIndex) / CGFloat(questionsToConduct.count)
     }
     
-    var selectedCategories = Set<String>()
+    var selectedCategories = Set<Int>() // Tag Id
     
     var surveysToShow: [Survey] {
+        return allSurveys
+        
         if selectedCategories.isEmpty == true {
             var ret = [Survey]()
-            
             for survey in allSurveys {
-                if let surveyCategories = survey.categories {
-                    if UserDefaults.standard.lastSelectedCategoriesSet.intersection(surveyCategories).isEmpty == false {
+                if let surveyCategories = survey.tags {
+                    let something = surveyCategories.map { $0.id }
+                    if UserDefaults.standard.lastSelectedCategoriesSet.intersection(something).isEmpty == false {
                         ret.append(survey)
                     }
-                } else {
-                    fatalError()
                 }
             }
             return ret
         } else {
             return allSurveys.filter {
-                guard let validCategories = $0.categories else { fatalError() }
-                let categorySet = Set(validCategories)
+                guard let validCategories = $0.tags else { fatalError() }
+                
+                let categorySet = Set(validCategories.map { $0.id })
                 return categorySet.intersection(selectedCategories).isEmpty == false
             }
         }

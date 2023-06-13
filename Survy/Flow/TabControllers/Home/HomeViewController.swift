@@ -325,8 +325,10 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
-
-        collectionViewCell.category = userService.lastSelectedCategories[indexPath.row]
+        
+// FIXME: User Info로부터 수정하기.
+//        collectionViewCell.category = userService.lastSelectedCategories[indexPath.row]
+        
         print("lastSelectedCategories: \(userService.lastSelectedCategories[indexPath.row])")
         collectionViewCell.categoryCellDelegate = self
         return collectionViewCell
@@ -334,8 +336,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 }
 
 extension HomeViewController: CategoryCellDelegate {
-    func categoryTapped(category: String, selected: Bool) {
-        participationService.toggleCategory(category)
+    func categoryTapped(categoryId: Int, selected: Bool) {
+        participationService.toggleCategory(categoryId)
         updateSurveys()
     }
 }

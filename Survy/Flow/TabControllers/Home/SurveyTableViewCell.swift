@@ -50,23 +50,31 @@ class SurveyTableViewCell: UITableViewCell {
     }
     
     private func configureLayout() {
+        
         guard let survey = survey else { return }
-        
-        // 왜.. 아무것도 없냐?
-        let categories = survey.categories ?? ["일반"]
-        
-//        let categoriesText = survey.categories.joined(separator: " • ")
+        print("configuring survey: \(survey)")
+        configureCategories(survey: survey)
+        configureParticipants(survey: survey)
+        configureRewardLabel(survey: survey)
+        questionLabel.text = survey.title
+    }
+    
+    private func configureCategories(survey: Survey) {
+        guard let tags = survey.tags else { return }
+        let categories = tags.map { $0.name }
         let categoriesText = categories.joined(separator: " • ")
         categoryLabel.text = categoriesText
-        
+    }
+    
+    private func configureParticipants(survey: Survey) {
         let participants = survey.participants.map { String($0)}.joined(separator: " / ")
         participantsLabel.text = participants
-        
+    }
+    
+    private func configureRewardLabel(survey: Survey) {
         if let rewardText = survey.rewardString {
             rewardLabel.addFrontImage(image: UIImage.coin, string: rewardText, font: UIFont.systemFont(ofSize: rewardLabel.font.pointSize))
         }
-        
-        questionLabel.text = survey.title
     }
     
     override func layoutSubviews() {

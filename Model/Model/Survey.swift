@@ -16,8 +16,7 @@ public struct Survey: Hashable, Decodable {
                 numOfParticipation: Int,
                 participationGoal: Int,
                 title: String,
-                rewardRange: String?,
-                categories: [String]?
+                rewardRange: String?
     )
     {
         self.id = id
@@ -25,12 +24,12 @@ public struct Survey: Hashable, Decodable {
         self.numOfParticipation = numOfParticipation
         self.participationGoal = participationGoal
         self.rewardRange = rewardRange
-        self.categories = ["운동", "테스트2"]
         print("survey init called")
     }
     
-    public mutating func setCategories(categories: [String]) {
-        self.categories = categories
+//    public mutating func setCategories(categories: [String]) {
+    public mutating func setCategories(tags: [Tag]) {
+        self.tags = tags
     }
     
     public let id: Int
@@ -43,7 +42,8 @@ public struct Survey: Hashable, Decodable {
     // need to get from Survey-Tag API
     
     // FIXME: 처리하기..
-    public var categories: [String]? = ["운동", "애견"]
+//    public var tags: [String]? = ["운동", "애견"]
+    public var tags: [Tag]?
     
     public enum CodingKeys: String, CodingKey {
         case id
@@ -52,7 +52,7 @@ public struct Survey: Hashable, Decodable {
         case participationGoal
 //        case createdAt = "created_at"
         case rewardRange = "reward_range"
-        case categories
+        case tags
     }
 }
 
@@ -62,6 +62,7 @@ extension Survey {
         }
         
         public var rewardString: String? {
+            
 //            let rewardRange = rewardRange ?? "100"
 //
 ////            guard let components = rewardRange.split(separator: ","), components.count <= 2 else { return }

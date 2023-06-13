@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import Model
 
 class CategoryCollectionViewCell: UICollectionViewCell {
     
     public var categoryCellDelegate: CategoryCellDelegate?
     
-    var category: String? {
+//    var category: String? {
+    var category: Tag? {
         didSet {
             self.configureLayout()
         }
@@ -24,7 +26,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
     private func configureLayout() {
         guard let category = category else { return }
-        categoryButton.setTitle(category, for: .normal)
+        categoryButton.setTitle(category.name, for: .normal)
     }
     
     private let categoryButton: UIButton = {
@@ -51,7 +53,9 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     
     private func toggleAppearance(_ isSelected: Bool) {
         guard let category = category else { return }
-        categoryCellDelegate?.categoryTapped(category: category, selected: isSelected)
+        
+        categoryCellDelegate?.categoryTapped(categoryId: category.id, selected: isSelected)
+        
         if isSelected {
             backgroundCircularView.backgroundColor = UIColor(white: 0.3, alpha: 1)
             categoryButton.setTitleColor(.white, for: .normal)
@@ -80,5 +84,5 @@ class CategoryCollectionViewCell: UICollectionViewCell {
 
 
 protocol CategoryCellDelegate: AnyObject {
-    func categoryTapped(category: String, selected: Bool)
+    func categoryTapped(categoryId: Int, selected: Bool)
 }

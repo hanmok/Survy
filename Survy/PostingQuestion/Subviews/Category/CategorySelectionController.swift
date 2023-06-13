@@ -10,16 +10,16 @@ import Model
 import SnapKit
 import API
 
-
-
 class CategorySelectionController: UIViewController, Coordinating {
     
     var coordinator: Coordinator?
     
     var postingService: PostingServiceType
+    var commonService: CommonServiceType
     
-    public init(postingService: PostingServiceType) {
+    public init(postingService: PostingServiceType, commonService: CommonServiceType) {
         self.postingService = postingService
+        self.commonService = commonService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,7 +28,6 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     private var selectedTags = Set<Tag>()
-    
     private var selectableTags = Set<Tag>()
     
     var selectedTagDataSource: UICollectionViewDiffableDataSource<SelectedSection, Tag>!
@@ -47,31 +46,36 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     private func fetchTags() {
-        self.coordinator?.setIndicatorSpinning(true)
-        APIService.shared.fetchTagsMoya { [weak self] tags in
-            guard let tags = tags, let self = self else { fatalError() }
-            print("hi!!")
-            self.selectableTags = []
-            for tag in tags.sorted(by: <) {
-                self.selectableTags.insert(tag)
+        if commonService.allTags.isEmpty {
+            self.coordinator?.setIndicatorSpinning(true)
+            APIService.shared.fetchTagsMoya { [weak self] tags in
+                guard let tags = tags, let self = self else { fatalError() }
+                commonService.setTags(tags)
+                self.updateUI(with: tags)
             }
-            
-            let lastSelectedCategoryNames = UserDefaults.standard.lastSelectedCategories.cutStringInOrder()
-            
-            selectedTags = Set(selectableTags.filter { lastSelectedCategoryNames.contains($0.name) }) // Set<Tag>
-            
-            // 해당 Cell 을 어떻게 .. 선택된 상태로 만들 수 있을까 ?
-            // SelectableCategoryCell
-            
-//            selectedTags.forEach {
-//                selectable
-//            }
-            
-            print("selectedTags: \(selectedTags.sorted())")
-            print("selectableTags: \(selectableTags)")
-            
-            self.updateTags()
+        } else {
+            self.updateUI(with: commonService.allTags)
         }
+    }
+    
+    private func updateUI(with tags: [Tag]) {
+        self.selectableTags = []
+        
+        for tag in tags.sorted(by: <) {
+            self.selectableTags.insert(tag)
+        }
+        
+        let lastSelectedCategoryNames = UserDefaults.standard.lastSelectedCategories.cutStringInOrder()
+        
+        selectedTags = Set(selectableTags.filter { lastSelectedCategoryNames.contains($0.name) }) // Set<Tag>
+        
+        // TODO: 해당 Cell 을 어떻게 .. 선택된 상태로 만들 수 있을까 ?
+        // SelectableCategoryCell
+        
+        print("selectedTags: \(selectedTags.sorted())")
+        print("selectableTags: \(selectableTags)")
+        
+        self.updateTags()
     }
     
     override func viewDidLoad() {
@@ -135,7 +139,9 @@ class CategorySelectionController: UIViewController, Coordinating {
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                    heightDimension: .absolute(32))
             
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
+            let group = NSCollectionLayoutGroup.horizontal(
+                layoutSize: groupSize, subitem: item, count: columns
+            )
             
             let headerFooterSize = NSCollectionLayoutSize(
                 widthDimension: .absolute(UIScreen.screenWidth - 64),
@@ -197,8 +203,8 @@ class CategorySelectionController: UIViewController, Coordinating {
     private func setupLayout() {
         
         self.view.addSubview(wholeContainerView)
-        [selectedCategoryCollectionView,
-         searchBar,
+        
+        [selectedCategoryCollectionView, searchBar,
          categoryListCollectionView, completeButton, topViewContainer].forEach { self.wholeContainerView.addSubview($0) }
         
         [topViewLabel, exitButton].forEach { self.topViewContainer.addSubview($0) }
@@ -257,7 +263,6 @@ class CategorySelectionController: UIViewController, Coordinating {
             })
         } else {
             let sortedTags = Array(selectableTags).sorted()
-//            tagsToShow = testTags
             tagsToShow = sortedTags
         }
         
@@ -341,7 +346,7 @@ class CategorySelectionController: UIViewController, Coordinating {
             self.coordinator?.setIndicatorSpinning(true)
             APIService.shared.requestTagMoya(requestingTagName: text) { [weak self] result in
                 self?.coordinator?.setIndicatorSpinning(false)
-                self?.fetchTags()
+//                self?.fetchTags()
             }
         }
         

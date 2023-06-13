@@ -16,4 +16,13 @@ extension String {
         let split = self.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces)}
         return split.sorted()
     }
+    
+    public func makeIntSet() -> Set<Int> {
+        let split = self.split(separator: ",").map {
+            $0.trimmingCharacters(in: .whitespaces)
+        }
+        if split.count == 0 { return Set([-1]) }
+        let intArr = split.map { Int($0) ?? -1 }
+        return Set(intArr)
+    }
 }

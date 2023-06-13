@@ -111,6 +111,7 @@ extension APIService {
                     print("fetched result: \(result)")
                     let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: result.data)
                     let tags = tagsDic["tags"]
+//                    print("tags: \(tags)")
                     completion(tags)
                     
                 case .failure(let error):
