@@ -180,13 +180,23 @@ extension APIService {
         surveyProvider.request(.fetchAll) { result in
             switch result {
                 case .success(let result):
+                    
 //                    let surveysDic = try! JSONDecoder().decode([String: [Survey]].self, from: result.data)
 //                    let surveysDic = try! JSONDecoder().decode([String: SurveyResponse].self, from: result.data)
 //                    let surveysResult = try! JSONDecoder().decode(SurveyResponse.self, from: result.data)
-                    let 
 //                    guard let surveys = surveysDic["surveys"] else { fatalError("There's no surveys in dictionary~")}
-                    print("surveysResult: \(surveysResult)")
+//                    print("surveysResult: \(surveysResult)")
+
+                    let surveysResponse = try! JSONDecoder().decode(SurveyResponse.self, from: result.data)
                     
+//                    let surveysResponse = try! JSONDecoder().decode([String: [Survey]].self, from: result.data)
+//                    let surveys = surveysResponse["surveys"]
+//                    completion(surveys)
+                    completion(surveysResponse.surveys)
+                    print("surveysResponse: \(surveysResponse)")
+                    
+                    
+//                    SurveyResponse
                     
                 case .failure(let error):
                     fatalError(error.localizedDescription)

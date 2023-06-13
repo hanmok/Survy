@@ -52,6 +52,7 @@ final class APITests: XCTestCase {
     
     func test_fetchSurveys() {
         let expectation = self.expectation(description: "post")
+        
         APIService.shared.getAllSurveys { result in
             print("myAPIResult: \(result)")
             XCTAssertNil(result)

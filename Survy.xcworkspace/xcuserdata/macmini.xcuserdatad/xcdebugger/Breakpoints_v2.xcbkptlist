@@ -491,53 +491,5 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6B4BB9DD-3C75-432C-B0AC-28B3F5B09251"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "API/API/APIService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
-            landmarkName = "getAllSurveys(completion:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "6B4BB9DD-3C75-432C-B0AC-28B3F5B09251 - b3139b78f4276f54"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Result&lt;Moya.Response, Moya.MoyaError&gt;) -&gt; () in API.APIService.getAllSurveys(completion: (Swift.Optional&lt;Swift.Array&lt;Model.Survey&gt;&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "API"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "190"
-                  endingLineNumber = "190"
-                  offsetFromSymbolStart = "1078">
-               </Location>
-               <Location
-                  uuid = "6B4BB9DD-3C75-432C-B0AC-28B3F5B09251 - 146eee29b72361aa"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "API.APIService.getAllSurveys(completion: (Swift.Optional&lt;Swift.Array&lt;Model.Survey&gt;&gt;) -&gt; ()) -&gt; ()"
-                  moduleName = "API"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/macmini/Desktop/SurvyiOS/Survy/API/API/APIService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "189"
-                  endingLineNumber = "189"
-                  offsetFromSymbolStart = "192">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
