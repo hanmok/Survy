@@ -24,7 +24,9 @@ protocol PostingServiceType: AnyObject {
     func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
     func resetQuestions()
-    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String, numberOfOptions: Int)
+    
+//    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String, numberOfOptions: Int)
+    
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int)
 }
 
@@ -49,15 +51,15 @@ class PostingService: PostingServiceType {
         }
     }
    
-    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String = "", numberOfOptions: Int) {
-        
-        if postingQuestions.count > index {
-            postingQuestions[index] = postingQuestion
-        } else {
-            let newPostingQuestion = PostingQuestion(index: index, question: questionText, questionType: type)
-            postingQuestions.append(PostingQuestion(index: index, question: questionText, questionType: type))
-        }
-    }
+//    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String = "", numberOfOptions: Int) {
+//
+//        if postingQuestions.count > index {
+//            postingQuestions[index] = postingQuestion
+//        } else {
+//            let newPostingQuestion = PostingQuestion(index: index, question: questionText, questionType: type)
+//            postingQuestions.append(PostingQuestion(index: index, question: questionText, questionType: type))
+//        }
+//    }
     
     func resetQuestions() {
         postingQuestions = []
@@ -81,6 +83,13 @@ class PostingService: PostingServiceType {
 }
 
 public class PostingQuestion {
+    
+    init(index: Int, question: String = "", questionType: BriefQuestionType) {
+        self.index = index
+        self.question = question
+        self.briefQuestionType = questionType
+    }
+    
     var index: Int
     var question: String
     var numberOfOptions: Int {
@@ -103,12 +112,8 @@ public class PostingQuestion {
         self.briefQuestionType = briefQuestionType
     }
     
-    
-    
-    init(index: Int, question: String = "", questionType: BriefQuestionType) {
-        self.index = index
-        self.question = question
-        self.briefQuestionType = questionType
+    func updateQuestionText(questionText: String) {
+        self.question = questionText
     }
     
     public func addSelectableOption(selectableOption: SelectableOption) {

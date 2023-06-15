@@ -12,6 +12,7 @@ import Model
 protocol PostingBlockCollectionViewCellDelegate {
     func updateUI(cell: PostingBlockCollectionViewCell, cellIndex: Int, postingQuestion: PostingQuestion)
     func setPostingQuestionToIndex(postingQuestion: PostingQuestion, index: Int)
+    func updateQuestionText(cellIndex: Int, questionText: String, postingQuestion: PostingQuestion)
 }
 
 class PostingBlockCollectionViewCell: UICollectionViewCell {
@@ -62,8 +63,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         let numberOfOptionsText = "\(postingQuestion.numberOfOptions) 옵션"
         
         questionTypeOptionStackView.numberOfSelectableOptionButton.setTitle(numberOfOptionsText, for: .normal)
-        
-        print("numberOfSelectableOptions:  \(postingQuestion.selectableOptions.count)") // 여기선 두개네 ?
         
         postingQuestion.selectableOptions.forEach {
             let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: postingQuestion.briefQuestionType, selectableOption: $0)
@@ -226,8 +225,11 @@ extension PostingBlockCollectionViewCell: UITextFieldDelegate {
     // Question 에서 return 눌릴 때 호출
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         UserDefaults.standard.isAddingSelectableOption = false
-        print("dismisskeyboard flag 2")
+        // 이거... 중요한거 아니야? 질문일텐데 ??
+//        guard textField.text != nil else { return true }
+        
         guard let text = textField.text else { return true }
+        print("text: \(text)")
         return dismissKeyboard()
     }
 }
@@ -253,8 +255,36 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
         return dismissKeyboard()
     }
     
+    func textViewDidChange(_ textView: UITextView) {
+        print("current text input: \(textView.text)")
+        
+        print("lastCharacter: \(textView.text.getLastCharacter())")
+        guard let lastCharacter = textView.text.getLastCharacter() else { return }
+
+//        if lastCharacter == "\n" {
+//            print("return tapped!")
+//        }
+        
+//        if textView.text.count > 1 {
+//            let endIndex = textView.text.endIndex
+//            let lastIndex = textView.text.index(endIndex, offsetBy: -1)
+//            let character = textView.text[lastIndex]
+//            print("last character: \(character)")
+//
+////            if textView.text.substring(from: textView.text.endIndex ) == "\n" {
+////                print("text input before return tapped: \(textView.text)")
+////            }
+//        }
+        
+    }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
+            print("return tapped!")
+            // TODO: Update PostingQuestion
+            guard let cellIndex = cellIndex else { return false }
+            guard let questionText = textView.text, let postingQuestion = postingQuestion else { return false }
+            postingBlockCollectionViewCellDelegate?.updateQuestionText(cellIndex: cellIndex, questionText: questionText, postingQuestion: postingQuestion)
             textView.resignFirstResponder()
             return false
         }
@@ -298,3 +328,14 @@ extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
         }
     }
 }
+
+
+//extension PostingBlockCollectionViewCell: UITextViewDelegate {
+//    func textViewDidChange(_ textView: UITextView) {
+//        if textView.text.count > 1 {
+//            if textView.text.substring(from: textView.text.count - 1) == "\n" {
+//
+//            }
+//        }
+//    }
+//}
