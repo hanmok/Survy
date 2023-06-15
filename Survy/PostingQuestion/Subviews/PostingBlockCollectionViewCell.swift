@@ -78,9 +78,11 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         }
         
         // flag 6152
-        Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { _ in
-            if let last = self.selectableOptionStackView.selectableOptionFieldViews.last?.selectableOptionTextField {
-                last.becomeFirstResponder()
+        if UserDefaults.standard.isAddingSelectableOption {
+            Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { _ in
+                if let last = self.selectableOptionStackView.selectableOptionFieldViews.last?.selectableOptionTextField {
+                    last.becomeFirstResponder()
+                }
             }
         }
     }
@@ -223,9 +225,9 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
 extension PostingBlockCollectionViewCell: UITextFieldDelegate {
     // Question 에서 return 눌릴 때 호출
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        UserDefaults.standard.isAddingSelectableOption = false
         print("dismisskeyboard flag 2")
         guard let text = textField.text else { return true }
-//        guard let postingQuestion = postingQuestion else { fatalError() }
         return dismissKeyboard()
     }
 }
@@ -233,20 +235,14 @@ extension PostingBlockCollectionViewCell: UITextFieldDelegate {
 extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
     // TODO: 다음 selectableOption 값으로 이동
     func selectableOptionFieldReturnTapped(_ text: String, _ position: Int) {
-        
         guard let postingQuestion = postingQuestion,
               let cellIndex = cellIndex else { fatalError() }
-        
         let selectableOption = SelectableOption(position: position, value: text)
-
         postingQuestion.modifySelectableOption(index: position, selectableOption: selectableOption)
-
         postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: position + 1))
         
         // 이거 호출되면서 TextField 가 내려감.
         postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
-        
-        
     }
 }
 

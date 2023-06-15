@@ -12,6 +12,16 @@ extension UserDefaults {
     enum Key: String {
         case isIndivisualSelected
         case myCategories
+        case isAddingSelectableOption
+    }
+
+    public var isAddingSelectableOption: Bool {
+        get {
+            return self.bool(forKey: .isAddingSelectableOption)
+        }
+        set {
+            set(newValue, forKey: .isAddingSelectableOption)
+        }
     }
     
     public var isIndivisualSelected: Bool {
