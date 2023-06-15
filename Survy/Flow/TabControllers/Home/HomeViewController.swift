@@ -115,6 +115,17 @@ class HomeViewController: TabController, Coordinating {
         DispatchQueue.main.async {
             self.surveyTableView.reloadData()
         }
+        
+        if commonService.surveysToShow.isEmpty {
+            self.surveyTableView.isHidden = true
+            noDataLabel.isHidden = false
+            
+            if UserDefaults.standard.myCategories.isEmpty {
+                noDataLabel.text = "Select Category first"
+            } else {
+                noDataLabel.text = "There's no survey available with current categories"
+            }
+        }
     }
     
     private func setupTargets() {
@@ -144,7 +155,8 @@ class HomeViewController: TabController, Coordinating {
         }
         
         [
-         categorySelectionCoveringView, collectedRewardLabel, surveyTableView, categorySelectionButton, categoryCollectionView].forEach {
+         categorySelectionCoveringView, collectedRewardLabel, surveyTableView, noDataLabel,
+         categorySelectionButton, categoryCollectionView].forEach {
              self.wholeScrollView.addSubview($0)
          }
         
@@ -194,6 +206,13 @@ class HomeViewController: TabController, Coordinating {
             make.bottom.equalTo(requestingButton.snp.top)
         }
         
+        noDataLabel.snp.makeConstraints { make in
+            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(categoryHeight + 20)
+            make.leading.equalToSuperview()
+            make.width.equalTo(UIScreen.screenWidth)
+            make.bottom.equalTo(requestingButton.snp.top)
+        }
+        
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         guard let text = numberFormatter.string(from: userService.collectedMoney as NSNumber) else { return }
@@ -217,6 +236,14 @@ class HomeViewController: TabController, Coordinating {
     private let wholeScrollView: UIScrollView = {
         let scrollView = UIScrollView()
         return scrollView
+    }()
+    
+    private let noDataLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .red
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
     }()
     
     private let requestingButton: UIButton = {

@@ -25,12 +25,11 @@ extension UserDefaults {
     
     public var myCategories: [Tag] {
         get {
-            if let data = object(forKey: Key.myCategories.rawValue) as? Data,
-               let categories = try? JSONDecoder().decode([Tag].self, from: data) {
-                return categories
-            } else {
+            guard  let data = object(forKey: Key.myCategories.rawValue) as? Data,
+                   let categories = try? JSONDecoder().decode([Tag].self, from: data) else {
                 return []
             }
+            return categories
         }
         set {
             if let encoded = try? JSONEncoder().encode(newValue) {
