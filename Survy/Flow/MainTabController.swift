@@ -47,7 +47,7 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
         tabBar.backgroundColor = UIColor.mainColor
         guard let coordinator = self.coordinator else { fatalError() }
         
-        let homeVC = HomeViewController(index: 0, participationService: self.provider.participationService, userService: self.provider.userService)
+        let homeVC = HomeViewController(index: 0, participationService: self.provider.participationService, userService: self.provider.userService, commonService: self.provider.commonService)
         
         homeVC.title = "홈"
         homeVC.coordinator = coordinator

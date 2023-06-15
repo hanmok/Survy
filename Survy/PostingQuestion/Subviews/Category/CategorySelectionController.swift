@@ -16,10 +16,12 @@ class CategorySelectionController: UIViewController, Coordinating {
     
     var postingService: PostingServiceType
     var commonService: CommonServiceType
+    var participationService: ParticipationServiceType
     
-    public init(postingService: PostingServiceType, commonService: CommonServiceType) {
+    public init(postingService: PostingServiceType, commonService: CommonServiceType, participationService: ParticipationServiceType) {
         self.postingService = postingService
         self.commonService = commonService
+        self.participationService = participationService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -42,21 +44,28 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        fetchTags()
+//        fetchTags()
     }
     
-    private func fetchTags() {
-        if commonService.allTags.isEmpty {
-            self.coordinator?.setIndicatorSpinning(true)
-            APIService.shared.fetchTagsMoya { [weak self] tags in
-                guard let tags = tags, let self = self else { fatalError() }
-                commonService.setTags(tags)
-                self.updateUI(with: tags)
-            }
-        } else {
-            self.updateUI(with: commonService.allTags)
-        }
-    }
+    // 가져오지 않았을 리가 없음.
+//    private func fetchTags() {
+////        if commonService.allTags.isEmpty {
+////        if ParticipationService
+//
+//        if participationService.allTags.isEmpty {
+//
+//            self.coordinator?.setIndicatorSpinning(true)
+////            APIService.shared.fetchTags { [weak self] tags in
+////                guard let self = self else { fatalError() }
+////                commonService.setTags(tags)
+////                self.updateUI(with: tags)
+////            }
+//
+//
+//        } else {
+//            self.updateUI(with: commonService.allTags)
+//        }
+//    }
     
     private func updateUI(with tags: [Tag]) {
         self.selectableTags = []
@@ -113,6 +122,7 @@ class CategorySelectionController: UIViewController, Coordinating {
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                    heightDimension: .absolute(20))
+            
             let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
             
             group.interItemSpacing = .fixed(spacing)
@@ -344,7 +354,7 @@ class CategorySelectionController: UIViewController, Coordinating {
             guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
             print("input text: \(text)")
             self.coordinator?.setIndicatorSpinning(true)
-            APIService.shared.requestTagMoya(requestingTagName: text) { [weak self] result in
+            APIService.shared.postTag(requestingTagName: text) { [weak self] result in
                 self?.coordinator?.setIndicatorSpinning(false)
 //                self?.fetchTags()
             }

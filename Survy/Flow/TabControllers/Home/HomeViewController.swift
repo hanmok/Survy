@@ -18,6 +18,8 @@ class HomeViewController: TabController, Coordinating {
     
     var participationService: ParticipationServiceType
     var userService: UserServiceType
+    var commonService: CommonServiceType
+    
     var coordinator: Coordinator?
     
     var surveyCellHeights = Set<CellHeight>()
@@ -41,13 +43,14 @@ class HomeViewController: TabController, Coordinating {
     
     private let categoryHeight: CGFloat = 50
     
-    init(index: Int, participationService: ParticipationServiceType,
-         userService: UserServiceType) {
+    init(index: Int,
+         participationService: ParticipationServiceType,
+         userService: UserServiceType,
+         commonService: CommonServiceType) {
         self.participationService = participationService
         self.userService = userService
+        self.commonService = commonService
         super.init(index: index)
-//        self.index = index
-//        super.init(nibName: nil, bundle: nil)
     }
     
     override func viewDidLoad() {
@@ -61,12 +64,33 @@ class HomeViewController: TabController, Coordinating {
         self.setupTargets()
         self.setupCategoryCollectionView()
         self.setupLayout()
-        coordinator?.setIndicatorSpinning(true)
         
-        participationService.getSurveys(completion: {
-            self.coordinator?.setIndicatorSpinning(false)
-            self.updateSurveys()
+        
+        coordinator?.setIndicatorSpinning(true)
+        // TODO: Get all tags, match them to surveys and update
+        
+        commonService.getSurveys { [weak self] in
+            self?.commonService.getTags(completion: { [weak self] in
+                self?.commonService.addTagsToSurveys(completion: { [weak self] surveys in
+                    
+                })
+            })
+        }
+        
+        participationService.getSurveys(completion: { [weak self] in
+            self?.participationService.getTags { [weak self] in
+                
+                // TODO: tags, surveys match 시키기.
+                
+                self?.coordinator?.setIndicatorSpinning(false)
+                self?.updateSurveys()
+                print("fetchedSurveys: \(self?.participationService.allSurveys)")
+                print("fetchedTags: \(self?.participationService.allTags)")
+                
+            }
         })
+        
+    
     }
     
     private func setupDelegates() {
@@ -75,9 +99,7 @@ class HomeViewController: TabController, Coordinating {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         guard navigationController != nil else { fatalError() }
-        
         coordinator?.testSetup()
         setupLayout()
     }
@@ -116,8 +138,6 @@ class HomeViewController: TabController, Coordinating {
         DispatchQueue.main.async {
             self.surveyTableView.reloadData()
         }
-        
-        print("updateUI Called")
     }
     
     private func setupTargets() {

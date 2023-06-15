@@ -20,20 +20,19 @@ protocol ParticipationServiceType: AnyObject {
     var selectedIndex: Int? { get set }
     var textAnswer: String? { get set }
     var allSurveys: [Survey] { get set }
+    var allTags: [Tag] { get set }
     var surveysToShow: [Survey] { get }
     var selectedCategories: Set<Int> { get set }
     
     func moveToNextQuestion()
     func initializeSurvey()
-    func postAnswer()
     func toggleCategory(_ categoryId: Int)
     func getSurveys(completion: @escaping () -> Void)
+    func getTags(completion: @escaping () -> Void)
 }
 
 class ParticipationService: ParticipationServiceType {
-    
-    
-    
+    var allTags = [Tag]()
     
     var selectedIndexes: Set<Int>?
 
@@ -51,11 +50,15 @@ class ParticipationService: ParticipationServiceType {
         }
     }
     
-    var textAnswer: String?
-    
-    func postAnswer() {
-        
+    func getTags(completion: @escaping () -> Void) {
+        APIService.shared.getAllTags { tags in
+            guard let tags = tags else { return }
+            self.allTags = tags
+            completion()
+        }
     }
+    
+    var textAnswer: String?
     
     var allSurveys: [Survey] = []
     
@@ -116,7 +119,6 @@ class ParticipationService: ParticipationServiceType {
         } else {
             return allSurveys.filter {
                 guard let validCategories = $0.tags else { fatalError() }
-                
                 let categorySet = Set(validCategories.map { $0.id })
                 return categorySet.intersection(selectedCategories).isEmpty == false
             }

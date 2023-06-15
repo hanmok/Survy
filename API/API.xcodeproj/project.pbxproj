@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A6BC78C2A39B5DF009CC23B /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC78B2A39B5DF009CC23B /* APIError.swift */; };
+		9A6BC7902A39C96E009CC23B /* SurveyTagAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */; };
+		9A6BC7922A39CA26009CC23B /* CodeTomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC7912A39CA26009CC23B /* CodeTomb.swift */; };
+		9A6BC7942A39CB17009CC23B /* DefaultAlamofireManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC7932A39CB17009CC23B /* DefaultAlamofireManager.swift */; };
 		9ACCC7352A20CA60006AE8CE /* API.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9ACCC72C2A20CA60006AE8CE /* API.framework */; };
 		9ACCC73A2A20CA60006AE8CE /* APITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC7392A20CA60006AE8CE /* APITests.swift */; };
 		9ACCC73B2A20CA60006AE8CE /* API.h in Headers */ = {isa = PBXBuildFile; fileRef = 9ACCC72F2A20CA60006AE8CE /* API.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -34,6 +38,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9A6BC78B2A39B5DF009CC23B /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyTagAPI.swift; sourceTree = "<group>"; };
+		9A6BC7912A39CA26009CC23B /* CodeTomb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTomb.swift; sourceTree = "<group>"; };
+		9A6BC7932A39CB17009CC23B /* DefaultAlamofireManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultAlamofireManager.swift; sourceTree = "<group>"; };
 		9ACCC72C2A20CA60006AE8CE /* API.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = API.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ACCC72F2A20CA60006AE8CE /* API.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
 		9ACCC7342A20CA60006AE8CE /* APITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = APITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,6 +87,7 @@
 		9ACCC7222A20CA60006AE8CE = {
 			isa = PBXGroup;
 			children = (
+				9A6BC7912A39CA26009CC23B /* CodeTomb.swift */,
 				9ACCC72E2A20CA60006AE8CE /* API */,
 				9ACCC7382A20CA60006AE8CE /* APITests */,
 				9ACCC72D2A20CA60006AE8CE /* Products */,
@@ -103,7 +112,10 @@
 				9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */,
 				9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */,
 				9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */,
+				9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */,
 				9AFE34E02A35AE5D009CCE6D /* Test.swift */,
+				9A6BC78B2A39B5DF009CC23B /* APIError.swift */,
+				9A6BC7932A39CB17009CC23B /* DefaultAlamofireManager.swift */,
 				9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */,
 				9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */,
 				9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */,
@@ -255,6 +267,10 @@
 				9AD647842A36E7F900ED6DC0 /* SurveyAPI.swift in Sources */,
 				9ACCC75E2A21F1B1006AE8CE /* TagAPI.swift in Sources */,
 				9ACCC7452A20CA6F006AE8CE /* APIService.swift in Sources */,
+				9A6BC78C2A39B5DF009CC23B /* APIError.swift in Sources */,
+				9A6BC7922A39CA26009CC23B /* CodeTomb.swift in Sources */,
+				9A6BC7942A39CB17009CC23B /* DefaultAlamofireManager.swift in Sources */,
+				9A6BC7902A39C96E009CC23B /* SurveyTagAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

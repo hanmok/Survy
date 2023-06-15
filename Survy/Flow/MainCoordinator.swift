@@ -93,7 +93,7 @@ class MainCoordinator: Coordinator {
 
                 switch type {
                     case .categorySelection:
-                        vc = CategorySelectionController(postingService: self.provider.postingService, commonService: self.provider.commonService)
+                        vc = CategorySelectionController(postingService: self.provider.postingService, commonService: self.provider.commonService, participationService: self.provider.participationService)
                     case .targetSelection:
                         vc = TargetSelectionController(postingService: self.provider.postingService)
                     case .confirmation:

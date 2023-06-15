@@ -7,6 +7,8 @@
 
 import Foundation
 
+public typealias SurveyId = Int
+public typealias TagId = Int
 
 public struct Survey: Hashable, Decodable {
     
@@ -32,6 +34,14 @@ public struct Survey: Hashable, Decodable {
         self.tags = tags
     }
     
+    public mutating func appendTags(tag: Tag) {
+        if self.tags == nil { // 아예 받아오지 않은 경우 아님?
+            self.tags = []
+        }
+        guard self.tags != nil else { return }
+        self.tags!.append(tag)
+    }
+    
     public let id: Int
     public let title: String
     public let numOfParticipation: Int
@@ -42,8 +52,8 @@ public struct Survey: Hashable, Decodable {
     // need to get from Survey-Tag API
     
     // FIXME: 처리하기..
-//    public var tags: [String]? = ["운동", "애견"]
     public var tags: [Tag]?
+    
     
     public enum CodingKeys: String, CodingKey {
         case id
