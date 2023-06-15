@@ -117,15 +117,18 @@ class HomeViewController: TabController, Coordinating {
         }
         
         if commonService.surveysToShow.isEmpty {
-            self.surveyTableView.isHidden = true
-            noDataLabel.isHidden = false
-            
             if UserDefaults.standard.myCategories.isEmpty {
                 noDataLabel.text = "Select Category first"
             } else {
                 noDataLabel.text = "There's no survey available with current categories"
             }
         }
+        self.setTableVisibility(shouldShowTable: !commonService.surveysToShow.isEmpty)
+    }
+    
+    private func setTableVisibility(shouldShowTable: Bool) {
+        self.surveyTableView.isHidden = !shouldShowTable
+        self.noDataLabel.isHidden = shouldShowTable
     }
     
     private func setupTargets() {
