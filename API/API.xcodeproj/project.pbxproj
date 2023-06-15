@@ -108,6 +108,7 @@
 			isa = PBXGroup;
 			children = (
 				9ACCC72F2A20CA60006AE8CE /* API.h */,
+				9A6BC7932A39CB17009CC23B /* DefaultAlamofireManager.swift */,
 				9ACCC7442A20CA6F006AE8CE /* APIService.swift */,
 				9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */,
 				9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */,
@@ -115,7 +116,6 @@
 				9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */,
 				9AFE34E02A35AE5D009CCE6D /* Test.swift */,
 				9A6BC78B2A39B5DF009CC23B /* APIError.swift */,
-				9A6BC7932A39CB17009CC23B /* DefaultAlamofireManager.swift */,
 				9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */,
 				9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */,
 				9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */,

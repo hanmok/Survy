@@ -76,14 +76,13 @@ class PostingViewController: BaseViewController, Coordinating {
         setupTopCollectionViews()
         configureTopDataSource()
         
-        setupNavigationBar()
-        
         setupLayout()
         setupTargets()
         
         view.backgroundColor = UIColor.postingVCBackground
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         
         setupInitialSnapshot()
@@ -195,12 +194,9 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
-        
         targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
         categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
-        
     }
-    
     
     // MARK: - Button Actions
     
@@ -208,19 +204,19 @@ class PostingViewController: BaseViewController, Coordinating {
         super.viewWillDisappear(animated)
     }
     
-    @objc func otherViewTapped() {
+    @objc private func dismissKeyboard() {
         view.dismissKeyboard()
     }
     
     @objc func targetTapped(_ sender: UIButton) {
-        view.dismissKeyboard()
+        dismissKeyboard()
+
         coordinator?.manipulate(.targetSelection, command: .present)
     }
     
     @objc func categoryTapped(_ sender: UIButton) {
-        view.dismissKeyboard()
+        dismissKeyboard()
         coordinator?.manipulate(.categorySelection, command: .present)
-        
     }
     
     @objc func requestSurveyTapped(_ sender: UIButton) {
@@ -334,10 +330,6 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
-    private func setupNavigationBar() {
-//        self.title = "설문 요청"
-//        setupLeftNavigationBar()
-    }
     
     private func setupLeftNavigationBar() {
         let backButton = UIBarButtonItem(image: UIImage.leftChevron, style: .plain, target: self, action: #selector(dismissTapped))
@@ -427,15 +419,15 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PostingBlockCollectionViewCell.reuseIdentifier, for: indexPath) as! PostingBlockCollectionViewCell
         
-        cell.postingBlockCollectionViewDelegate = self
+        cell.postingBlockCollectionViewCellDelegate = self
         cell.cellIndex = indexPath.row
         
 //        let cellHeight = CellHeight(index: indexPath.row, height: 150 + 20)
+        
         let cellHeight = CellHeight(index: indexPath.row, height: defaultCellHeight + 20)
         if self.questionCellHeights.filter { $0.index == indexPath.row }.isEmpty {
             self.questionCellHeights.insert(cellHeight)
         }
-        
         
         viewDidAppear(false)
         
@@ -487,33 +479,34 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
 }
 
 extension PostingViewController: PostingBlockCollectionViewCellDelegate {
-    func updateUI(cellIndex: Int, postingQuestion: PostingQuestion) {
-        
-//        let postingQuestion = PostingQuestion(index: cellIndex, question: postingQuestion.question, questionType: postingQuestion.briefQuestionType)
+    func updateUI(cell: PostingBlockCollectionViewCell, cellIndex: Int, postingQuestion: PostingQuestion) {
         
         guard let correspondingCellHeight = questionCellHeights.first(where: { $0.index == cellIndex }) else { fatalError() }
         
         questionCellHeights.remove(correspondingCellHeight)
         let numberOfSelectableOptions = postingQuestion.numberOfOptions
-//        let newCellHeight = CellHeight(index: cellIndex, height: CGFloat(150 + numberOfSelectableOptions * 22)) // 각 selectableOption 의 크기
+
         let newCellHeight = CellHeight(index: cellIndex, height: defaultCellHeight + CGFloat(numberOfSelectableOptions) * self.selectableOptionHeight)
-        // 각 selectableOption 의 크기
-        print("newCellHeight: \(newCellHeight)")
-        print("cellHeights: ")
-        questionCellHeights.forEach {
-            print("idx: \($0.index), height: \($0.height)")
-        }
+        
         questionCellHeights.insert(newCellHeight)
-        print("umm ??")
+        
         postingBlockCollectionView.reloadItems(at: [IndexPath(row: cellIndex, section: 0)])
+                
+        // flag 6151
+//        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+//            print("numberOfFieldViews: \(cell.selectableOptionStackView.selectableOptionFieldViews.count)")
+//            if let lastTextField = cell.selectableOptionStackView.selectableOptionFieldViews.last?.selectableOptionTextField {
+//                print("umm..")
+//                lastTextField.becomeFirstResponder()
+//            }
+//        }
+        
         // TODO: Reload 했을 때, 입력한 값들이 그대로 유지된 채로 셀 크기만 업데이트 한 것 처럼 보이기.
     }
     
     func setPostingQuestionToIndex(postingQuestion: PostingQuestion, index: Int) {
         postingService.setPostingQuestion(postingQuestion: postingQuestion, index: index)
     }
-    
-    
 }
 
 extension PostingViewController: PostingBlockCollectionFooterDelegate {
@@ -531,5 +524,3 @@ extension PostingViewController: CustomNavigationBarDelegate {
         self.navigationController?.popViewController(animated: true)
     }
 }
-
-

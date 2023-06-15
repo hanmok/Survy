@@ -10,7 +10,7 @@ import SnapKit
 import Model
 
 protocol PostingBlockCollectionViewCellDelegate {
-    func updateUI(cellIndex: Int, postingQuestion: PostingQuestion)
+    func updateUI(cell: PostingBlockCollectionViewCell, cellIndex: Int, postingQuestion: PostingQuestion)
     func setPostingQuestionToIndex(postingQuestion: PostingQuestion, index: Int)
 }
 
@@ -28,7 +28,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var postingBlockCollectionViewDelegate: PostingBlockCollectionViewCellDelegate?
+    var postingBlockCollectionViewCellDelegate: PostingBlockCollectionViewCellDelegate?
         
     public var postingQuestion: PostingQuestion? {
         didSet {
@@ -36,6 +36,10 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             initializeStates()
             configure(with: postingQuestion)
         }
+    }
+    
+    public var briefQuestionType: BriefQuestionType {
+        return postingQuestion?.briefQuestionType ?? .multipleSelection // 이게 문제가 아님
     }
     
     private func initializeStates() {
@@ -46,12 +50,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         selectableOptionStackView = SelectableOptionStackView()
     }
     
-    public var briefQuestionType: BriefQuestionType {
-        return postingQuestion?.briefQuestionType ?? .multipleSelection // 이게 문제가 아님
-    }
-
     private func configure(with postingQuestion: PostingQuestion) {
-        
         questionTextField.text = postingQuestion.question
         if questionTextField.text == "" { questionTextField.text = "질문을 입력해주세요." }
         questionTextField.textColor = postingQuestion.question == "질문을 입력해주세요." ? .lightGray : .black
@@ -64,7 +63,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         
         questionTypeOptionStackView.numberOfSelectableOptionButton.setTitle(numberOfOptionsText, for: .normal)
         
-        print("numberOfSelectableOptions: \(postingQuestion.selectableOptions.count)")
+        print("numberOfSelectableOptions:  \(postingQuestion.selectableOptions.count)") // 여기선 두개네 ?
         
         postingQuestion.selectableOptions.forEach {
             let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: postingQuestion.briefQuestionType, selectableOption: $0)
@@ -76,6 +75,13 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         selectableOptionStackView.snp.remakeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
+        }
+        
+        // flag 6152
+        Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false) { _ in
+            if let last = self.selectableOptionStackView.selectableOptionFieldViews.last?.selectableOptionTextField {
+                last.becomeFirstResponder()
+            }
         }
     }
     
@@ -202,6 +208,7 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
     }
     
     // configure 시, notifyConditionChanged 에서 한번씩 호출.
+    
     private func updateWithQuestionType(tag: Int) {
         notifySelectionChange(to: tag)
     }
@@ -216,6 +223,7 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
 extension PostingBlockCollectionViewCell: UITextFieldDelegate {
     // Question 에서 return 눌릴 때 호출
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("dismisskeyboard flag 2")
         guard let text = textField.text else { return true }
 //        guard let postingQuestion = postingQuestion else { fatalError() }
         return dismissKeyboard()
@@ -226,14 +234,19 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
     // TODO: 다음 selectableOption 값으로 이동
     func selectableOptionFieldReturnTapped(_ text: String, _ position: Int) {
         
-        guard let postingQuestion = postingQuestion, let cellIndex = cellIndex else { fatalError() }
+        guard let postingQuestion = postingQuestion,
+              let cellIndex = cellIndex else { fatalError() }
+        
         let selectableOption = SelectableOption(position: position, value: text)
-        
+
         postingQuestion.modifySelectableOption(index: position, selectableOption: selectableOption)
-        
+
         postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: position + 1))
         
-        postingBlockCollectionViewDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
+        // 이거 호출되면서 TextField 가 내려감.
+        postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
+        
+        
     }
 }
 
@@ -278,15 +291,14 @@ extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
                 postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
             }
             
-            postingBlockCollectionViewDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
-            postingBlockCollectionViewDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
-            
+            postingBlockCollectionViewCellDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
+            postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
         } else {
             let postingQuestion = PostingQuestion(index: cellIndex, question: questionTextField.text, questionType: briefQuestionType)
             postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
             
-            postingBlockCollectionViewDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
-            postingBlockCollectionViewDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
+            postingBlockCollectionViewCellDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
+            postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
         }
     }
 }

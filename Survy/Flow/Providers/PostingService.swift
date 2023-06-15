@@ -11,7 +11,6 @@ import Model
 protocol PostingServiceType: AnyObject {
     var selectedTargets: [Target] { get set }
     var selectedTags: [Tag] { get set }
-    
     var postingQuestions: [PostingQuestion] { get set }
     
     var defaultMinimumCost: Int { get }
@@ -19,7 +18,6 @@ protocol PostingServiceType: AnyObject {
     var numberOfSpecimens: Int { get set }
     var totalCost: Int { get }
     var numberOfQuestions: Int { get set }
-    
     
     func setTargets(_ targets: [Target])
     func setTags(_ tags: [Tag])
@@ -31,6 +29,18 @@ protocol PostingServiceType: AnyObject {
 }
 
 class PostingService: PostingServiceType {
+    
+    var postingQuestions: [PostingQuestion] = []
+    var numberOfQuestions: Int = 1
+    var defaultMinimumCost: Int { return 300 }
+    var expectedTimeInMin: Int { return 2 }
+    var numberOfSpecimens: Int = 100
+    var totalCost: Int {
+        return numberOfSpecimens * defaultMinimumCost * expectedTimeInMin
+    }
+    var selectedTargets: [Target] = []
+    var selectedTags: [Tag] = []
+    
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int) {
         if self.postingQuestions.count > index {
             self.postingQuestions[index] = postingQuestion
@@ -39,8 +49,6 @@ class PostingService: PostingServiceType {
         }
     }
    
-    var postingQuestions: [PostingQuestion] = []
-    
     func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String = "", numberOfOptions: Int) {
         
         if postingQuestions.count > index {
@@ -59,23 +67,9 @@ class PostingService: PostingServiceType {
 //        let index = self.numberOfQuestions + 1
     }
     
-    var numberOfQuestions: Int = 1
-    
-    var defaultMinimumCost: Int { return 300 }
-    var expectedTimeInMin: Int { return 2 }
-    
-    var numberOfSpecimens: Int = 100
-    
-    var totalCost: Int {
-        return numberOfSpecimens * defaultMinimumCost * expectedTimeInMin
-    }
-    
     func setNumberOfSpecimens(_ num: Int) {
         self.numberOfSpecimens = num
     }
-    
-    var selectedTargets: [Target] = []
-    var selectedTags: [Tag] = []
     
     func setTargets(_ targets: [Target]) {
         selectedTargets = targets.sorted()
@@ -92,6 +86,8 @@ public class PostingQuestion {
     var numberOfOptions: Int {
         return selectableOptions.count
     }
+    var briefQuestionType: BriefQuestionType
+    var selectableOptions: [SelectableOption] = []
     
     func modifySelectableOption(index: Int, selectableOption: SelectableOption) {
         if selectableOptions.count > index {
@@ -107,8 +103,7 @@ public class PostingQuestion {
         self.briefQuestionType = briefQuestionType
     }
     
-    var briefQuestionType: BriefQuestionType
-    var selectableOptions: [SelectableOption] = []
+    
     
     init(index: Int, question: String = "", questionType: BriefQuestionType) {
         self.index = index
@@ -119,6 +114,5 @@ public class PostingQuestion {
     public func addSelectableOption(selectableOption: SelectableOption) {
         self.selectableOptions.append(selectableOption)
         print("addSelectableOption called, current number of options: \(self.selectableOptions.count)")
-        
     }
 }

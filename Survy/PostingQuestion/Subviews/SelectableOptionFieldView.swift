@@ -98,7 +98,7 @@ extension SelectableOptionFieldView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
         guard let text = textField.text else { return true }
-        
+        print("dismisskeyboard flag 1")
         selectableOptionFieldDelegate?.selectableOptionFieldReturnTapped(text, self.selectableOption.position)
         
         return true
