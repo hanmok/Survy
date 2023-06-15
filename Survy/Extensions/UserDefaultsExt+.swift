@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import Model
 
 extension UserDefaults {
     enum Key: String {
         case isIndivisualSelected
-        case lastSelectedCategories
+        case myCategories
     }
     
     public var isIndivisualSelected: Bool {
@@ -22,17 +23,24 @@ extension UserDefaults {
         }
     }
     
-    public var lastSelectedCategories: String {
+    public var myCategories: [Tag] {
         get {
-            return self.string(forKey: .lastSelectedCategories) ?? ""
+            if let data = object(forKey: Key.myCategories.rawValue) as? Data,
+               let categories = try? JSONDecoder().decode([Tag].self, from: data) {
+                return categories
+            } else {
+                return []
+            }
         }
         set {
-            set(newValue, forKey: .lastSelectedCategories)
+            if let encoded = try? JSONEncoder().encode(newValue) {
+                set(encoded, forKey: .myCategories)
+            }
         }
     }
     
-    public var lastSelectedCategoriesSet: Set<Int> {
-        return lastSelectedCategories.makeIntSet() // set of tag Id
+    func array(forKey key: Key) -> [Tag]? {
+        return array(forKey: key.rawValue) as? [Tag]
     }
     
     private func string(forKey key: Key) -> String? {

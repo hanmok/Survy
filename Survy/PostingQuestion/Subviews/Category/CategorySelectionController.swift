@@ -18,7 +18,9 @@ class CategorySelectionController: UIViewController, Coordinating {
     var commonService: CommonServiceType
     var participationService: ParticipationServiceType
     
-    public init(postingService: PostingServiceType, commonService: CommonServiceType, participationService: ParticipationServiceType) {
+    public init(postingService: PostingServiceType,
+                commonService: CommonServiceType,
+                participationService: ParticipationServiceType) {
         self.postingService = postingService
         self.commonService = commonService
         self.participationService = participationService
@@ -44,6 +46,8 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        let fetchedTags = commonService.allTags
+        self.updateUI(with: fetchedTags)
 //        fetchTags()
     }
     
@@ -74,16 +78,9 @@ class CategorySelectionController: UIViewController, Coordinating {
             self.selectableTags.insert(tag)
         }
         
-        let lastSelectedCategoryNames = UserDefaults.standard.lastSelectedCategories.cutStringInOrder()
-        
-        selectedTags = Set(selectableTags.filter { lastSelectedCategoryNames.contains($0.name) }) // Set<Tag>
-        
+        selectedTags = Set(selectableTags.filter { UserDefaults.standard.myCategories.contains($0)})
         // TODO: 해당 Cell 을 어떻게 .. 선택된 상태로 만들 수 있을까 ?
-        // SelectableCategoryCell
-        
-        print("selectedTags: \(selectedTags.sorted())")
-        print("selectableTags: \(selectableTags)")
-        
+    
         self.updateTags()
     }
     
@@ -205,7 +202,8 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         let selectedTagsArr = Array(selectedTags)
         postingService.setTags(selectedTagsArr)
-        UserDefaults.standard.lastSelectedCategories = selectedTagsArr.map { $0.name }.joined(separator: ",")
+        
+        UserDefaults.standard.myCategories = selectedTagsArr
         
         coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
     }

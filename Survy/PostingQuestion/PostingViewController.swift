@@ -214,14 +214,11 @@ class PostingViewController: BaseViewController, Coordinating {
     
     @objc func targetTapped(_ sender: UIButton) {
         view.dismissKeyboard()
-        
         coordinator?.manipulate(.targetSelection, command: .present)
-        
     }
     
     @objc func categoryTapped(_ sender: UIButton) {
         view.dismissKeyboard()
-        
         coordinator?.manipulate(.categorySelection, command: .present)
         
     }

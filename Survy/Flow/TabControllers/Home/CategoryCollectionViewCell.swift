@@ -54,7 +54,7 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     private func toggleAppearance(_ isSelected: Bool) {
         guard let category = category else { return }
         
-        categoryCellDelegate?.categoryTapped(categoryId: category.id, selected: isSelected)
+        categoryCellDelegate?.categoryTapped(category: category, selected: isSelected)
         
         if isSelected {
             backgroundCircularView.backgroundColor = UIColor(white: 0.3, alpha: 1)
@@ -84,5 +84,5 @@ class CategoryCollectionViewCell: UICollectionViewCell {
 
 
 protocol CategoryCellDelegate: AnyObject {
-    func categoryTapped(categoryId: Int, selected: Bool)
+    func categoryTapped(category: Tag, selected: Bool)
 }

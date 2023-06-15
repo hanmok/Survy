@@ -30,6 +30,7 @@ public struct Survey: Hashable, Decodable {
     }
     
 //    public mutating func setCategories(categories: [String]) {
+    
     public mutating func setCategories(tags: [Tag]) {
         self.tags = tags
     }

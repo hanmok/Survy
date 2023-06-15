@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Tag: Decodable {
+public struct Tag: Codable {
     
     public init(id: Int, name: String) {
         self.id = id

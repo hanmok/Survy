@@ -16,31 +16,24 @@ class HomeViewController: TabController, Coordinating {
         categoryCollectionView.reloadData()
     }
     
-    var participationService: ParticipationServiceType
-    var userService: UserServiceType
-    var commonService: CommonServiceType
-    
-    var coordinator: Coordinator?
-    
-    var surveyCellHeights = Set<CellHeight>()
-    var tableViewTotalHeight: CGFloat {
-        return surveyCellHeights.map { $0.height }.reduce(0, +)
-    }
-    
-    var hasCategoryPinnedToTheTop = false
-    
-    var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
-    
     enum Section {
         case main
     }
     
+    var participationService: ParticipationServiceType
+    var userService: UserServiceType
+    var commonService: CommonServiceType
+    var coordinator: Coordinator?
+    var surveyCellHeights = Set<CellHeight>()
+    var tableViewTotalHeight: CGFloat {
+        return surveyCellHeights.map { $0.height }.reduce(0, +)
+    }
+    var hasCategoryPinnedToTheTop = false
+    var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
+    
     var topViewHeightConstraint: NSLayoutConstraint?
 
-    
     private var isAnimationInProgress = false
-    
-    
     private let categoryHeight: CGFloat = 50
     
     init(index: Int,
@@ -65,32 +58,17 @@ class HomeViewController: TabController, Coordinating {
         self.setupCategoryCollectionView()
         self.setupLayout()
         
-        
         coordinator?.setIndicatorSpinning(true)
         // TODO: Get all tags, match them to surveys and update
         
         commonService.getSurveys { [weak self] in
             self?.commonService.getTags(completion: { [weak self] in
                 self?.commonService.addTagsToSurveys(completion: { [weak self] surveys in
-                    
+                    self?.coordinator?.setIndicatorSpinning(false)
+                    self?.updateSurveys()
                 })
             })
         }
-        
-        participationService.getSurveys(completion: { [weak self] in
-            self?.participationService.getTags { [weak self] in
-                
-                // TODO: tags, surveys match 시키기.
-                
-                self?.coordinator?.setIndicatorSpinning(false)
-                self?.updateSurveys()
-                print("fetchedSurveys: \(self?.participationService.allSurveys)")
-                print("fetchedTags: \(self?.participationService.allTags)")
-                
-            }
-        })
-        
-    
     }
     
     private func setupDelegates() {
@@ -108,7 +86,7 @@ class HomeViewController: TabController, Coordinating {
         self.surveyDataSource = UITableViewDiffableDataSource<Section, Survey>(tableView: surveyTableView, cellProvider: { [weak self] tableView, indexPath, itemIdentifier -> UITableViewCell? in
             guard let self = self else { return nil }
             let cell = tableView.dequeueReusableCell(withIdentifier: SurveyTableViewCell.reuseIdentifier, for: indexPath) as! SurveyTableViewCell
-            cell.survey = participationService.surveysToShow[indexPath.row]
+            cell.survey = commonService.surveysToShow[indexPath.row]
             cell.surveyDelegate = self
             return cell
         })
@@ -132,8 +110,7 @@ class HomeViewController: TabController, Coordinating {
         surveyCellHeights.removeAll()
         var snapshot = NSDiffableDataSourceSnapshot<Section, Survey>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(participationService.surveysToShow)
-        
+        snapshot.appendItems(commonService.surveysToShow)
         self.surveyDataSource.apply(snapshot)
         DispatchQueue.main.async {
             self.surveyTableView.reloadData()
@@ -160,6 +137,7 @@ class HomeViewController: TabController, Coordinating {
         self.view.addSubview(wholeScrollView)
         self.view.addSubview(requestingButton)
         self.view.addSubview(safeAreaCoveringView)
+        
         safeAreaCoveringView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
             make.height.equalTo(40)
@@ -319,7 +297,9 @@ extension HomeViewController: UITableViewDelegate {
 
         let estimatedFrame2 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 13)], context: nil)
         
-        let estimatedFrame3 = NSString(string: participationService.surveysToShow[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
+//        let estimatedFrame3 = NSString(string: participationService.surveysToShow[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
+//        let estimatedFrame3 = NSString(string: commonService.allSurveys[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
+        let estimatedFrame3 = NSString(string: commonService.surveysToShow[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
         
         // 12 + 10 + 12 + 20 + 12
         let spacings: CGFloat = 66
@@ -338,26 +318,24 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         surveyCellHeights.removeAll()
-        let result = userService.lastSelectedCategories.count
-        return result
+        return UserDefaults.standard.myCategories.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
         
-// FIXME: User Info로부터 수정하기.
-//        collectionViewCell.category = userService.lastSelectedCategories[indexPath.row]
-        
-        print("lastSelectedCategories: \(userService.lastSelectedCategories[indexPath.row])")
         collectionViewCell.categoryCellDelegate = self
+        let tag = UserDefaults.standard.myCategories[indexPath.row]
+        
+        collectionViewCell.category = tag
         return collectionViewCell
     }
 }
 
 extension HomeViewController: CategoryCellDelegate {
-    func categoryTapped(categoryId: Int, selected: Bool) {
-        participationService.toggleCategory(categoryId)
+    func categoryTapped(category: Tag, selected: Bool) {
+        commonService.toggleCategory(category)
         updateSurveys()
     }
 }

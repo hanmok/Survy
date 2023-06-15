@@ -8,23 +8,55 @@ import API
 import Foundation
 import Model
 
-
-
-
 protocol CommonServiceType {
     var selectedIndex: Int { get set }
     var allTags: [Tag] { get set }
     var allSurveys: [Survey] { get set }
+    var surveysToShow: [Survey] { get }
+    var selectedCategories: Set<Tag> { get set }
     
     func setSelectedIndex(_ index: Int)
     func setTags(_ tags: [Tag])
-    
+    func toggleCategory(_ category: Tag)
     func getSurveys(completion: @escaping () -> Void)
     func getTags(completion: @escaping () -> Void)
     func addTagsToSurveys(completion: @escaping ([Survey]?) -> Void)
 }
 
 class CommonService: CommonServiceType {
+    var selectedCategories = Set<Tag>()
+    
+//    func toggleCategory(_ categoryId: Int) {
+    func toggleCategory(_ category: Tag) {
+        selectedCategories.toggle(category)
+    }
+    
+    var surveysToShow: [Survey] {
+        
+        print("selectedCategories: \(selectedCategories)")
+        print("myCategories: \(UserDefaults.standard.myCategories)")
+        
+        if selectedCategories.isEmpty {
+            var ret = [Survey]()
+            for survey in allSurveys {
+                if let surveyCategories = survey.tags {
+                    let defaultCategories = Set(UserDefaults.standard.myCategories)
+                    if defaultCategories.intersection(surveyCategories).isEmpty == false {
+                        ret.append(survey)
+                    }
+                }
+            }
+            return ret
+        } else {
+            return allSurveys.filter {
+                guard let validCategories = $0.tags else { fatalError() }
+                let categorySet = Set(validCategories)
+                print("validCategories: \(validCategories) ")
+                return categorySet.intersection(selectedCategories).isEmpty == false
+            }
+        }
+    }
+    
     
     var allSurveys: [Survey] = []
     var allTags: [Tag] = []
@@ -57,7 +89,6 @@ class CommonService: CommonServiceType {
     
     func addTagsToSurveys(completion: @escaping ([Survey]?) -> Void) {
         APIService.shared.getAllSurveyTags { [weak self] surveyTags in
-            
             guard let surveyTags = surveyTags, let self = self  else { return }
             guard self.allTags.isEmpty == false, self.allSurveys.isEmpty == false else {
                 completion(nil)
@@ -75,6 +106,7 @@ class CommonService: CommonServiceType {
                     myDic[surveyId] = [tagId]
                 }
             }
+            
             var newSurveys = [Survey]()
             for (surveyId, tagIds) in myDic {
                 print("surveyId: \(surveyId), tagIds: \(tagIds)")

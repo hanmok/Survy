@@ -26,9 +26,6 @@ protocol ParticipationServiceType: AnyObject {
     
     func moveToNextQuestion()
     func initializeSurvey()
-    func toggleCategory(_ categoryId: Int)
-    func getSurveys(completion: @escaping () -> Void)
-    func getTags(completion: @escaping () -> Void)
 }
 
 class ParticipationService: ParticipationServiceType {
@@ -37,26 +34,6 @@ class ParticipationService: ParticipationServiceType {
     var selectedIndexes: Set<Int>?
 
     var selectedIndex: Int?
-    
-    func toggleCategory(_ categoryId: Int) {
-        selectedCategories.toggle(categoryId)
-    }
-    
-    func getSurveys(completion: @escaping () -> Void) {
-        APIService.shared.getAllSurveys { surveys in
-            guard let surveys = surveys else { return }
-            self.allSurveys = surveys
-            completion()
-        }
-    }
-    
-    func getTags(completion: @escaping () -> Void) {
-        APIService.shared.getAllTags { tags in
-            guard let tags = tags else { return }
-            self.allTags = tags
-            completion()
-        }
-    }
     
     var textAnswer: String?
     
@@ -110,9 +87,15 @@ class ParticipationService: ParticipationServiceType {
             for survey in allSurveys {
                 if let surveyCategories = survey.tags {
                     let something = surveyCategories.map { $0.id }
-                    if UserDefaults.standard.lastSelectedCategoriesSet.intersection(something).isEmpty == false {
+                    let some = Set(UserDefaults.standard.myCategories.map { $0.id})
+                    if some.intersection(something).isEmpty == false {
                         ret.append(survey)
                     }
+                    
+//                    if Set(UserDefaults.standard.myCategories.map { $0.name}).intersection(something).isEmpty == false {
+//                        ret.append(survey)
+//                    }
+                    
                 }
             }
             return ret
