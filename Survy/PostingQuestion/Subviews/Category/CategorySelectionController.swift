@@ -367,7 +367,9 @@ extension CategorySelectionController {
         }
         
         selectableTagDataSource = UICollectionViewDiffableDataSource<SelectableSection, Tag>(collectionView: categoryListCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: selectableCellRegistration, for: indexPath, item: identifier)
+            let cell = collectionView.dequeueConfiguredReusableCell(using: selectableCellRegistration, for: indexPath, item: identifier)
+            cell.layer.cornerRadius = 10
+            return cell
          }
         
         selectableTagDataSource.supplementaryViewProvider = {
@@ -375,7 +377,6 @@ extension CategorySelectionController {
             guard kind == UICollectionView.elementKindSectionFooter else { return nil }
                 let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategorySelectionFooterCell.reuseIdentifier, for: indexPath) as? CategorySelectionFooterCell
             view?.footerCellDelegate = self
-            
             return view
         }
         
@@ -385,7 +386,9 @@ extension CategorySelectionController {
         }
         
         selectedTagDataSource = UICollectionViewDiffableDataSource<SelectedSection, Tag>(collectionView: selectedCategoryCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: selectedCellRegistration, for: indexPath, item: identifier)
+            let cell = collectionView.dequeueConfiguredReusableCell(using: selectedCellRegistration, for: indexPath, item: identifier)
+            cell.layer.cornerRadius = 10
+            return cell
          }
     }
 }
@@ -411,14 +414,7 @@ extension CategorySelectionController {
 
 extension CategorySelectionController: SelectableCategoryCellDelegate {
     func selectableCategoryCellTapped(_ cell: SelectableCategoryCell) {
-        
-        // count == 4, isSelected == false
-        // 4개 선택된 상태에서, 새로 선택한게 이미 선택된 상태가 아니어야함.
-//        guard selectedTags.count < 4 && cell.isTagSelected == true else {
-//            coordinator?.navigationController?.toastMessage(title: "관심 카테고리는 4개까지 선택 가능합니다.")
-//            return
-//        }
-        
+
         if selectedTags.count == 4 && cell.isTagSelected == false {
             coordinator?.navigationController?.toastMessage(title: "관심 카테고리는 4개까지 선택 가능합니다.")
             return
