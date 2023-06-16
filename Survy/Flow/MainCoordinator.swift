@@ -92,8 +92,9 @@ class MainCoordinator: Coordinator {
                 var vc: UIViewController & Coordinating
 
                 switch type {
-                    case .categorySelection:
-                        vc = CategorySelectionController(postingService: self.provider.postingService, commonService: self.provider.commonService, participationService: self.provider.participationService)
+                    case .categorySelection(let purpose):
+                        guard let purpose = purpose else { fatalError() }
+                        vc = CategorySelectionController(postingService: self.provider.postingService, commonService: self.provider.commonService, participationService: self.provider.participationService, purpose: purpose)
                     case .targetSelection:
                         vc = TargetSelectionController(postingService: self.provider.postingService)
                     case .confirmation:

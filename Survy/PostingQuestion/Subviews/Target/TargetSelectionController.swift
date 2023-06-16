@@ -132,13 +132,13 @@ class TargetSelectionController: UIViewController, Coordinating {
     }
     
     @objc func exitTapped() {
-        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
+        coordinator?.manipulate(.categorySelection(nil), command: .dismiss(nil))
     }
     
     @objc func completeTapped(_ sender: UIButton) {
         let selectedTargetsArr = Array(selectedTargets)
         postingService.setTargets(selectedTargetsArr)
-        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
+        coordinator?.manipulate(.categorySelection(nil), command: .dismiss(nil))
     }
     
     private let wholeContainerView: UIView = {

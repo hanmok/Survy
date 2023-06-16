@@ -138,8 +138,11 @@ class HomeViewController: TabController, Coordinating {
     }
     
     @objc func categorySelectionButtonTapped() {
-        coordinator?.manipulate(.categorySelection, command: .present)
+//        coordinator?.manipulate(.categorySelection, command: .present)
+        coordinator?.manipulate(.categorySelection(.participating), command: .present)
     }
+    
+    
     
     @objc func moveToPostSurvey() {
         coordinator?.move(to: .postingController)

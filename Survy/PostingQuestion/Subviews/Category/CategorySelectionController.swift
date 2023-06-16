@@ -10,6 +10,11 @@ import Model
 import SnapKit
 import API
 
+enum CategorySelectionPurpose {
+    case participating
+    case posting
+}
+
 class CategorySelectionController: UIViewController, Coordinating {
     
     var coordinator: Coordinator?
@@ -17,13 +22,16 @@ class CategorySelectionController: UIViewController, Coordinating {
     var postingService: PostingServiceType
     var commonService: CommonServiceType
     var participationService: ParticipationServiceType
+    var purpose: CategorySelectionPurpose
     
     public init(postingService: PostingServiceType,
                 commonService: CommonServiceType,
-                participationService: ParticipationServiceType) {
+                participationService: ParticipationServiceType,
+                purpose: CategorySelectionPurpose) {
         self.postingService = postingService
         self.commonService = commonService
         self.participationService = participationService
+        self.purpose = purpose
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -47,29 +55,14 @@ class CategorySelectionController: UIViewController, Coordinating {
     
     override func viewWillAppear(_ animated: Bool) {
         let fetchedTags = commonService.allTags
-        self.updateUI(with: fetchedTags)
-//        fetchTags()
-    }
-    
-    // 가져오지 않았을 리가 없음.
-//    private func fetchTags() {
-////        if commonService.allTags.isEmpty {
-////        if ParticipationService
-//
-//        if participationService.allTags.isEmpty {
-//
-//            self.coordinator?.setIndicatorSpinning(true)
-////            APIService.shared.fetchTags { [weak self] tags in
-////                guard let self = self else { fatalError() }
-////                commonService.setTags(tags)
-////                self.updateUI(with: tags)
-////            }
-//
-//
-//        } else {
-//            self.updateUI(with: commonService.allTags)
+        updateUI(with: fetchedTags)
+        
+//        if purpose == .participating {
+//            self.updateUI(with: fetchedTags)
 //        }
-//    }
+//        fetchTags()
+        
+    }
     
     private func updateUI(with tags: [Tag]) {
         self.selectableTags = []
@@ -78,8 +71,11 @@ class CategorySelectionController: UIViewController, Coordinating {
             self.selectableTags.insert(tag)
         }
         
-        selectedTags = Set(selectableTags.filter { UserDefaults.standard.myCategories.contains($0)})
-        // TODO: 해당 Cell 을 어떻게 .. 선택된 상태로 만들 수 있을까 ?
+        if purpose == .participating {
+            selectedTags = Set(selectableTags.filter { UserDefaults.standard.myCategories.contains($0)})
+        } else {
+            selectedTags = Set(postingService.selectedTags)
+        }
     
         self.updateTags()
     }
@@ -194,7 +190,7 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     @objc func exitTapped() {
-        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
+        coordinator?.manipulate(.categorySelection(nil), command: .dismiss(nil))
     }
     
     @objc func completeTapped(_ sender: UIButton) {
@@ -203,9 +199,11 @@ class CategorySelectionController: UIViewController, Coordinating {
         let selectedTagsArr = Array(selectedTags)
         postingService.setTags(selectedTagsArr)
         
-        UserDefaults.standard.myCategories = selectedTagsArr
+        if purpose == .participating { // Posting 하는 경우는 아직 굳이 하지 않아도 됨.
+            UserDefaults.standard.myCategories = selectedTagsArr
+        }
         
-        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
+        coordinator?.manipulate(.categorySelection(nil), command: .dismiss(nil))
     }
     
     private func setupLayout() {

@@ -109,16 +109,6 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     private func configureTopDataSource() {
-        let tagCellRegistration = UICollectionView.CellRegistration<TagLabelCollectionViewCell, Tag> {
-            (cell, indexPath, tag) in
-            cell.text = tag.name
-        }
-
-        tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
-        }
-        
         let targetCellRegistration = UICollectionView.CellRegistration<TargetLabelCollectionViewCell, Target> {
             (cell, indexPath, target) in
             cell.text = target.name
@@ -128,11 +118,20 @@ class PostingViewController: BaseViewController, Coordinating {
             (collectionView: UICollectionView, indexPath: IndexPath, identifier: Target) -> UICollectionViewCell? in
              return collectionView.dequeueConfiguredReusableCell(using: targetCellRegistration, for: indexPath, item: identifier)
         }
+        
+        
+        let tagCellRegistration = UICollectionView.CellRegistration<TagLabelCollectionViewCell, Tag> {
+            (cell, indexPath, tag) in
+            cell.text = tag.name
+        }
+
+        tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
+            return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
+        }
     }
     
     override func updateMyUI() {
-        
-//        questionCellHeights.removeAll()
         
         if postingService.selectedTags != currentTags {
             currentTags = postingService.selectedTags
@@ -148,6 +147,12 @@ class PostingViewController: BaseViewController, Coordinating {
             targetSnapshot.appendSections([.main])
             targetSnapshot.appendItems(currentTargets)
             self.targetDataSource.apply(targetSnapshot, animatingDifferences: true)
+        }
+        
+        if postingService.selectedTags.isEmpty == false && postingService.hasCompletedQuestion {
+            requestingButton.backgroundColor = UIColor.deeperMainColor
+        } else {
+            requestingButton.backgroundColor = UIColor.grayProgress
         }
     }
     
@@ -216,7 +221,7 @@ class PostingViewController: BaseViewController, Coordinating {
     
     @objc func categoryTapped(_ sender: UIButton) {
         dismissKeyboard()
-        coordinator?.manipulate(.categorySelection, command: .present)
+        coordinator?.manipulate(.categorySelection(.posting), command: .present)
     }
     
     @objc func requestSurveyTapped(_ sender: UIButton) {
@@ -432,7 +437,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         if postingService.postingQuestions.count > indexPath.row {
             cell.postingQuestion = postingService.postingQuestions[indexPath.row]
-            if postingService.hasCompletedQuestion {
+            if postingService.hasCompletedQuestion && postingService.selectedTags.isEmpty == false {
                 self.requestingButton.backgroundColor = UIColor.deeperMainColor
             }
         }
