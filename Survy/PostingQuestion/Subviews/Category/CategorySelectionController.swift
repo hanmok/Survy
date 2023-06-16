@@ -17,12 +17,27 @@ enum CategorySelectionPurpose {
 
 class CategorySelectionController: UIViewController, Coordinating {
     
+    enum SelectableSection {
+        case main
+    }
+    
+    enum SelectedSection {
+        case main
+    }
+    
+    
     var coordinator: Coordinator?
     
     var postingService: PostingServiceType
     var commonService: CommonServiceType
     var participationService: ParticipationServiceType
     var purpose: CategorySelectionPurpose
+    
+    private var selectedTags = Set<Tag>()
+    private var selectableTags = Set<Tag>()
+    
+    var selectedTagDataSource: UICollectionViewDiffableDataSource<SelectedSection, Tag>!
+    var selectableTagDataSource: UICollectionViewDiffableDataSource<SelectableSection, Tag>!
     
     public init(postingService: PostingServiceType,
                 commonService: CommonServiceType,
@@ -39,29 +54,9 @@ class CategorySelectionController: UIViewController, Coordinating {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var selectedTags = Set<Tag>()
-    private var selectableTags = Set<Tag>()
-    
-    var selectedTagDataSource: UICollectionViewDiffableDataSource<SelectedSection, Tag>!
-    var selectableTagDataSource: UICollectionViewDiffableDataSource<SelectableSection, Tag>!
-    
-    enum SelectableSection {
-        case main
-    }
-    
-    enum SelectedSection {
-        case main
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         let fetchedTags = commonService.allTags
         updateUI(with: fetchedTags)
-        
-//        if purpose == .participating {
-//            self.updateUI(with: fetchedTags)
-//        }
-//        fetchTags()
-        
     }
     
     private func updateUI(with tags: [Tag]) {
@@ -93,15 +88,7 @@ class CategorySelectionController: UIViewController, Coordinating {
         setupLayout()
         
         performQuery(with: nil)
-        
     }
-    
-    private let wholeContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.applyCornerRadius(on: .all, radius: 10)
-        return view
-    }()
     
     func createSelectedTagLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
@@ -146,13 +133,13 @@ class CategorySelectionController: UIViewController, Coordinating {
                 layoutSize: groupSize, subitem: item, count: columns
             )
             
-            let headerFooterSize = NSCollectionLayoutSize(
+            let footerSize = NSCollectionLayoutSize(
                 widthDimension: .absolute(UIScreen.screenWidth - 64),
-              heightDimension: .absolute(40)
+                heightDimension: .absolute(CGFloat.categoryAdddingButton)
             )
             
             let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerFooterSize,
+                layoutSize: footerSize,
                 elementKind: UICollectionView.elementKindSectionFooter,
                 alignment: .bottom
               )
@@ -293,11 +280,31 @@ class CategorySelectionController: UIViewController, Coordinating {
         selectedSnapshot.appendItems(sortedSelectedTags)
         selectedTagDataSource.apply(selectedSnapshot, animatingDifferences: false)
         
-        
         self.coordinator?.setIndicatorSpinning(false)
+    }
+    
+    private var selectedCategoryCollectionView: UICollectionView!
+    
+    private var categoryListCollectionView: UICollectionView!
+    
+    private func addCategoryAction() {
+        let alertController = UIAlertController(title: "관심사 추가 요청", message: nil, preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.placeholder = "New Category Name"
+        }
         
+        let saveAction = UIAlertAction(title: "요청", style: .default) { alert -> Void in
+            guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
+            self.coordinator?.setIndicatorSpinning(true)
+            APIService.shared.postTag(requestingTagName: text) { [weak self] result in
+                self?.coordinator?.setIndicatorSpinning(false)
+            }
+        }
         
-        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        self.present(alertController, animated: true)
     }
     
     private let completeButton: UIButton = {
@@ -336,31 +343,13 @@ class CategorySelectionController: UIViewController, Coordinating {
         return searchBar
     }()
     
-    private var selectedCategoryCollectionView: UICollectionView!
+    private let wholeContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.applyCornerRadius(on: .all, radius: 10)
+        return view
+    }()
     
-    private var categoryListCollectionView: UICollectionView!
-    
-    private func addCategoryAction() {
-        let alertController = UIAlertController(title: "관심사 추가 요청", message: nil, preferredStyle: .alert)
-        alertController.addTextField { textField in
-            textField.placeholder = "New Category Name"
-        }
-        
-        let saveAction = UIAlertAction(title: "요청", style: .default) { alert -> Void in
-            guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
-            print("input text: \(text)")
-            self.coordinator?.setIndicatorSpinning(true)
-            APIService.shared.postTag(requestingTagName: text) { [weak self] result in
-                self?.coordinator?.setIndicatorSpinning(false)
-//                self?.fetchTags()
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-        alertController.addAction(cancelAction)
-        alertController.addAction(saveAction)
-        self.present(alertController, animated: true)
-    }
 }
 
 extension CategorySelectionController {
@@ -400,7 +389,6 @@ extension CategorySelectionController {
          }
     }
 }
-
 
 extension CategorySelectionController: SelectedCategoryCellDelegate {
     func selectedCategoryCellTapped(_ cell: SelectedCategoryCell) {
