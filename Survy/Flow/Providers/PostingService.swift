@@ -26,8 +26,6 @@ protocol PostingServiceType: AnyObject {
     func addQuestion()
     func resetQuestions()
     
-//    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String, numberOfOptions: Int)
-    
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int)
 }
 

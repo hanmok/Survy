@@ -412,9 +412,8 @@ class PostingViewController: BaseViewController, Coordinating {
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // 어쩌면, 생성하지 않은 걸수도 있겠다.
         print("flag 6161, numberOfQuestions: \(postingService.numberOfQuestions)")
-        return max(postingService.numberOfQuestions, 1)
+        return postingService.numberOfQuestions
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -423,11 +422,9 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         cell.postingBlockCollectionViewCellDelegate = self
         cell.cellIndex = indexPath.row
-        
-//        let cellHeight = CellHeight(index: indexPath.row, height: 150 + 20)
-        
+                
         let cellHeight = CellHeight(index: indexPath.row, height: defaultCellHeight + 20)
-        if self.questionCellHeights.filter { $0.index == indexPath.row }.isEmpty {
+        if self.questionCellHeights.filter ({ $0.index == indexPath.row }).isEmpty {
             self.questionCellHeights.insert(cellHeight)
         }
         

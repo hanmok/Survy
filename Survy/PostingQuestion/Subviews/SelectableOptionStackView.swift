@@ -27,7 +27,6 @@ class SelectableOptionStackView: UIStackView {
     
     public func removeSelectableOptions() {
         self.selectableOptionFieldViews.removeAll()
-        
     }
     
     init() {

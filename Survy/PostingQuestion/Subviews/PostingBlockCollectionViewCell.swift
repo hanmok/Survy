@@ -52,14 +52,18 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     }
     
     private func configure(with postingQuestion: PostingQuestion) {
-        questionTextField.text = postingQuestion.question
+        questionTextField.text = postingQuestion.question // 왜 nil 이죠?
+        
         if questionTextField.text == "" { questionTextField.text = "질문을 입력해주세요." }
-        questionTextField.textColor = postingQuestion.question == "질문을 입력해주세요." ? .lightGray : .black
+        // 이거 왜 안먹지?
+        print("postingQuestion.question: \(postingQuestion.question)")
+        
+        questionTextField.textColor = questionTextField.text == "질문을 입력해주세요." ? .lightGray : .black
         
         if let briefQuestionType = postingQuestion.briefQuestionType {
             questionTypeOptionStackView.updateSelectedOption(briefType: briefQuestionType)
         }
-    
+        
         indexLabel.text = "\((postingQuestion.index + 1))."
         
         postingQuestion.selectableOptions.forEach {
@@ -75,8 +79,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
         }
-        
-        // flag 6152
         
         let keyboardShowingUpDelay = 0.5
         
@@ -119,7 +121,8 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             addSubview($0)
         }
         
-        [questionTypeButton1, questionTypeButton2, questionTypeButton3, questionTypeButton4].forEach { self.questionTypeOptionStackView.addPostingSingleSelectionButton($0)}
+        [questionTypeButton1, questionTypeButton2, questionTypeButton3, questionTypeButton4].forEach { self.questionTypeOptionStackView.addPostingSingleSelectionButton($0)
+        }
         
         
         indexLabel.snp.makeConstraints { make in
@@ -157,7 +160,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     public var questionTextField: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        
         textView.text = "질문을 입력해주세요."
         textView.textColor = UIColor.lightGray
         textView.tag = -1
@@ -169,28 +171,27 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         return textView
     }()
     
-    
-    private var questionTypeButton1: PostingSelectionButton = {
+    private let questionTypeButton1: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "단일 선택", tag: 0)
         return singleSelection
     }()
     
-    private var questionTypeButton2: PostingSelectionButton = {
+    private let questionTypeButton2: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "다중 선택", tag: 1)
         return singleSelection
     }()
     
-    private var questionTypeButton3: PostingSelectionButton = {
+    private let questionTypeButton3: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "단답형", tag: 2)
         return singleSelection
     }()
     
-    private var questionTypeButton4: PostingSelectionButton = {
+    private let questionTypeButton4: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "서술형", tag: 3)
         return singleSelection
     }()
     
-    public var questionTypeOptionStackView: QuestionTypeOptionStackView = {
+    public let questionTypeOptionStackView: QuestionTypeOptionStackView = {
         let postingOptionStackView = QuestionTypeOptionStackView()
         return postingOptionStackView
     }()
@@ -228,11 +229,7 @@ extension PostingBlockCollectionViewCell: UITextFieldDelegate {
     // Question 에서 return 눌릴 때 호출
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         UserDefaults.standard.isAddingSelectableOption = false
-        // 이거... 중요한거 아니야? 질문일텐데 ??
-//        guard textField.text != nil else { return true }
-        
         guard let text = textField.text else { return true }
-        print("text: \(text)")
         return dismissKeyboard()
     }
 }
@@ -260,41 +257,18 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
         return dismissKeyboard()
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-        print("current text input: \(textView.text)")
-        
-        print("lastCharacter: \(textView.text.getLastCharacter())")
-        guard let lastCharacter = textView.text.getLastCharacter() else { return }
-
-//        if lastCharacter == "\n" {
-//            print("return tapped!")
-//        }
-        
-//        if textView.text.count > 1 {
-//            let endIndex = textView.text.endIndex
-//            let lastIndex = textView.text.index(endIndex, offsetBy: -1)
-//            let character = textView.text[lastIndex]
-//            print("last character: \(character)")
-//
-////            if textView.text.substring(from: textView.text.endIndex ) == "\n" {
-////                print("text input before return tapped: \(textView.text)")
-////            }
-//        }
-        
-    }
-    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
             print("return tapped!")
             // TODO: Update PostingQuestion
-            guard let cellIndex = cellIndex else { return false }
-            guard let questionText = textView.text, let postingQuestion = postingQuestion else { return false }
+            guard let cellIndex = cellIndex, let questionText = textView.text, let postingQuestion = postingQuestion else { return false }
             postingBlockCollectionViewCellDelegate?.updateQuestionText(cellIndex: cellIndex, questionText: questionText, postingQuestion: postingQuestion)
             textView.resignFirstResponder()
             return false
         }
         return true
     }
+    
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
@@ -305,7 +279,8 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = "질문을 입력해주세요."
-            textView.textColor = UIColor.lightGray
+//            textView.textColor = UIColor.lightGray
+            textView.textColor = UIColor(white: 0.7, alpha: 1)
         }
     }
 }
@@ -313,7 +288,7 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
 extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
     // change or set initially, 두번째로 호출
     func changeQuestionType(briefQuestionType: BriefQuestionType) {
-        // 호출이 진짜 되나? ㅇㅇ 됨.
+        print("이거 호출 안되는데? 아니네 되네 ")
         guard let cellIndex = cellIndex else { fatalError() }
 
         // PostingQuestion 할당된게 있는지 먼저 확인
@@ -332,7 +307,9 @@ extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
                     postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
                 }
             }
-            
+            if let questionText = questionTextField.text {
+                postingBlockCollectionViewCellDelegate?.updateQuestionText(cellIndex: cellIndex, questionText: questionText, postingQuestion: postingQuestion)
+            }
             postingBlockCollectionViewCellDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
             postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
             
@@ -347,14 +324,3 @@ extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
         }
     }
 }
-
-
-//extension PostingBlockCollectionViewCell: UITextViewDelegate {
-//    func textViewDidChange(_ textView: UITextView) {
-//        if textView.text.count > 1 {
-//            if textView.text.substring(from: textView.text.count - 1) == "\n" {
-//
-//            }
-//        }
-//    }
-//}
