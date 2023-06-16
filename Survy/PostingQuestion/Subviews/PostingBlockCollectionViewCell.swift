@@ -89,12 +89,14 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         
         let keyboardShowingUpDelay = 0.5
         
-        if UserDefaults.standard.isAddingSelectableOption {
+        if UserDefaults.standard.isAddingSelectableOption && [BriefQuestionType.singleSelection, BriefQuestionType.multipleSelection].contains(postingQuestion.briefQuestionType) {
             Timer.scheduledTimer(withTimeInterval: keyboardShowingUpDelay, repeats: false) { _ in
                 if let last = self.selectableOptionStackView.selectableOptionFieldViews.last?.selectableOptionTextField {
                     last.becomeFirstResponder()
                 }
             }
+        }  else {
+            UserDefaults.standard.isAddingSelectableOption = false
         }
     }
     
@@ -154,9 +156,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
         }
-        
-        
-        
     }
     
     private let indexLabel: UILabel = {
@@ -250,9 +249,14 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
         guard let postingQuestion = postingQuestion,
               let cellIndex = cellIndex else { fatalError() }
         
+        
+        
         let selectableOption = SelectableOption(position: position, value: text)
         postingQuestion.modifySelectableOption(index: position, selectableOption: selectableOption)
-        postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: position + 1))
+        
+        if [BriefQuestionType.singleSelection, BriefQuestionType.multipleSelection].contains(postingQuestion.briefQuestionType) {
+            postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: position + 1))
+        }
         
         // 이거 호출되면서 TextField 가 내려감.
         postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)

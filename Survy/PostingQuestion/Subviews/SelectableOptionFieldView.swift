@@ -64,10 +64,19 @@ class SelectableOptionFieldView: UIView {
                     selectableOptionTextField.text = selectableOption.value
                 }
             case .short:
-                selectableOptionTextField.placeholder = "short form placeHolder"
+                if let value = selectableOption.value {
+                    selectableOptionTextField.text = value
+                } else {
+                    selectableOptionTextField.placeholder = "short form placeHolder"
+                }
                 optionSymbolImageView.image = nil
+                
             case .essay:
-                selectableOptionTextField.placeholder = "essay form placeHolder"
+                if let value = selectableOption.value {
+                    selectableOptionTextField.text = value
+                } else {
+                    selectableOptionTextField.placeholder = "essay form placeHolder"
+                }
                 optionSymbolImageView.image = nil
         }
     }
