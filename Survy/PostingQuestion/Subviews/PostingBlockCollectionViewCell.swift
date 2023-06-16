@@ -35,13 +35,12 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         didSet {
             guard let postingQuestion = postingQuestion else { fatalError() }
             initializeStates()
-            
             configure(with: postingQuestion)
         }
     }
     
     public var briefQuestionType: BriefQuestionType {
-        return postingQuestion?.briefQuestionType ?? .multipleSelection // 이게 문제가 아님
+        return postingQuestion?.briefQuestionType ?? .multipleSelection
     }
     
     private func initializeStates() {

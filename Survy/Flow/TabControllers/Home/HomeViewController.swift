@@ -67,6 +67,7 @@ class HomeViewController: TabController, Coordinating {
                     self?.coordinator?.setIndicatorSpinning(false)
                     self?.updateSurveys()
                 })
+                self?.categorySelectionButton.isUserInteractionEnabled = true
             })
         }
     }
@@ -281,6 +282,7 @@ class HomeViewController: TabController, Coordinating {
         button.setTitleColor(.systemBlue, for: .normal)
         button.backgroundColor = .mainBackgroundColor
         button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+        button.isUserInteractionEnabled = false
         return button
     }()
     

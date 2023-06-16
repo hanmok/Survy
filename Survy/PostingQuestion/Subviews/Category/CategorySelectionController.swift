@@ -349,7 +349,6 @@ class CategorySelectionController: UIViewController, Coordinating {
         view.applyCornerRadius(on: .all, radius: 10)
         return view
     }()
-    
 }
 
 extension CategorySelectionController {
@@ -387,7 +386,7 @@ extension CategorySelectionController {
         
         selectedTagDataSource = UICollectionViewDiffableDataSource<SelectedSection, Tag>(collectionView: selectedCategoryCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
             let cell = collectionView.dequeueConfiguredReusableCell(using: selectedCellRegistration, for: indexPath, item: identifier)
-            cell.layer.cornerRadius = 10
+            cell.layer.cornerRadius = 6
             return cell
          }
     }
