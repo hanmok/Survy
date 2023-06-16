@@ -12,12 +12,10 @@ protocol PostingServiceType: AnyObject {
     var selectedTargets: [Target] { get set }
     var selectedTags: [Tag] { get set }
     var postingQuestions: [PostingQuestion] { get set }
-    
     var defaultMinimumCost: Int { get }
     var expectedTimeInMin: Int { get }
     var numberOfSpecimens: Int { get set }
     var totalCost: Int { get }
-
     var numberOfQuestions: Int { get }
     
     func setTargets(_ targets: [Target])
@@ -25,7 +23,6 @@ protocol PostingServiceType: AnyObject {
     func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
     func resetQuestions()
-    
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int)
 }
 
@@ -47,7 +44,7 @@ class PostingService: PostingServiceType {
     var selectedTags: [Tag] = []
     
     
-    // start from.. 0 ? 1 ?
+    /// start from 0
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int) {
         print("setPostingQuestion called, index: \(index), numberOfPostingQuestions: \(self.postingQuestions.count)")
         
@@ -64,8 +61,6 @@ class PostingService: PostingServiceType {
     
     /// does noting for now (0616)
     func addQuestion() {
-//        let index = self.numberOfQuestions + 1
-        
         let postingQuestion = PostingQuestion(index: numberOfQuestions)
         postingQuestions.append(postingQuestion)
         print("current postingQuestion: \(postingQuestions.count)")

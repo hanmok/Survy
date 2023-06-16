@@ -35,6 +35,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         didSet {
             guard let postingQuestion = postingQuestion else { fatalError() }
             initializeStates()
+            
             configure(with: postingQuestion)
         }
     }
@@ -55,8 +56,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         questionTextField.text = postingQuestion.question // 왜 nil 이죠?
         
         if questionTextField.text == "" { questionTextField.text = "질문을 입력해주세요." }
-        // 이거 왜 안먹지?
-        print("postingQuestion.question: \(postingQuestion.question)")
         
         questionTextField.textColor = questionTextField.text == "질문을 입력해주세요." ? .lightGray : .black
         
@@ -80,6 +79,14 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
         }
         
+        if postingQuestion.isCompleted {
+            layer.borderColor = UIColor.deeperMainColor.cgColor
+            layer.borderWidth = 2
+        } else {
+            layer.borderColor = UIColor.clear.cgColor
+            layer.borderWidth = 0
+        }
+        
         let keyboardShowingUpDelay = 0.5
         
         if UserDefaults.standard.isAddingSelectableOption {
@@ -93,6 +100,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        print("postingBlockcell initialized")
         setupDelegate()
         setupLayout()
     }
@@ -124,7 +132,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         [questionTypeButton1, questionTypeButton2, questionTypeButton3, questionTypeButton4].forEach { self.questionTypeOptionStackView.addPostingSingleSelectionButton($0)
         }
         
-        
         indexLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
             make.leading.equalToSuperview().offset(20)
@@ -147,6 +154,9 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
         }
+        
+        
+        
     }
     
     private let indexLabel: UILabel = {
@@ -237,7 +247,6 @@ extension PostingBlockCollectionViewCell: UITextFieldDelegate {
 extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
     // TODO: 다음 selectableOption 값으로 이동
     func selectableOptionFieldReturnTapped(_ text: String, _ position: Int) {
-        
         guard let postingQuestion = postingQuestion,
               let cellIndex = cellIndex else { fatalError() }
         
@@ -249,7 +258,6 @@ extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
         postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
     }
 }
-
 
 extension PostingBlockCollectionViewCell: UITextViewDelegate {
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -279,23 +287,21 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = "질문을 입력해주세요."
-//            textView.textColor = UIColor.lightGray
             textView.textColor = UIColor(white: 0.7, alpha: 1)
         }
     }
 }
 
 extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
-    // change or set initially, 두번째로 호출
-    func changeQuestionType(briefQuestionType: BriefQuestionType) {
-        print("이거 호출 안되는데? 아니네 되네 ")
+    
+    func setQuestionType(briefQuestionType: BriefQuestionType) {
         guard let cellIndex = cellIndex else { fatalError() }
 
         // PostingQuestion 할당된게 있는지 먼저 확인
-        if let postingQuestion = postingQuestion {
+        
+        guard let postingQuestion = postingQuestion else { fatalError() }
             
             postingQuestion.modifyQuestionType(briefQuestionType: briefQuestionType)
-            // Type 변경!
             
             // 여기에서, 각 BriefQuestionType case에 따라 별로 구분해줘야 할 것 같아.
             
@@ -307,20 +313,12 @@ extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
                     postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
                 }
             }
+        
             if let questionText = questionTextField.text {
                 postingBlockCollectionViewCellDelegate?.updateQuestionText(cellIndex: cellIndex, questionText: questionText, postingQuestion: postingQuestion)
             }
+        
             postingBlockCollectionViewCellDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
             postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
-            
-        } else {
-            print("생성!")
-            let postingQuestion = PostingQuestion(index: cellIndex, question: questionTextField.text, briefQuestionType: briefQuestionType)
-            // 이게 호출될 것 같은데?
-            postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
-            
-            postingBlockCollectionViewCellDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
-            postingBlockCollectionViewCellDelegate?.updateUI(cell: self, cellIndex: cellIndex, postingQuestion: postingQuestion)
-        }
     }
 }

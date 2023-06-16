@@ -9,7 +9,7 @@ import UIKit
 import Model
 
 protocol QuestionTypeOptionStackViewDelegate: AnyObject {
-    func changeQuestionType(briefQuestionType: BriefQuestionType)
+    func setQuestionType(briefQuestionType: BriefQuestionType)
 }
 
 class QuestionTypeOptionStackView: UIStackView {
@@ -79,7 +79,7 @@ class QuestionTypeOptionStackView: UIStackView {
         
         optionStackViewDelegate?.notifySelectionChange(to: selectedIndex)
         
-        questionOptionStackViewDelegate?.changeQuestionType(briefQuestionType: briefType)
+        questionOptionStackViewDelegate?.setQuestionType(briefQuestionType: briefType)
     }
 }
 

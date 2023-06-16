@@ -205,6 +205,7 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     @objc private func dismissKeyboard() {
+        UserDefaults.standard.isAddingSelectableOption = false
         view.dismissKeyboard()
     }
     

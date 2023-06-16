@@ -8,12 +8,6 @@
 import Foundation
 
 public class PostingQuestion {
-    // 음.. briefQuestionType 없을 수도 있음. 처음 생겼는데 있는게 더 이상함.
-    public init(index: Int, question: String = "", briefQuestionType: BriefQuestionType) {
-        self.index = index
-        self.question = question
-        self.briefQuestionType = briefQuestionType
-    }
     
     public init(index: Int) {
         self.index = index
@@ -25,6 +19,19 @@ public class PostingQuestion {
     public var numberOfOptions: Int {
         return selectableOptions.count
     }
+    
+    public var isCompleted: Bool {
+        if question != nil,
+            briefQuestionType != nil,
+            let first = selectableOptions.first,
+            first.value != nil || first.placeHolder != nil {
+            print("isCompleted changed to true")
+            return true
+        }
+        print("isCompleted is false")
+        return false
+    }
+    
     public var briefQuestionType: BriefQuestionType?
     public var selectableOptions: [SelectableOption] = []
     
@@ -40,7 +47,6 @@ public class PostingQuestion {
     
     public func removeSelectableOptions() {
         self.selectableOptions.removeAll()
-        
     }
     
     public func modifyQuestionType(briefQuestionType: BriefQuestionType) {
