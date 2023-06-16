@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Model
 
 class SelectableOptionStackView: UIStackView {
     var briefQuestionType: BriefQuestionType? {
@@ -22,6 +23,11 @@ class SelectableOptionStackView: UIStackView {
         selectableOptionFieldViews.append(selectableOptionFieldView)
         addArrangedSubview(selectableOptionFieldView)
         selectableOptionFieldView.selectableOptionTextField.becomeFirstResponder()
+    }
+    
+    public func removeSelectableOptions() {
+        self.selectableOptionFieldViews.removeAll()
+        
     }
     
     init() {

@@ -21,6 +21,8 @@ class QuestionTypeOptionStackView: UIStackView {
     
     var questionTypeButtons: [SelectionButton] = []
     
+    public var numberOfSelctableOptions: Int?
+    
     public var isConditionFulfilled: Bool = false {
         didSet {
             if oldValue != isConditionFulfilled {
@@ -61,16 +63,7 @@ class QuestionTypeOptionStackView: UIStackView {
         button.addTarget(self, action: #selector(singleSelectionButtonTapped(_:)), for: .touchUpInside)
     }
     
-    public let numberOfSelectableOptionButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
-        button.setTitle("옵션 수", for: .normal)
-        button.backgroundColor = .magenta
-        button.layer.cornerRadius = 6
-        return button
-    }()
     
-    public var numberOfSelctableOptions: Int?
     
     @objc func singleSelectionButtonTapped(_ sender: PostingSelectionButton) {
         if let selectedIndex = selectedIndex, sender.tag != selectedIndex {

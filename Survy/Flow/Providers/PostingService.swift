@@ -17,7 +17,8 @@ protocol PostingServiceType: AnyObject {
     var expectedTimeInMin: Int { get }
     var numberOfSpecimens: Int { get set }
     var totalCost: Int { get }
-    var numberOfQuestions: Int { get set }
+
+    var numberOfQuestions: Int { get }
     
     func setTargets(_ targets: [Target])
     func setTags(_ tags: [Tag])
@@ -33,7 +34,11 @@ protocol PostingServiceType: AnyObject {
 class PostingService: PostingServiceType {
     
     var postingQuestions: [PostingQuestion] = []
-    var numberOfQuestions: Int = 1
+
+    var numberOfQuestions: Int {
+        return postingQuestions.count
+    }
+    
     var defaultMinimumCost: Int { return 300 }
     var expectedTimeInMin: Int { return 2 }
     var numberOfSpecimens: Int = 100
@@ -43,30 +48,29 @@ class PostingService: PostingServiceType {
     var selectedTargets: [Target] = []
     var selectedTags: [Tag] = []
     
+    
+    // start from.. 0 ? 1 ?
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int) {
+        print("setPostingQuestion called, index: \(index), numberOfPostingQuestions: \(self.postingQuestions.count)")
+        
         if self.postingQuestions.count > index {
             self.postingQuestions[index] = postingQuestion
         } else {
             self.postingQuestions.append(postingQuestion)
         }
     }
-   
-//    func updateQuestion(postingQuestion: PostingQuestion, index: Int, type: BriefQuestionType, questionText: String = "", numberOfOptions: Int) {
-//
-//        if postingQuestions.count > index {
-//            postingQuestions[index] = postingQuestion
-//        } else {
-//            let newPostingQuestion = PostingQuestion(index: index, question: questionText, questionType: type)
-//            postingQuestions.append(PostingQuestion(index: index, question: questionText, questionType: type))
-//        }
-//    }
     
     func resetQuestions() {
         postingQuestions = []
     }
     
+    /// does noting for now (0616)
     func addQuestion() {
 //        let index = self.numberOfQuestions + 1
+        
+        let postingQuestion = PostingQuestion(index: numberOfQuestions)
+        postingQuestions.append(postingQuestion)
+        print("current postingQuestion: \(postingQuestions.count)")
     }
     
     func setNumberOfSpecimens(_ num: Int) {
@@ -82,42 +86,3 @@ class PostingService: PostingServiceType {
     }
 }
 
-public class PostingQuestion {
-    
-    init(index: Int, question: String = "", questionType: BriefQuestionType) {
-        self.index = index
-        self.question = question
-        self.briefQuestionType = questionType
-    }
-    
-    var index: Int
-    var question: String
-    var numberOfOptions: Int {
-        return selectableOptions.count
-    }
-    var briefQuestionType: BriefQuestionType
-    var selectableOptions: [SelectableOption] = []
-    
-    func modifySelectableOption(index: Int, selectableOption: SelectableOption) {
-        if selectableOptions.count > index {
-            self.selectableOptions[index] = selectableOption
-        } else {
-            let numberOfCurrentOptions = self.selectableOptions.count
-            print("modifyCalled, adding \(numberOfCurrentOptions), count: \(selectableOptions.count), index: \(index)")
-            self.selectableOptions.append(SelectableOption(postion: numberOfCurrentOptions))
-        }
-    }
-    
-    func modifyQuestionType(briefQuestionType: BriefQuestionType) {
-        self.briefQuestionType = briefQuestionType
-    }
-    
-    func updateQuestionText(questionText: String) {
-        self.question = questionText
-    }
-    
-    public func addSelectableOption(selectableOption: SelectableOption) {
-        self.selectableOptions.append(selectableOption)
-        print("addSelectableOption called, current number of options: \(self.selectableOptions.count)")
-    }
-}

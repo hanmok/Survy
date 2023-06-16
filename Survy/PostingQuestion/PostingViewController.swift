@@ -412,6 +412,8 @@ class PostingViewController: BaseViewController, Coordinating {
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // 어쩌면, 생성하지 않은 걸수도 있겠다.
+        print("flag 6161, numberOfQuestions: \(postingService.numberOfQuestions)")
         return max(postingService.numberOfQuestions, 1)
     }
     
@@ -464,7 +466,6 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-//        var height: CGFloat = 150
         var height: CGFloat = defaultCellHeight
         
         if let first = questionCellHeights.first(where: { cellHeight in
@@ -472,6 +473,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         {
             height = first.height
         }
+        print("sizeForItem: \(height), index: \(indexPath.row)")
         print("dequeueing height: \(height)")
         
         return CGSize(width: UIScreen.screenWidth - 40, height: height)
@@ -498,15 +500,20 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
         
         postingBlockCollectionView.reloadItems(at: [IndexPath(row: cellIndex, section: 0)])
     }
-    
+    /// append 기능도 수행
     func setPostingQuestionToIndex(postingQuestion: PostingQuestion, index: Int) {
+        print("setPostingQuestionToIndex called, index: \(index)")
         postingService.setPostingQuestion(postingQuestion: postingQuestion, index: index)
     }
 }
 
 extension PostingViewController: PostingBlockCollectionFooterDelegate {
     func addQuestionButtonTapped() {
+        // FIXME: does nothing ;;
         postingService.addQuestion()
+        
+        print("postingService's numberOfQuestion: \(postingService.postingQuestions.count)")
+        
         DispatchQueue.main.async {
             self.postingBlockCollectionView.reloadData()
         }

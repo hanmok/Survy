@@ -8,12 +8,7 @@
 import UIKit
 import Model
 
-enum BriefQuestionType: Int {
-    case singleSelection = 0
-    case multipleSelection
-    case short
-    case essay
-}
+
 
 class SelectableOptionFieldView: UIView {
     
@@ -59,22 +54,23 @@ class SelectableOptionFieldView: UIView {
         case .singleSelection:
             optionSymbolImageView.image = UIImage.emptyCircle
                 selectableOptionTextField.placeholder = String.optionPlaceholder
+                if selectableOption.value != nil {
+                    selectableOptionTextField.text = selectableOption.value
+                }
         case .multipleSelection:
             optionSymbolImageView.image = UIImage.uncheckedSquare
                 selectableOptionTextField.placeholder = String.optionPlaceholder
-        default:
-            optionSymbolImageView.image = nil
-            selectableOptionTextField.placeholder = "placeHolder"
-        }
-        
-        if selectableOption.value != nil {
-            selectableOptionTextField.text = selectableOption.value
-        } else {
-            selectableOptionTextField.placeholder = "옵션"
+                if selectableOption.value != nil {
+                    selectableOptionTextField.text = selectableOption.value
+                }
+            case .short:
+                selectableOptionTextField.placeholder = "short form placeHolder"
+                optionSymbolImageView.image = nil
+            case .essay:
+                selectableOptionTextField.placeholder = "essay form placeHolder"
+                optionSymbolImageView.image = nil
         }
     }
-    
-    
     
     private let optionSymbolImageView: UIImageView = {
         let imageView = UIImageView()
