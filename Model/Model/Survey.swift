@@ -73,26 +73,7 @@ extension Survey {
         }
         
         public var rewardString: String? {
-            
-//            let rewardRange = rewardRange ?? "100"
-//
-////            guard let components = rewardRange.split(separator: ","), components.count <= 2 else { return }
-//
-////            switch components.count {
-////                case
-////            }
-//
-//
-//
-//            if rewardRange.count == 1 {
-//                return "\(rewardRange.first!)"
-//            }
-//            if let min = rewardRange.min(),
-//               let max = rewardRange.max() {
-//                return "\(min) ~ \(max)"
-//            } else { return nil }
-            
-            
+        
             guard let rewardRange = rewardRange else { return nil }
             return separateRange(rewardRange)
         }

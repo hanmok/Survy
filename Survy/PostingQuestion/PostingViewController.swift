@@ -81,7 +81,6 @@ class PostingViewController: BaseViewController, Coordinating {
         
         view.backgroundColor = UIColor.postingVCBackground
         
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(otherViewTapped))
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         view.addGestureRecognizer(tapGesture)
         
@@ -433,8 +432,10 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         if postingService.postingQuestions.count > indexPath.row {
             cell.postingQuestion = postingService.postingQuestions[indexPath.row]
+            if postingService.hasCompletedQuestion {
+                self.requestingButton.backgroundColor = UIColor.deeperMainColor
+            }
         }
-        
         return cell
     }
     
@@ -507,7 +508,7 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
 
 extension PostingViewController: PostingBlockCollectionFooterDelegate {
     func addQuestionButtonTapped() {
-        // FIXME: does nothing ;;
+        
         postingService.addQuestion()
         
         print("postingService's numberOfQuestion: \(postingService.postingQuestions.count)")

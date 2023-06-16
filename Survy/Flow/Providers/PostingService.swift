@@ -17,6 +17,7 @@ protocol PostingServiceType: AnyObject {
     var numberOfSpecimens: Int { get set }
     var totalCost: Int { get }
     var numberOfQuestions: Int { get }
+    var hasCompletedQuestion: Bool { get }
     
     func setTargets(_ targets: [Target])
     func setTags(_ tags: [Tag])
@@ -29,11 +30,9 @@ protocol PostingServiceType: AnyObject {
 class PostingService: PostingServiceType {
     
     var postingQuestions: [PostingQuestion] = []
-
     var numberOfQuestions: Int {
         return postingQuestions.count
     }
-    
     var defaultMinimumCost: Int { return 300 }
     var expectedTimeInMin: Int { return 2 }
     var numberOfSpecimens: Int = 100
@@ -42,7 +41,11 @@ class PostingService: PostingServiceType {
     }
     var selectedTargets: [Target] = []
     var selectedTags: [Tag] = []
-    
+    var hasCompletedQuestion: Bool {
+        return postingQuestions.contains(where: { postingQuestion in
+            postingQuestion.isCompleted == true
+        })
+    }
     
     /// start from 0
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int) {
@@ -59,11 +62,9 @@ class PostingService: PostingServiceType {
         postingQuestions = []
     }
     
-    /// does noting for now (0616)
     func addQuestion() {
         let postingQuestion = PostingQuestion(index: numberOfQuestions)
         postingQuestions.append(postingQuestion)
-        print("current postingQuestion: \(postingQuestions.count)")
     }
     
     func setNumberOfSpecimens(_ num: Int) {
@@ -78,4 +79,3 @@ class PostingService: PostingServiceType {
         selectedTags = tags.sorted()
     }
 }
-
