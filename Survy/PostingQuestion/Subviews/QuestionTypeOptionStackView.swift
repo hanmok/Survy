@@ -43,14 +43,21 @@ class QuestionTypeOptionStackView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func convertTagIntoRawValue(_ tag: Int) -> Int {
+        return tag * 10 + 4
+    }
+    
     public func updateSelectedOption(briefType: BriefQuestionType) {
-        guard let selectedButton = questionTypeButtons.first(where: {$0.tag == briefType.rawValue }) else { return }
+        
+//        guard let selectedButton = questionTypeButtons.first(where: {$0.tag * 10 + 4 == briefType.rawValue }) else { return }
+        
+        guard let selectedButton = questionTypeButtons.first(where: {convertTagIntoRawValue($0.tag) == briefType.rawValue }) else { return }
         print("selectedButtonTag: \(selectedButton.tag), briefTypeRawValue: \(briefType.rawValue)")
         selectedButton.backgroundColor = UIColor.deeperMainColor
         selectedButton.setTitleColor(.white, for: .normal)
-        // TODO: 다른 버튼들 색상 원상태로.
         
-        let otherButtons = questionTypeButtons.filter { $0.tag != briefType.rawValue }
+        let otherButtons = questionTypeButtons.filter { convertTagIntoRawValue($0.tag) != briefType.rawValue }
+        
         otherButtons.forEach {
             $0.backgroundColor = UIColor.blurredMainColor
             $0.setTitleColor(.blurredTextColor, for: .normal)

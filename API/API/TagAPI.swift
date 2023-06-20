@@ -1,5 +1,5 @@
 //
-//  Tag+Moya.swift
+//  Genre+Moya.swift
 //  API
 //
 //  Created by Mac mini on 2023/05/27.
@@ -9,14 +9,14 @@ import Foundation
 import Moya
 import Model
 
-public enum TagAPI  {
+public enum GenreAPI  {
     case fetchAll
     case fetchWith(Int)
     case create(String)
 }
 
 
-extension TagAPI: BaseAPIType {
+extension GenreAPI: BaseAPIType {
 
     struct Super: BaseAPIType {}
     
@@ -27,9 +27,9 @@ extension TagAPI: BaseAPIType {
     public var path: String {
         switch self {
             case .fetchAll, .create:
-                return "/tags"
+                return "/genres"
             case .fetchWith(let id):
-                return "/tags/\(id)"
+                return "/genres/\(id)"
         }
     }
 

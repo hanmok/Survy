@@ -26,7 +26,7 @@ protocol Coordinator {
 }
 
 enum ChildView {
-    case categorySelection(CategorySelectionPurpose?)
+    case genreSelection(GenreSelectionPurpose?)
     
     case targetSelection
     case confirmation
@@ -37,7 +37,7 @@ extension ChildView: Equatable {
         switch (lhs, rhs) {
             case (.targetSelection, .targetSelection): return true
             case (.confirmation, .confirmation): return true
-            case (.categorySelection, .categorySelection): return true
+            case (.genreSelection, .genreSelection): return true
             default: return false
         }
     }

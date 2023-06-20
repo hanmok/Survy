@@ -57,10 +57,10 @@ class QuestionViewController: BaseViewController, Coordinating {
         optionStackView.optionStackViewDelegate = self
         
         guard let question = surveyService.currentQuestion,
-              let percentage = surveyService.percentage else { return }
+              let percengenree = surveyService.percengenree else { return }
         
         questionLabel.text = "\(question.position). \(question.text)"
-        percentageLabel.text = "\(Int(percentage * 100))%"
+        percengenreeLabel.text = "\(Int(percengenree * 100))%"
         
         if surveyService.isLastQuestion {
             nextButton.setTitle("완료", for: .normal)
@@ -129,13 +129,13 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     
     private func setupLayout() {
-        let percentage = surveyService.percentage ?? 0.0
+        let percengenree = surveyService.percengenree ?? 0.0
         [progressContainerView, questionContainerView, nextButton, quitButton]
             .forEach {
             self.view.addSubview($0)
         }
         
-        [fullProgressBar, partialProgressBar, percentageLabel].forEach {
+        [fullProgressBar, partialProgressBar, percengenreeLabel].forEach {
             self.progressContainerView.addSubview($0)
         }
         
@@ -151,14 +151,14 @@ class QuestionViewController: BaseViewController, Coordinating {
             make.edges.equalToSuperview()
         }
         
-        let filledWidth = (UIScreen.screenWidth - 40) * percentage
+        let filledWidth = (UIScreen.screenWidth - 40) * percengenree
         partialProgressBar.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalTo(filledWidth)
             make.height.top.equalToSuperview()
         }
         
-        percentageLabel.snp.makeConstraints { make in
+        percengenreeLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.height.equalToSuperview()
         }
@@ -194,7 +194,7 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     // MARK: - UI Properties
     
-    // MARK: - Percentage Bar
+    // MARK: - Percengenree Bar
     private let progressContainerView: UIView = {
         let view = UIView()
         view.clipsToBounds = true
@@ -214,7 +214,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         return view
     }()
     
-    private let percentageLabel: UILabel = {
+    private let percengenreeLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
         label.text = "0%"

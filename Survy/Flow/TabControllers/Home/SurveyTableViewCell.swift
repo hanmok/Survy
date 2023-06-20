@@ -50,20 +50,19 @@ class SurveyTableViewCell: UITableViewCell {
     }
     
     private func configureLayout() {
-        
         guard let survey = survey else { return }
         print("configuring survey: \(survey)")
-        configureCategories(survey: survey)
+        configureGenres(survey: survey)
         configureParticipants(survey: survey)
         configureRewardLabel(survey: survey)
         questionLabel.text = survey.title
     }
     
-    private func configureCategories(survey: Survey) {
-        guard let tags = survey.tags else { return }
-        let categories = tags.map { $0.name }
-        let categoriesText = categories.joined(separator: " • ")
-        categoryLabel.text = categoriesText
+    private func configureGenres(survey: Survey) {
+        guard let genres = survey.genres else { return }
+        let names = genres.map { $0.name }
+        let genresText = names.joined(separator: " • ")
+        genreLabel.text = genresText
     }
     
     private func configureParticipants(survey: Survey) {
@@ -88,17 +87,17 @@ class SurveyTableViewCell: UITableViewCell {
     private func setupLayout() {
         contentView.layer.cornerRadius = 16
         contentView.addShadow(offset: CGSize(width: 5.0, height: 5.0))
-        [categoryLabel, questionLabel, participantsLabel, rewardLabel, answerTextField, dividerView, testView, participateButton].forEach {
+        [genreLabel, questionLabel, participantsLabel, rewardLabel, answerTextField, dividerView, testView, participateButton].forEach {
             self.contentView.addSubview($0)
         }
         
-        categoryLabel.snp.makeConstraints { make in
+        genreLabel.snp.makeConstraints { make in
             make.leading.top.equalToSuperview().inset(12)
         }
         
         questionLabel.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(12)
-            make.top.equalTo(categoryLabel.snp.bottom).offset(10)
+            make.top.equalTo(genreLabel.snp.bottom).offset(10)
         }
         
         participantsLabel.snp.makeConstraints { make in
@@ -150,7 +149,7 @@ class SurveyTableViewCell: UITableViewCell {
         return view
     }()
 
-    private let categoryLabel: UILabel = {
+    private let genreLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
         return label

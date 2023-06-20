@@ -12,7 +12,7 @@ import Toast
 
 class PostingViewController: BaseViewController, Coordinating {
     
-    var currentTags: [Tag] = []
+    var currentGenres: [Genre] = []
     
     var currentTargets: [Target] = []
     
@@ -31,7 +31,7 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
-    private var tagDataSource: UICollectionViewDiffableDataSource<Section, Tag>!
+    private var genreDataSource: UICollectionViewDiffableDataSource<Section, Genre>!
     
     let marginSize = 12
     enum Section {
@@ -118,10 +118,10 @@ class PostingViewController: BaseViewController, Coordinating {
     private func setupTopCollectionViews() {
         let layout = createLayout()
         
-        selectedTagsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        selectedGenresCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         selectedTargetsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
-        selectedTagsCollectionView.backgroundColor = .magenta
+        selectedGenresCollectionView.backgroundColor = .magenta
         selectedTargetsCollectionView.backgroundColor = .cyan
     }
     
@@ -136,25 +136,25 @@ class PostingViewController: BaseViewController, Coordinating {
              return collectionView.dequeueConfiguredReusableCell(using: targetCellRegistration, for: indexPath, item: identifier)
         }
         
-        let tagCellRegistration = UICollectionView.CellRegistration<TagLabelCollectionViewCell, Tag> {
-            (cell, indexPath, tag) in
-            cell.text = tag.name
+        let genreCellRegistration = UICollectionView.CellRegistration<GenreLabelCollectionViewCell, Genre> {
+            (cell, indexPath, genre) in
+            cell.text = genre.name
         }
 
-        tagDataSource = UICollectionViewDiffableDataSource<Section, Tag>(collectionView: selectedTagsCollectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: tagCellRegistration, for: indexPath, item: identifier)
+        genreDataSource = UICollectionViewDiffableDataSource<Section, Genre>(collectionView: selectedGenresCollectionView) {
+            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Genre) -> UICollectionViewCell? in
+            return collectionView.dequeueConfiguredReusableCell(using: genreCellRegistration, for: indexPath, item: identifier)
         }
     }
     
     override func updateMyUI() {
         
-        if postingService.selectedTags != currentTags {
-            currentTags = postingService.selectedTags
-            var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
-            tagSnapshot.appendSections([.main])
-            tagSnapshot.appendItems(currentTags)
-            tagDataSource.apply(tagSnapshot)
+        if postingService.selectedGenres != currentGenres {
+            currentGenres = postingService.selectedGenres
+            var genreSnapshot = NSDiffableDataSourceSnapshot<Section, Genre>()
+            genreSnapshot.appendSections([.main])
+            genreSnapshot.appendItems(currentGenres)
+            genreDataSource.apply(genreSnapshot)
         }
         
         if postingService.selectedTargets != currentTargets {
@@ -164,19 +164,26 @@ class PostingViewController: BaseViewController, Coordinating {
             targetSnapshot.appendItems(currentTargets)
             self.targetDataSource.apply(targetSnapshot, animatingDifferences: true)
         }
-        
-        if postingService.selectedTags.isEmpty == false && postingService.hasCompletedQuestion {
-            requestingButton.backgroundColor = UIColor.deeperMainColor
+        checkIfConditionSatisfied()
+    }
+    
+    private func checkIfConditionSatisfied() {
+        if postingService.selectedGenres.isEmpty == false && postingService.hasCompletedQuestion && postingService.title != nil {
+            setRequestingButtonStatus(to: true)
+            print("selectableOptions:")
+            for eachQuestion in postingService.postingQuestions {
+                print(eachQuestion.selectableOptions)
+            }
         } else {
-            requestingButton.backgroundColor = UIColor.grayProgress
+            setRequestingButtonStatus(to: false)
         }
     }
     
     private func setupInitialSnapshot() {
-        var tagSnapshot = NSDiffableDataSourceSnapshot<Section, Tag>()
-        tagSnapshot.appendSections([.main])
-        tagSnapshot.appendItems(currentTags, toSection: .main)
-        tagDataSource.apply(tagSnapshot)
+        var genreSnapshot = NSDiffableDataSourceSnapshot<Section, Genre>()
+        genreSnapshot.appendSections([.main])
+        genreSnapshot.appendItems(currentGenres, toSection: .main)
+        genreDataSource.apply(genreSnapshot)
         
         var targetSnapshot = NSDiffableDataSourceSnapshot<Section, Target>()
         targetSnapshot.appendSections([.main])
@@ -214,7 +221,7 @@ class PostingViewController: BaseViewController, Coordinating {
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
         targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
-        categoryButton.addTarget(self, action: #selector(categoryTapped), for: .touchUpInside)
+        genreButton.addTarget(self, action: #selector(genreTapped), for: .touchUpInside)
     }
     
     // MARK: - Button Actions
@@ -234,21 +241,12 @@ class PostingViewController: BaseViewController, Coordinating {
         coordinator?.manipulate(.targetSelection, command: .present)
     }
     
-    @objc func categoryTapped(_ sender: UIButton) {
+    @objc func genreTapped(_ sender: UIButton) {
         dismissKeyboard()
-        coordinator?.manipulate(.categorySelection(.posting), command: .present)
+        coordinator?.manipulate(.genreSelection(.posting), command: .present)
     }
     
     @objc func requestSurveyTapped(_ sender: UIButton) {
-        print("current PostingQuestions: ")
-        print("number of Questions: \(postingService.numberOfQuestions)")
-        
-        postingService.postingQuestions.forEach {
-            print("question: \($0.text), questionType: \($0.briefQuestionType)")
-            $0.selectableOptions.forEach {
-                print("options: \($0.value)")
-            }
-        }
         coordinator?.manipulate(.confirmation, command: .present)
     }
     
@@ -273,9 +271,9 @@ class PostingViewController: BaseViewController, Coordinating {
         
         [
             titleTextField,
-            targetButton, categoryButton,
+            targetButton, genreButton,
             selectedTargetsCollectionView,
-            selectedTagsCollectionView,
+            selectedGenresCollectionView,
             postingBlockCollectionView
         ].forEach {
             self.scrollView.addSubview($0)
@@ -335,30 +333,34 @@ class PostingViewController: BaseViewController, Coordinating {
         }
         selectedTargetsCollectionView.backgroundColor = .clear
         
-        categoryButton.snp.makeConstraints { make in
+        genreButton.snp.makeConstraints { make in
             make.top.equalTo(targetButton.snp.bottom).offset(20)
             make.leading.equalToSuperview().inset(20)
             make.height.equalTo(26)
         }
         
-        categoryButton.addSmallerInsets()
+        genreButton.addSmallerInsets()
         
-        selectedTagsCollectionView.snp.makeConstraints { make in
-            make.top.equalTo(categoryButton.snp.top)
-            make.bottom.equalTo(categoryButton.snp.bottom)
-            make.leading.equalTo(categoryButton.snp.trailing).offset(10)
+        selectedGenresCollectionView.snp.makeConstraints { make in
+            make.top.equalTo(genreButton.snp.top)
+            make.bottom.equalTo(genreButton.snp.bottom)
+            make.leading.equalTo(genreButton.snp.trailing).offset(10)
             make.width.equalTo(300)
         }
-        selectedTagsCollectionView.backgroundColor = .clear
+        selectedGenresCollectionView.backgroundColor = .clear
         
         postingBlockCollectionView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth)
-            make.top.equalTo(categoryButton.snp.bottom).offset(16)
+            make.top.equalTo(genreButton.snp.bottom).offset(16)
             make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
         }
     }
     
+    private func setRequestingButtonStatus(to active: Bool) {
+        requestingButton.isUserInteractionEnabled = active
+        requestingButton.backgroundColor = active ? .deeperMainColor : .grayProgress
+    }
     
     private func setupLeftNavigationBar() {
         let backButton = UIBarButtonItem(image: UIImage.leftChevron, style: .plain, target: self, action: #selector(dismissTapped))
@@ -373,7 +375,7 @@ class PostingViewController: BaseViewController, Coordinating {
     }()
     
     private var selectedTargetsCollectionView: UICollectionView!
-    private var selectedTagsCollectionView: UICollectionView!
+    private var selectedGenresCollectionView: UICollectionView!
     
     private lazy var postingBlockCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -401,11 +403,10 @@ class PostingViewController: BaseViewController, Coordinating {
         return button
     }()
     
-    private let categoryButton: UIButton = {
+    private let genreButton: UIButton = {
         let button = UIButton()
         let attributedString = NSAttributedString(string: "관심사", attributes: [.foregroundColor: UIColor.systemBlue, .font: UIFont.systemFont(ofSize: 18, weight: .semibold)])
         button.setAttributedTitle(attributedString, for: .normal)
-        
         button.backgroundColor = UIColor(white: 0.9, alpha: 1)
         button.layer.cornerRadius = 6
         button.clipsToBounds = true
@@ -461,9 +462,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         if postingService.postingQuestions.count > indexPath.row {
             cell.postingQuestion = postingService.postingQuestions[indexPath.row]
-            if postingService.hasCompletedQuestion && postingService.selectedTags.isEmpty == false {
-                self.requestingButton.backgroundColor = UIColor.deeperMainColor
-            }
+            checkIfConditionSatisfied()
         }
         return cell
     }

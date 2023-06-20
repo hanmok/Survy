@@ -34,20 +34,19 @@ final class APITests: XCTestCase {
     }
 
     func test_sth() {
-        let expectation = self.expectation(description: "post")
-//        APIService.shared.fetchTags { tags in
-        APIService.shared.getAllTags { tags in
-            print("fetched Tags: \(tags)")
-            XCTAssertNotNil(tags)
-//            XCTAssertNil(tags)
+        let expectation = self.expectation(description: "get all posts")
+//        APIService.shared.fetchGenres { genres in
+        APIService.shared.getAllGenres { genres in
+            print("fetched Genres: \(genres)")
+            XCTAssertNotNil(genres)
+//            XCTAssertNil(genres)
             expectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
     
     func test_fetchSurveys() {
-        let expectation = self.expectation(description: "post")
-        
+        let expectation = self.expectation(description: "get all surveys")
         APIService.shared.getAllSurveys { result in
             print("myAPIResult: \(result)")
             XCTAssertNotNil(result)
@@ -56,13 +55,12 @@ final class APITests: XCTestCase {
         waitForExpectations(timeout: 10)
     }
     
-    func test_fetchSurveyTags() {
-        let expectation = self.expectation(description: "fetchSurveyTags")
+    func test_fetchSurveyGenres() {
+        let expectation = self.expectation(description: "get all survey_genres")
         
-        APIService.shared.getAllSurveyTags { surveyTags in
-            print("myAPIResult: \(surveyTags)")
-            XCTAssertNil(surveyTags)
-            XCTAssertNotNil(surveyTags)
+        APIService.shared.getAllSurveyGenres { surveyGenres in
+            print("myAPIResult: \(surveyGenres)")
+            XCTAssertNotNil(surveyGenres)
             expectation.fulfill()
         }
 
@@ -79,8 +77,8 @@ final class APITests: XCTestCase {
             print("id: \(id), string: \(string)")
             
             // TODO: Make Section
-            
-            XCTAssertNil(id)
+            XCTAssertNotNil(id)
+//            XCTAssertNil(id)
             expectation.fulfill()
         }
 
@@ -95,10 +93,9 @@ final class APITests: XCTestCase {
         APIService.shared.postSection(title: title, sequence: sequence, surveyId: surveyId) { id, string in
             guard let id = id else { fatalError() }
             print("id: \(id), string: \(string)")
-            XCTAssertNil(id)
+            XCTAssertNotNil(id)
             expectation.fulfill()
         }
-        
         
         waitForExpectations(timeout: 10)
     }
@@ -111,7 +108,23 @@ final class APITests: XCTestCase {
             
             guard let questionId = questionId else { fatalError() }
             print("questionId: \(questionId), string: \(string)")
-            XCTAssertNil(questionId)
+//            XCTAssertNil(questionId)
+            XCTAssertNotNil(questionId)
+            expectation.fulfill()
+            
+        }
+        
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_postSelectableOption() {
+        let expectation = self.expectation(description: "post selectableOption")
+        let (value, position, questionId) = ("test selectableOption", 0, 4)
+        
+        APIService.shared.postSelectableOption(value: value, position: position, questionId: questionId) { result, string in
+            guard let result = result else { fatalError() }
+            XCTAssertNotNil(result)
+            print("result string: \(string)")
             expectation.fulfill()
         }
         waitForExpectations(timeout: 10)

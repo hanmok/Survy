@@ -8,6 +8,7 @@
 import UIKit
 import Model
 import API
+import Dispatch
 
 class ConfirmationController: UIViewController, Coordinating {
     var coordinator: Coordinator?
@@ -74,37 +75,89 @@ class ConfirmationController: UIViewController, Coordinating {
     }
     
     @objc func completeTapped() {
+        postingService.setSurveyTitle(name: "testing")
+        postingService.setParticipationGoal(participationGoal: 100)
+        
         guard let surveyTitle = postingService.surveyTitle,
               let participationGoal = postingService.participationGoal else { fatalError() }
         
         let userId = userService.userId
         
+        // postSurvey -> id 받아낸 후 postSection 시 사용, section id 받아오고, postQuestion 시 사용. 시간이 너무 오래걸리지는 않을까?
+        // 음.. ProgressBar 라도 하나 만들어줘야 할 것 같은데.. ?
+        // 모든 과정 내에서
+        // Perfect!
+        
+        let dispatchGroup = DispatchGroup()
+        
         APIService.shared.postSurvey(title: surveyTitle,
                                      participationGoal: participationGoal,
                                      userId: userId) { [weak self] surveyId, string in
+            guard let self = self else { fatalError() }
             guard let surveyId = surveyId else { fatalError() }
-            guard var sections = self?.postingService.sections else { return }
             
-            var sectionIds = [SectionId]()
+            let testSections = [
+                Section(surveyId: surveyId, numOfQuestions: 3, sequence: 0, title: "test 1")
+//                ,Section(surveyId: surveyId, numOfQuestions: 4, sequence: 1, title: "test 2")
+            ]
+            
+            self.postingService.setSections(testSections)
+            
+            guard var sections = self.postingService.sections else { return }
             
             for index in sections.indices {
-                APIService.shared.postSection(title: sections[index].title, sequence: sections[index].sequence, surveyId: surveyId) { sectionId, sectionResultString in
+                dispatchGroup.enter()
+                APIService.shared.postSection(title: sections[index].title,
+                                              sequence: sections[index].sequence,
+                                              surveyId: surveyId) { sectionId, sectionResultString in
+                    
                     guard let sectionId = sectionId else { return }
                     sections[index].setId(sectionId)
+                    
+//                    guard let postingQuestions = self?.postingService.postingQuestions else { fatalError() }
+                    
+                    let postingQuestions = self.postingService.postingQuestions
+                    
+                    // Posting Questions
+                    for index in postingQuestions.indices {
+                        
+                        var question = postingQuestions[index]
+                        question.setSectionId(sectionId)
+                        APIService.shared.postQuestion(text: question.questionText!,
+                                                       sectionId: question.sectionId!,
+                                                       questionTypeId: question.briefQuestionType!.rawValue,
+                                                       expectedTimeInSec: 20) { questionId, string in
+                            guard let questionId = questionId else { fatalError() }
+                            
+                            // TODO: Posting Selectable Option
+                             // 왜 이거 두번 호출될까 ?
+                            let selectableOptions = postingQuestions[index].selectableOptions
+                            print("selectableOptions: \(selectableOptions), the number of selectableOptions: \(selectableOptions.count)")
+                            
+                            for selectableIdx in selectableOptions.indices {
+                                let selectableOption = selectableOptions[selectableIdx]
+                                
+                                if let selectableValue = selectableOption.value {
+                                    dispatchGroup.enter()
+                                    APIService.shared.postSelectableOption(value: selectableValue,
+                                                                           position: selectableOption.position,
+                                                                           questionId: questionId) { void, message in
+                                        dispatchGroup.leave()
+                                        guard let void = void else { fatalError(message) }
+                                    }
+                                }
+                            }
+                            print("completed!")
+                        }
+                    }
+                    dispatchGroup.leave()
                 }
             }
             
-            guard let postingQuestions = self?.postingService.postingQuestions else { fatalError() }
-            
-            for index in postingQuestions.indices {
-                let question = postingQuestions[index]
-                APIService.shared.postQuestion(text: question.text!, sectionId: question.sectionId!, questionTypeId: question.briefQuestionType!.rawValue, expectedTimeInSec: 20) { questionId, string in
-                    // TODO: Selectable Option
-                    print("completed!")
-                }
+            dispatchGroup.notify(queue: .main) {
+                self.coordinator?.manipulate(.confirmation, command: .dismiss(true))
             }
         }
-        coordinator?.manipulate(.confirmation, command: .dismiss(true))
     }
     
     private func setupNavigationBar() {

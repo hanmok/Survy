@@ -7,6 +7,7 @@
 
 import Foundation
 
+// FIXME: 왜 이건 Class야..?
 public class PostingQuestion {
     
     public init(index: Int) {
@@ -14,16 +15,20 @@ public class PostingQuestion {
     }
     
     public var index: Int
-    public var text: String?
+    public var questionText: String?
     
     public var numberOfOptions: Int {
         return selectableOptions.count
     }
     
+    public func setSectionId(_ sectionId: Int) {
+        self.sectionId = sectionId
+    }
+    
     public var sectionId: Int?
     
     public var isCompleted: Bool {
-        if text != nil,
+        if questionText != nil,
             briefQuestionType != nil,
             let first = selectableOptions.first,
             first.value != nil || first.placeHolder != nil {
@@ -34,7 +39,9 @@ public class PostingQuestion {
         return false
     }
     
+    /// QuestionTypeId
     public var briefQuestionType: BriefQuestionType?
+    
     public var selectableOptions: [SelectableOption] = []
     
     public func modifySelectableOption(index: Int, selectableOption: SelectableOption) {
@@ -43,7 +50,7 @@ public class PostingQuestion {
         } else {
             let numberOfCurrentOptions = self.selectableOptions.count
             print("modifyCalled, adding \(numberOfCurrentOptions), count: \(selectableOptions.count), index: \(index)")
-            self.selectableOptions.append(SelectableOption(postion: numberOfCurrentOptions))
+            self.selectableOptions.append(SelectableOption(position: numberOfCurrentOptions))
         }
     }
     
@@ -56,7 +63,7 @@ public class PostingQuestion {
     }
     
     public func updateQuestionText(questionText: String) {
-        self.text = questionText
+        self.questionText = questionText
     }
     
     public func addSelectableOption(selectableOption: SelectableOption) {

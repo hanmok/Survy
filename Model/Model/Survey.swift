@@ -26,16 +26,16 @@ public struct Survey: Hashable, Decodable {
         print("survey init called")
     }
     
-    public mutating func setCategories(tags: [Tag]) {
-        self.tags = tags
+    public mutating func setGenres(genres: [Genre]) {
+        self.genres = genres
     }
     
-    public mutating func appendTags(tag: Tag) {
-        if self.tags == nil { // 아예 받아오지 않은 경우 아님?
-            self.tags = []
+    public mutating func appendGenres(genre: Genre) {
+        if self.genres == nil { // 아예 받아오지 않은 경우 아님?
+            self.genres = []
         }
-        guard self.tags != nil else { return }
-        self.tags!.append(tag)
+        guard self.genres != nil else { return }
+        self.genres!.append(genre)
     }
     
     public let id: Int
@@ -45,10 +45,10 @@ public struct Survey: Hashable, Decodable {
     public let rewardRange: String?
 //    public var createdAt: Date? = nil
     
-    // need to get from Survey-Tag API
+    // need to get from Survey-Genre API
     
     // FIXME: 처리하기..
-    public var tags: [Tag]?
+    public var genres: [Genre]?
     
     
     public enum CodingKeys: String, CodingKey {
@@ -58,7 +58,7 @@ public struct Survey: Hashable, Decodable {
         case participationGoal
 //        case createdAt = "created_at"
         case rewardRange = "reward_range"
-        case tags
+        case genres
     }
 }
 
@@ -66,7 +66,6 @@ extension Survey {
         public var participants: [Int] {
             return [self.numOfParticipation ?? 0, participationGoal ?? 1]
         }
-        
         public var rewardString: String? {
         
             guard let rewardRange = rewardRange else { return nil }

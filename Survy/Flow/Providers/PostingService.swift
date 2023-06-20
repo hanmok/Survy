@@ -10,7 +10,7 @@ import Model
 
 protocol PostingServiceType: AnyObject {
     var selectedTargets: [Target] { get set }
-    var selectedTags: [Tag] { get set }
+    var selectedGenres: [Genre] { get set }
     var postingQuestions: [PostingQuestion] { get set }
     var defaultMinimumCost: Int { get }
     var expectedTimeInMin: Int { get }
@@ -26,7 +26,7 @@ protocol PostingServiceType: AnyObject {
     func setTitle(_ title: String)
     func setParticipationGoal(participationGoal: Int)
     func setTargets(_ targets: [Target])
-    func setTags(_ tags: [Tag])
+    func setGenres(_ genres: [Genre])
     func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
     func resetQuestions()
@@ -38,30 +38,15 @@ protocol PostingServiceType: AnyObject {
 class PostingService: PostingServiceType {
     
     var title: String?
-    
-    func setTitle(_ title: String) {
-        print("title set to \(title)")
-        self.title = title
-    }
+
     var sections: [Section]?
-    
-    func setSections(_ sections: [Section]) {
-        self.sections = sections
-    }
     
     var participationGoal: Int?
     
-    func setParticipationGoal(participationGoal: Int) {
-        self.participationGoal = participationGoal
-    }
-    
     var surveyTitle: String?
     
-    func setSurveyTitle(name: String) {
-        self.surveyTitle = name
-    }
-    
     var postingQuestions: [PostingQuestion] = []
+    
     var numberOfQuestions: Int {
         return postingQuestions.count
     }
@@ -72,11 +57,29 @@ class PostingService: PostingServiceType {
         return numberOfSpecimens * defaultMinimumCost * expectedTimeInMin
     }
     var selectedTargets: [Target] = []
-    var selectedTags: [Tag] = []
+    var selectedGenres: [Genre] = []
+    
     var hasCompletedQuestion: Bool {
         return postingQuestions.contains(where: { postingQuestion in
             postingQuestion.isCompleted == true
         })
+    }
+    
+    func setSurveyTitle(name: String) {
+        self.surveyTitle = name
+    }
+    
+    func setTitle(_ title: String) {
+        print("title set to \(title)")
+        self.title = title
+    }
+    
+    func setSections(_ sections: [Section]) {
+        self.sections = sections
+    }
+    
+    func setParticipationGoal(participationGoal: Int) {
+        self.participationGoal = participationGoal
     }
     
     /// start from 0
@@ -107,7 +110,7 @@ class PostingService: PostingServiceType {
         selectedTargets = targets.sorted()
     }
     
-    func setTags(_ tags: [Tag]) {
-        selectedTags = tags.sorted()
+    func setGenres(_ genres: [Genre]) {
+        selectedGenres = genres.sorted()
     }
 }

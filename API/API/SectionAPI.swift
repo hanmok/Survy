@@ -22,8 +22,8 @@ extension SectionAPI: BaseAPIType {
     
     public var path: String {
 //        switch self {
-//            case .fetchTags(let surveyId):
-//                return "/surveys/\(surveyId)/tags"
+//            case .fetchGenres(let surveyId):
+//                return "/surveys/\(surveyId)/genres"
 //            default:
 //                return "/surveys"
 //        }
@@ -33,7 +33,7 @@ extension SectionAPI: BaseAPIType {
     public var method: Moya.Method {
 
 //        switch self {
-//            case .fetchAll, .fetchTags:
+//            case .fetchAll, .fetchGenres:
 //                return .get
 //            case .create:
 //                return .post

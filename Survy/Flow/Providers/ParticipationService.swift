@@ -20,16 +20,16 @@ protocol ParticipationServiceType: AnyObject {
     var selectedIndex: Int? { get set }
     var textAnswer: String? { get set }
     var allSurveys: [Survey] { get set }
-    var allTags: [Tag] { get set }
+    var allGenres: [Genre] { get set }
     var surveysToShow: [Survey] { get }
-    var selectedCategories: Set<Int> { get set }
+    var selectedGenres: Set<Int> { get set }
     
     func moveToNextQuestion()
     func initializeSurvey()
 }
 
 class ParticipationService: ParticipationServiceType {
-    var allTags = [Tag]()
+    var allGenres = [Genre]()
     
     var selectedIndexes: Set<Int>?
 
@@ -72,27 +72,27 @@ class ParticipationService: ParticipationServiceType {
     }
     
     var questionIndex: Int?
-    var percentage: CGFloat? {
+    var percengenree: CGFloat? {
         guard let questionsToConduct = questionsToConduct, let questionIndex = questionIndex else { return 0 }
         return CGFloat(questionIndex) / CGFloat(questionsToConduct.count)
     }
     
-    var selectedCategories = Set<Int>() // Tag Id
+    var selectedGenres = Set<Int>() // Genre Id
     
     var surveysToShow: [Survey] {
         return allSurveys
         
-        if selectedCategories.isEmpty == true {
+        if selectedGenres.isEmpty == true {
             var ret = [Survey]()
             for survey in allSurveys {
-                if let surveyCategories = survey.tags {
-                    let something = surveyCategories.map { $0.id }
-                    let some = Set(UserDefaults.standard.myCategories.map { $0.id})
+                if let surveyGenres = survey.genres {
+                    let something = surveyGenres.map { $0.id }
+                    let some = Set(UserDefaults.standard.myGenres.map { $0.id})
                     if some.intersection(something).isEmpty == false {
                         ret.append(survey)
                     }
                     
-//                    if Set(UserDefaults.standard.myCategories.map { $0.name}).intersection(something).isEmpty == false {
+//                    if Set(UserDefaults.standard.myGenres.map { $0.name}).intersection(something).isEmpty == false {
 //                        ret.append(survey)
 //                    }
                     
@@ -101,9 +101,9 @@ class ParticipationService: ParticipationServiceType {
             return ret
         } else {
             return allSurveys.filter {
-                guard let validCategories = $0.tags else { fatalError() }
-                let categorySet = Set(validCategories.map { $0.id })
-                return categorySet.intersection(selectedCategories).isEmpty == false
+                guard let validGenres = $0.genres else { fatalError() }
+                let genreSet = Set(validGenres.map { $0.id })
+                return genreSet.intersection(selectedGenres).isEmpty == false
             }
         }
     }

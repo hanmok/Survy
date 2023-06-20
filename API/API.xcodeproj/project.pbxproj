@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9A4D5C612A41A41500980937 /* SelectableOptionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4D5C602A41A41500980937 /* SelectableOptionAPI.swift */; };
 		9A6BC78C2A39B5DF009CC23B /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC78B2A39B5DF009CC23B /* APIError.swift */; };
 		9A6BC7902A39C96E009CC23B /* SurveyTagAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */; };
 		9A6BC7922A39CA26009CC23B /* CodeTomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC7912A39CA26009CC23B /* CodeTomb.swift */; };
@@ -26,7 +27,6 @@
 		9AD2BC422A3C3DE6007690B7 /* SectionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC412A3C3DE6007690B7 /* SectionAPI.swift */; };
 		9AD2BC442A3C3E61007690B7 /* QuestionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */; };
 		9AD647842A36E7F900ED6DC0 /* SurveyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */; };
-		9AFE34E12A35AE5D009CCE6D /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AFE34E02A35AE5D009CCE6D /* Test.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		9A4D5C602A41A41500980937 /* SelectableOptionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableOptionAPI.swift; sourceTree = "<group>"; };
 		9A6BC78B2A39B5DF009CC23B /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyTagAPI.swift; sourceTree = "<group>"; };
 		9A6BC7912A39CA26009CC23B /* CodeTomb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTomb.swift; sourceTree = "<group>"; };
@@ -60,7 +61,6 @@
 		9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = BasicEncodingDecoding.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = NameDismatches.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = BasicPosting.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		9AFE34E02A35AE5D009CCE6D /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,7 +119,7 @@
 				9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */,
 				9A6BC78B2A39B5DF009CC23B /* APIError.swift */,
 				9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */,
-				9AFE34E02A35AE5D009CCE6D /* Test.swift */,
+				9A4D5C602A41A41500980937 /* SelectableOptionAPI.swift */,
 				9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */,
 				9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */,
 				9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */,
@@ -277,12 +277,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				9ACCC7602A21F349006AE8CE /* BaseAPIType.swift in Sources */,
-				9AFE34E12A35AE5D009CCE6D /* Test.swift in Sources */,
 				9AD647842A36E7F900ED6DC0 /* SurveyAPI.swift in Sources */,
 				9ACCC75E2A21F1B1006AE8CE /* TagAPI.swift in Sources */,
 				9ACCC7452A20CA6F006AE8CE /* APIService.swift in Sources */,
 				9A6BC78C2A39B5DF009CC23B /* APIError.swift in Sources */,
 				9AD2BC442A3C3E61007690B7 /* QuestionAPI.swift in Sources */,
+				9A4D5C612A41A41500980937 /* SelectableOptionAPI.swift in Sources */,
 				9A6BC7922A39CA26009CC23B /* CodeTomb.swift in Sources */,
 				9A6BC7942A39CB17009CC23B /* DefaultAlamofireManager.swift in Sources */,
 				9AD2BC422A3C3DE6007690B7 /* SectionAPI.swift in Sources */,

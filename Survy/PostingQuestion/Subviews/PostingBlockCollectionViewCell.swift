@@ -15,6 +15,7 @@ protocol PostingBlockCollectionViewCellDelegate {
     func updateQuestionText(cellIndex: Int, questionText: String, postingQuestion: PostingQuestion)
 }
 
+
 class PostingBlockCollectionViewCell: UICollectionViewCell {
     
     public var numberOfSelectableOptions: Int {
@@ -52,13 +53,14 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     }
     
     private func configure(with postingQuestion: PostingQuestion) {
-        questionTextField.text = postingQuestion.text // 왜 nil 이죠?
+        questionTextField.text = postingQuestion.questionText // 왜 nil 이죠?
         
         if questionTextField.text == "" { questionTextField.text = "질문을 입력해주세요." }
         
         questionTextField.textColor = questionTextField.text == "질문을 입력해주세요." ? .lightGray : .black
         
         if let briefQuestionType = postingQuestion.briefQuestionType {
+            
             questionTypeOptionStackView.updateSelectedOption(briefType: briefQuestionType)
         }
         
@@ -66,7 +68,9 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         
         postingQuestion.selectableOptions.forEach {
             if let briefQuestionType = postingQuestion.briefQuestionType {
-                let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: briefQuestionType, selectableOption: $0)
+                let selectableOptionFieldView = SelectableOptionFieldView(
+                    briefQuestionType: briefQuestionType,
+                    selectableOption: $0)
                 selectableOptionFieldView.selectableOptionFieldDelegate = self
                 selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
             }
@@ -222,14 +226,14 @@ extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
     
     // configure 시, notifyConditionChanged 에서 한번씩 호출.
     
-    private func updateWithQuestionType(tag: Int) {
-        notifySelectionChange(to: tag)
+    private func updateWithQuestionType(genre: Int) {
+        notifySelectionChange(to: genre)
     }
     
     // 한번만 호출
     func notifyConditionChange(to condition: Bool) {
         guard let selectedIndex = questionTypeOptionStackView.selectedIndex, condition else { return }
-        updateWithQuestionType(tag: selectedIndex)
+        updateWithQuestionType(genre: selectedIndex)
     }
 }
 

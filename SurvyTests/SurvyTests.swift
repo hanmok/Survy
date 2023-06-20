@@ -67,7 +67,14 @@ final class SurvyTests: XCTestCase {
                 fatalError()
         }
     }
+    
+    func test_sth() {
+        let nums2 = 5 ..< 10
+        for num2 in nums2 {
+            print("currentNum 1: \(num2)")
+            if num2 == 7 { return }
+            print("currentNum 2: \(num2)")
+        }
+    }
 }
-
-
 

@@ -1,6 +1,6 @@
 
 //
-//  CategorySelectingController.swift
+//  GenreSelectingController.swift
 //  Survy
 //
 //  Created by Mac mini on 2023/05/08.
@@ -77,7 +77,7 @@ class TargetSelectionController: UIViewController, Coordinating {
         setupInitialValues()
     }
     
-    func createSelectableTagLayout() -> UICollectionViewLayout {
+    func createSelectableGenreLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
             let contentSize = layoutEnvironment.container.effectiveContentSize
@@ -117,7 +117,7 @@ class TargetSelectionController: UIViewController, Coordinating {
     }
     
     private func setupCollectionView() {
-        let layout = createSelectableTagLayout()
+        let layout = createSelectableGenreLayout()
         selectableTargetCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     }
     
@@ -132,13 +132,13 @@ class TargetSelectionController: UIViewController, Coordinating {
     }
     
     @objc func exitTapped() {
-        coordinator?.manipulate(.categorySelection(nil), command: .dismiss(nil))
+        coordinator?.manipulate(.genreSelection(nil), command: .dismiss(nil))
     }
     
     @objc func completeTapped(_ sender: UIButton) {
         let selectedTargetsArr = Array(selectedTargets)
         postingService.setTargets(selectedTargetsArr)
-        coordinator?.manipulate(.categorySelection(nil), command: .dismiss(nil))
+        coordinator?.manipulate(.genreSelection(nil), command: .dismiss(nil))
     }
     
     private let wholeContainerView: UIView = {
@@ -243,8 +243,8 @@ extension TargetSelectionController {
     func configureDataSource() {
         registerSupplementaryView()
         
-        let selectableCellRegistration = UICollectionView.CellRegistration<SelectableTargetCell, Target> { (cell, indexPath, category) in
-            cell.target = category
+        let selectableCellRegistration = UICollectionView.CellRegistration<SelectableTargetCell, Target> { (cell, indexPath, genre) in
+            cell.target = genre
             cell.delegate = self
         }
 

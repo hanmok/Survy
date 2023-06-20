@@ -8,5 +8,5 @@
 import Foundation
 
 extension CGFloat {
-    public static let categoryAdddingButton: CGFloat = 70
+    public static let genreAdddingButton: CGFloat = 70
 }

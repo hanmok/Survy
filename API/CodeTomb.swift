@@ -14,7 +14,7 @@ import Foundation
 //
 ////    https://dearsurvy.herokuapp.com
 //        let baseURL = "https://dearsurvy.herokuapp.com"
-//        let url = URL(string: "\(baseURL)/tags")!
+//        let url = URL(string: "\(baseURL)/genres")!
 ////        let url = URL(string: "\(baseURL)")!
 //        var urlRequest = URLRequest(url: url)
 //        urlRequest.httpMethod = "GET"
@@ -32,13 +32,13 @@ import Foundation
 //
 //        task.resume()
 //
-//        AF.request("https://dearsurvy.herokuapp.com/tags").response { response in
+//        AF.request("https://dearsurvy.herokuapp.com/genres").response { response in
 //            print("af Response:")
 //            debugPrint(response)
 //        }
 //
-//        AF.request("https://dearsurvy.herokuapp.com/tags")
-//            .responseDecodable(of: TagResponse.self) { response in
+//        AF.request("https://dearsurvy.herokuapp.com/genres")
+//            .responseDecodable(of: GenreResponse.self) { response in
 //                do {
 //                    let resultValue = try response.result.get()
 //                    print("fetched result: \(resultValue)")
@@ -48,18 +48,18 @@ import Foundation
 //            }
 //    }
 
-//     public func fetchTags(completion: @escaping ([Tag]) -> Void){
-//        let url = URL(string: "https://dearsurvy.herokuapp.com/tags")!
+//     public func fetchGenres(completion: @escaping ([Genre]) -> Void){
+//        let url = URL(string: "https://dearsurvy.herokuapp.com/genres")!
 //        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
 //            guard error == nil, let data = data else {
 //                print(error)
 //                return
 //            }
 //
-//            let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: data)
-//            let tags = tagsDic["tags"]!
-//            print("tags: \(tags)")
-//            completion(tags)
+//            let genresDic = try! JSONDecoder().decode([String: [Genre]].self, from: data)
+//            let genres = genresDic["genres"]!
+//            print("genres: \(genres)")
+//            completion(genres)
 //
 //        }.resume()
 //    }
@@ -85,15 +85,15 @@ import Foundation
 //    }
 
 
-//public func requestTag(tagName: String, completion: @escaping ((String)?) -> Void) {
-//    guard let url = URL(string: "https://dearsurvy.herokuapp.com/tags") else { return }
+//public func requestGenre(genreName: String, completion: @escaping ((String)?) -> Void) {
+//    guard let url = URL(string: "https://dearsurvy.herokuapp.com/genres") else { return }
 //
 //    var request = URLRequest(url: url)
 //    // method, body, headers
 //    request.httpMethod = "POST"
 //    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 //    let body: [String: AnyHashable] = [
-//        "name": tagName
+//        "name": genreName
 //    ]
 //
 //    request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: .fragmentsAllowed)
@@ -117,9 +117,9 @@ import Foundation
 
 
 
-//func test_postTag() { // why is it not working ??
+//func test_postGenre() { // why is it not working ??
 //    let expectation = self.expectation(description: "post")
-//    APIService.shared.requestTag(tagName: "달리기") { result in
+//    APIService.shared.requestGenre(genreName: "달리기") { result in
 //        print("myAPIResult: \(result)")
 //        XCTAssertNil(result)
 //        expectation.fulfill()

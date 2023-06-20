@@ -14,12 +14,6 @@ public struct SelectableOption {
         self.placeHolder = placeHolder
     }
     
-    public init(postion: Int, value: String? = nil, placeHolder: String? = nil) {
-        self.position = postion
-        self.value = value
-        self.placeHolder = placeHolder
-    }
-    
     public let id: Int = Int.random(in: 0 ... 10000)
     public let position: Int
     public var value: String? = nil

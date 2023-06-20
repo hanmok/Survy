@@ -20,24 +20,25 @@ public class APIService {
         return provider
     }()
     
-    private let tagProvider = MoyaProvider<TagAPI>()
+    private let genreProvider = MoyaProvider<GenreAPI>()
     private let surveyProvider = MoyaProvider<SurveyAPI>()
-    private let surveyTagProvider = MoyaProvider<SurveyTagAPI>()
+    private let surveyGenreProvider = MoyaProvider<SurveyGenreAPI>()
     private let sectionProvider = MoyaProvider<SectionAPI>()
     private let questionProvider = MoyaProvider<QuestionAPI>()
+    private let selectableProvider = MoyaProvider<SelectableOptionAPI>()
 }
 
-// MARK: - Tag
+// MARK: - Genre
 
 extension APIService {
-    public func getAllTags(completion: @escaping ([Tag]?) -> Void) {
-        tagProvider.request(.fetchAll) { result in
+    public func getAllGenres(completion: @escaping ([Genre]?) -> Void) {
+        genreProvider.request(.fetchAll) { result in
             switch result {
                 case .success(let result):
                     print("fetched result: \(result)")
-                    let tagsDic = try! JSONDecoder().decode([String: [Tag]].self, from: result.data)
-                    let tags = tagsDic["tags"]
-                    completion(tags)
+                    let genresDic = try! JSONDecoder().decode([String: [Genre]].self, from: result.data)
+                    let genres = genresDic["genres"]
+                    completion(genres)
                     
                 case .failure(let error):
                     print("error: \(error.localizedDescription)")
@@ -46,10 +47,10 @@ extension APIService {
         }
     }
     
-    public func postTag(requestingTagName: String, completion: @escaping ((String)?) -> Void) {
+    public func postGenre(requestingGenreName: String, completion: @escaping ((String)?) -> Void) {
             
         // TODO: - StatusCode 500 이면 에러 처리.
-        tagProvider.request(.create(requestingTagName)) { result in
+        genreProvider.request(.create(requestingGenreName)) { result in
             switch result {
             case .success(let response):
                     // 이게 무슨코드야? json 으로 만드는 코드.
@@ -67,6 +68,7 @@ extension APIService {
 // MARK: - Survey
 
 extension APIService {
+    // TODO: 본인이 올린 Survey는 올리지 않아야 함.
     public func getAllSurveys(completion: @escaping ([Survey]?) -> Void ) {
         surveyProvider.request(.fetchAll) { result in
             switch result {
@@ -131,21 +133,37 @@ extension APIService {
     }
 }
 
-
-
-
-// MARK: - SurveyTags
+// FIXME: 음.. Result<Success, Fail> 로 하는게 더 좋을 수 있지 않을까 ??
 
 extension APIService {
-    public func getAllSurveyTags(completion: @escaping ([SurveyTag]?) -> Void) {
-        surveyTagProvider.request(.fetchAll) { result in
+    public func postSelectableOption(value: String, position: Int, questionId: Int, completion: @escaping (Void?, String) -> Void) {
+        selectableProvider.request(.create(value, position, questionId)) { result in
             switch result {
                 case .success(let response):
-                    let surveyTagsDic = try! JSONDecoder().decode([String: [SurveyTag]].self, from: response.data)
-                    guard let surveyTags = surveyTagsDic["survey_tags"] else { completion(nil)
+                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
+                    
+                    completion((), postResponse.message)
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+}
+
+
+
+// MARK: - SurveyGenres
+
+extension APIService {
+    public func getAllSurveyGenres(completion: @escaping ([SurveyGenre]?) -> Void) {
+        surveyGenreProvider.request(.fetchAll) { result in
+            switch result {
+                case .success(let response):
+                    let surveyGenresDic = try! JSONDecoder().decode([String: [SurveyGenre]].self, from: response.data)
+                    guard let surveyGenres = surveyGenresDic["survey_genres"] else { completion(nil)
                         return
                     }
-                    completion(surveyTags)
+                    completion(surveyGenres)
                 case .failure(let moyaError):
                     completion(nil)
             }

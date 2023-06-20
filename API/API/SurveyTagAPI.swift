@@ -1,5 +1,5 @@
 //
-//  SurveyTag.swift
+//  SurveyGenre.swift
 //  API
 //
 //  Created by Mac mini on 2023/06/14.
@@ -9,11 +9,11 @@ import Foundation
 import Moya
 import Model
 
-public enum SurveyTagAPI {
+public enum SurveyGenreAPI {
     case fetchAll
 }
 
-extension SurveyTagAPI: BaseAPIType {
+extension SurveyGenreAPI: BaseAPIType {
     struct Super: BaseAPIType { }
     
     var `super`: Super {
@@ -23,7 +23,7 @@ extension SurveyTagAPI: BaseAPIType {
     public var path: String {
         switch self {
             case .fetchAll:
-                return "/survey_tags"
+                return "/survey_genres"
         }
     }
     

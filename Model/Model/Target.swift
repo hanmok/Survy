@@ -1,5 +1,5 @@
 //
-//  Tag.swift
+//  Genre.swift
 //  Survy
 //
 //  Created by Mac mini on 2023/04/28.
@@ -40,7 +40,7 @@ public struct TargetResponse: Decodable {
 // 이거 먼저 Decode 해보기.
 
 //{
-//    "tags": [
+//    "genres": [
 //        {
 //            "id": 4,
 //            "name": "운동"

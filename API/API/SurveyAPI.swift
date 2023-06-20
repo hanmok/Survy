@@ -12,7 +12,7 @@ import Model
 public enum SurveyAPI {
     case create(String, Int, Int) // title, participationGoal, userId
     case fetchAll
-    case fetchTags(Int) // with survey id
+    case fetchGenres(Int) // with survey id
 }
 
 extension SurveyAPI: BaseAPIType {
@@ -25,8 +25,8 @@ extension SurveyAPI: BaseAPIType {
     
     public var path: String {
         switch self {
-            case .fetchTags(let surveyId):
-                return "/surveys/\(surveyId)/tags"
+            case .fetchGenres(let surveyId):
+                return "/surveys/\(surveyId)/genres"
             default:
                 return "/surveys"
         }
@@ -34,7 +34,7 @@ extension SurveyAPI: BaseAPIType {
     
     public var method: Moya.Method {
         switch self {
-            case .fetchAll, .fetchTags:
+            case .fetchAll, .fetchGenres:
                 return .get
             case .create:
                 return .post

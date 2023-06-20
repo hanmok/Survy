@@ -8,13 +8,13 @@
 import UIKit
 import SnapKit
 
-protocol CategorySelectionFooterCellDelegate: AnyObject {
-    func categorySelectionFooterCellTapped()
+protocol GenreSelectionFooterCellDelegate: AnyObject {
+    func genreSelectionFooterCellTapped()
 }
 
-class CategorySelectionFooterCell: UICollectionReusableView {
+class GenreSelectionFooterCell: UICollectionReusableView {
     
-    weak var footerCellDelegate: CategorySelectionFooterCellDelegate?
+    weak var footerCellDelegate: GenreSelectionFooterCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,7 +30,7 @@ class CategorySelectionFooterCell: UICollectionReusableView {
         addSubview(addingButton)
         addingButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
-            make.width.height.equalTo(CGFloat.categoryAdddingButton)
+            make.width.height.equalTo(CGFloat.genreAdddingButton)
             make.bottom.equalToSuperview()
         }
     }
@@ -40,7 +40,7 @@ class CategorySelectionFooterCell: UICollectionReusableView {
     }
     
     @objc func buttonTapped() {
-        footerCellDelegate?.categorySelectionFooterCellTapped()
+        footerCellDelegate?.genreSelectionFooterCellTapped()
     }
     
     let addingButton: UIButton = {
@@ -48,7 +48,7 @@ class CategorySelectionFooterCell: UICollectionReusableView {
         button.backgroundColor = UIColor.deeperMainColor
         let plusImage = UIImage.plus.withTintColor(.white, renderingMode: .alwaysOriginal)
         button.addImageToCenter(image: plusImage, dividingRatio: 1.6)
-        button.applyCornerRadius(on: .all, radius: CGFloat.categoryAdddingButton / 2)
+        button.applyCornerRadius(on: .all, radius: CGFloat.genreAdddingButton / 2)
         return button
     }()
 }

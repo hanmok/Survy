@@ -13,7 +13,7 @@ class HomeViewController: TabController, Coordinating {
 
     override func updateMyUI() {
         updateSurveys()
-        categoryCollectionView.reloadData()
+        genreCollectionView.reloadData()
     }
     
     enum Section {
@@ -28,13 +28,13 @@ class HomeViewController: TabController, Coordinating {
     var tableViewTotalHeight: CGFloat {
         return surveyCellHeights.map { $0.height }.reduce(0, +)
     }
-    var hasCategoryPinnedToTheTop = false
+    var hasGenrePinnedToTheTop = false
     var surveyDataSource: UITableViewDiffableDataSource<Section, Survey>! = nil
     
     var topViewHeightConstraint: NSLayoutConstraint?
 
     private var isAnimationInProgress = false
-    private let categoryHeight: CGFloat = 50
+    private let genreHeight: CGFloat = 50
     
     init(index: Int,
          participationService: ParticipationServiceType,
@@ -55,19 +55,19 @@ class HomeViewController: TabController, Coordinating {
 
         self.setupDelegates()
         self.setupTargets()
-        self.setupCategoryCollectionView()
+        self.setupGenreCollectionView()
         self.setupLayout()
         
         coordinator?.setIndicatorSpinning(true)
-        // TODO: Get all tags, match them to surveys and update
+        // TODO: Get all genres, match them to surveys and update
         
         commonService.getSurveys { [weak self] in
-            self?.commonService.getTags(completion: { [weak self] in
-                self?.commonService.addTagsToSurveys(completion: { [weak self] surveys in
+            self?.commonService.getGenres(completion: { [weak self] in
+                self?.commonService.addGenresToSurveys(completion: { [weak self] surveys in
                     self?.coordinator?.setIndicatorSpinning(false)
                     self?.updateSurveys()
                 })
-                self?.categorySelectionButton.isUserInteractionEnabled = true
+                self?.genreSelectionButton.isUserInteractionEnabled = true
             })
         }
     }
@@ -101,10 +101,10 @@ class HomeViewController: TabController, Coordinating {
         surveyTableView.tableFooterView = footerView
     }
     
-    private func setupCategoryCollectionView(){
-        categoryCollectionView.register(CategoryCollectionViewCell.self, forCellWithReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier)
-        categoryCollectionView.dataSource = self
-        categoryCollectionView.delegate = self
+    private func setupGenreCollectionView(){
+        genreCollectionView.register(GenreCollectionViewCell.self, forCellWithReuseIdentifier: GenreCollectionViewCell.reuseIdentifier)
+        genreCollectionView.dataSource = self
+        genreCollectionView.delegate = self
     }
     
     private func updateSurveys() {
@@ -118,10 +118,10 @@ class HomeViewController: TabController, Coordinating {
         }
         
         if commonService.surveysToShow.isEmpty {
-            if UserDefaults.standard.myCategories.isEmpty {
-                noDataLabel.text = "Select Category first"
+            if UserDefaults.standard.myGenres.isEmpty {
+                noDataLabel.text = "Select Genre first"
             } else {
-                noDataLabel.text = "There's no survey available with current categories"
+                noDataLabel.text = "There's no survey available with current genres"
             }
         }
         self.setTableVisibility(shouldShowTable: !commonService.surveysToShow.isEmpty)
@@ -134,16 +134,13 @@ class HomeViewController: TabController, Coordinating {
     
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
-        
-        categorySelectionButton.addTarget(self, action: #selector(categorySelectionButtonTapped), for: .touchUpInside)
+        genreSelectionButton.addTarget(self, action: #selector(genreSelectionButtonTapped), for: .touchUpInside)
     }
     
-    @objc func categorySelectionButtonTapped() {
-//        coordinator?.manipulate(.categorySelection, command: .present)
-        coordinator?.manipulate(.categorySelection(.participating), command: .present)
+    @objc func genreSelectionButtonTapped() {
+//        coordinator?.manipulate(.genreSelection, command: .present)
+        coordinator?.manipulate(.genreSelection(.participating), command: .present)
     }
-    
-    
     
     @objc func moveToPostSurvey() {
         coordinator?.move(to: .postingController)
@@ -162,8 +159,8 @@ class HomeViewController: TabController, Coordinating {
         }
         
         [
-         categorySelectionCoveringView, collectedRewardLabel, surveyTableView, noDataLabel,
-         categorySelectionButton, categoryCollectionView].forEach {
+         genreSelectionCoveringView, collectedRewardLabel, surveyTableView, noDataLabel,
+         genreSelectionButton, genreCollectionView].forEach {
              self.wholeScrollView.addSubview($0)
          }
         
@@ -178,25 +175,25 @@ class HomeViewController: TabController, Coordinating {
             make.top.equalToSuperview()
         }
         
-        categorySelectionCoveringView.snp.makeConstraints { make in
+        genreSelectionCoveringView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth)
             make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
-            make.height.equalTo(categoryHeight)
+            make.height.equalTo(genreHeight)
         }
         
-        categorySelectionButton.snp.makeConstraints { make in
+        genreSelectionButton.snp.makeConstraints { make in
             make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(12)
             make.width.equalTo(UIScreen.screenWidth / 6)
-            make.height.equalTo(categoryHeight)
+            make.height.equalTo(genreHeight)
         }
         
-        categoryCollectionView.snp.makeConstraints { make in
+        genreCollectionView.snp.makeConstraints { make in
             make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
-            make.leading.equalTo(categorySelectionButton.snp.trailing).offset(8)
+            make.leading.equalTo(genreSelectionButton.snp.trailing).offset(8)
             make.width.equalTo(UIScreen.screenWidth * 5 / 6 - 32)
-            make.height.equalTo(categorySelectionButton.snp.height)
+            make.height.equalTo(genreSelectionButton.snp.height)
         }
         
         requestingButton.snp.makeConstraints { make in
@@ -207,14 +204,14 @@ class HomeViewController: TabController, Coordinating {
         }
         
         surveyTableView.snp.makeConstraints { make in
-            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(categoryHeight + 20)
+            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(genreHeight + 20)
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth)
             make.bottom.equalTo(requestingButton.snp.top)
         }
         
         noDataLabel.snp.makeConstraints { make in
-            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(categoryHeight + 20)
+            make.top.equalTo(collectedRewardLabel.snp.bottom).offset(genreHeight + 20)
             make.leading.equalToSuperview()
             make.width.equalTo(UIScreen.screenWidth)
             make.bottom.equalTo(requestingButton.snp.top)
@@ -276,7 +273,7 @@ class HomeViewController: TabController, Coordinating {
         return label
     }()
     
-    private let categorySelectionButton: UIButton = {
+    private let genreSelectionButton: UIButton = {
         let button = UIButton()
         button.setTitle("선택", for: .normal)
         button.setTitleColor(.systemBlue, for: .normal)
@@ -286,11 +283,11 @@ class HomeViewController: TabController, Coordinating {
         return button
     }()
     
-    private lazy var categoryCollectionView: UICollectionView = {
+    private lazy var genreCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 8
-        layout.itemSize = CGSize(width: UIScreen.screenWidth / 6, height: categoryHeight)
+        layout.itemSize = CGSize(width: UIScreen.screenWidth / 6, height: genreHeight)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .mainBackgroundColor
         collectionView.isScrollEnabled = false
@@ -313,7 +310,7 @@ class HomeViewController: TabController, Coordinating {
         return view
     }()
     
-    private let categorySelectionCoveringView: UIView = {
+    private let genreSelectionCoveringView: UIView = {
         let view = UIView()
         view.backgroundColor = .mainBackgroundColor
         return view
@@ -332,8 +329,6 @@ extension HomeViewController: UITableViewDelegate {
 
         let estimatedFrame2 = NSString(string: " ").boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 13)], context: nil)
         
-//        let estimatedFrame3 = NSString(string: participationService.surveysToShow[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
-//        let estimatedFrame3 = NSString(string: commonService.allSurveys[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
         let estimatedFrame3 = NSString(string: commonService.surveysToShow[indexPath.row].title).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: 18)], context: nil)
         
         // 12 + 10 + 12 + 20 + 12
@@ -353,24 +348,24 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         surveyCellHeights.removeAll()
-        return UserDefaults.standard.myCategories.count
+        return UserDefaults.standard.myGenres.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: CategoryCollectionViewCell.reuseIdentifier, for: indexPath) as! CategoryCollectionViewCell
+        let collectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: GenreCollectionViewCell.reuseIdentifier, for: indexPath) as! GenreCollectionViewCell
         
-        collectionViewCell.categoryCellDelegate = self
-        let tag = UserDefaults.standard.myCategories[indexPath.row]
+        collectionViewCell.genreCellDelegate = self
+        let genre = UserDefaults.standard.myGenres[indexPath.row]
         
-        collectionViewCell.category = tag
+        collectionViewCell.genre = genre
         return collectionViewCell
     }
 }
 
-extension HomeViewController: CategoryCellDelegate {
-    func categoryTapped(category: Tag, selected: Bool) {
-        commonService.toggleCategory(category)
+extension HomeViewController: GenreCellDelegate {
+    func genreTapped(genre: Genre, selected: Bool) {
+        commonService.toggleGenre(genre)
         updateSurveys()
     }
 }
@@ -388,69 +383,69 @@ extension HomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         let edgeHeight: CGFloat = 24.0
-        if scrollView.contentOffset.y > edgeHeight && hasCategoryPinnedToTheTop == false {
+        if scrollView.contentOffset.y > edgeHeight && hasGenrePinnedToTheTop == false {
             safeAreaCoveringView.isHidden = false
-            hasCategoryPinnedToTheTop = true
+            hasGenrePinnedToTheTop = true
             
             // TODO: pin to the top
-            [categorySelectionCoveringView, categorySelectionButton, categoryCollectionView ].forEach {
+            [genreSelectionCoveringView, genreSelectionButton, genreCollectionView ].forEach {
                 $0.removeFromSuperview()
                 self.view.addSubview($0)
             }
             
             self.view.addSubview(safeAreaCoveringView)
             
-            categorySelectionCoveringView.snp.makeConstraints { make in
+            genreSelectionCoveringView.snp.makeConstraints { make in
                 make.top.equalToSuperview().offset(40)
                 make.leading.equalToSuperview()
                 make.width.equalTo(UIScreen.screenWidth)
-                make.height.equalTo(categoryHeight)
+                make.height.equalTo(genreHeight)
             }
             
-            categorySelectionButton.snp.makeConstraints { make in
+            genreSelectionButton.snp.makeConstraints { make in
                 make.top.equalToSuperview().offset(40)
                 make.leading.equalToSuperview().offset(12)
                 make.width.equalTo(UIScreen.screenWidth / 6)
-                make.height.equalTo(categoryHeight)
+                make.height.equalTo(genreHeight)
             }
             
-            categoryCollectionView.snp.makeConstraints { make in
+            genreCollectionView.snp.makeConstraints { make in
                 make.top.equalToSuperview().offset(40)
-                make.leading.equalTo(categorySelectionButton.snp.trailing).offset(8)
+                make.leading.equalTo(genreSelectionButton.snp.trailing).offset(8)
                 make.width.equalTo(UIScreen.screenWidth * 5 / 6 - 32)
-                make.height.equalTo(categoryHeight)
+                make.height.equalTo(genreHeight)
             }
             
-        } else if scrollView.contentOffset.y <= edgeHeight && hasCategoryPinnedToTheTop == true {
+        } else if scrollView.contentOffset.y <= edgeHeight && hasGenrePinnedToTheTop == true {
             
             safeAreaCoveringView.isHidden = true
 
-            hasCategoryPinnedToTheTop = false
+            hasGenrePinnedToTheTop = false
             
-            [categorySelectionCoveringView, categorySelectionButton, categoryCollectionView].forEach {
+            [genreSelectionCoveringView, genreSelectionButton, genreCollectionView].forEach {
                 $0.removeFromSuperview()
                 self.wholeScrollView.addSubview($0)
             }
             
-            categorySelectionCoveringView.snp.makeConstraints { make in
+            genreSelectionCoveringView.snp.makeConstraints { make in
                 make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
                 make.leading.equalToSuperview()
                 make.width.equalTo(UIScreen.screenWidth)
-                make.height.equalTo(categoryHeight)
+                make.height.equalTo(genreHeight)
             }
             
-            categorySelectionButton.snp.makeConstraints { make in
+            genreSelectionButton.snp.makeConstraints { make in
                 make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
                 make.leading.equalToSuperview().offset(12)
                 make.width.equalTo(UIScreen.screenWidth / 6)
-                make.height.equalTo(categoryHeight)
+                make.height.equalTo(genreHeight)
             }
             
-            categoryCollectionView.snp.makeConstraints { make in
+            genreCollectionView.snp.makeConstraints { make in
                 make.top.equalTo(collectedRewardLabel.snp.bottom).offset(20)
-                make.leading.equalTo(categorySelectionButton.snp.trailing).offset(8)
+                make.leading.equalTo(genreSelectionButton.snp.trailing).offset(8)
                 make.width.equalTo(UIScreen.screenWidth * 5 / 6 - 32)
-                make.height.equalTo(categorySelectionButton.snp.height)
+                make.height.equalTo(genreSelectionButton.snp.height)
             }
         }
     }

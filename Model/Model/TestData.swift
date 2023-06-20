@@ -24,4 +24,4 @@ public let dietQuestion3 = Question(id: 3, questionType: .shortSentence, section
     SelectableOption(position: 1, value: nil, placeHolder: "경험을 공유해주세요.")
 ])
 
-public let section = Section(surveyId: 1, numOfQuestions: 3)
+// public let section = Section(surveyId: 1, numOfQuestions: 3)

@@ -9,13 +9,14 @@ import Foundation
 import Moya
 import Model
 
-public enum QuestionAPI {
+public enum SelectableOptionAPI {
 //    case create(String, Int, Int, Int) // text, section_id, questionType_id, expectedTimeInSec
-    case create(QuestionText, SectionId, QuestionTypeId, Int) // text, section_id, questionType_id, expectedTimeInSec
+//    case create(QuestionText, SectionId, QuestionTypeId, Int) // text, section_id, questionType_id, expectedTimeInSec
+    case create(SelectableOptionValue, Position, QuestionId) // text, section_id,
 }
 
 
-extension QuestionAPI: BaseAPIType {
+extension SelectableOptionAPI: BaseAPIType {
     
     struct Super: BaseAPIType { }
     
@@ -24,7 +25,7 @@ extension QuestionAPI: BaseAPIType {
     }
     
     public var path: String {
-        return "/questions"
+        return "/selectable-options"
     }
     
     public var method: Moya.Method {
@@ -34,11 +35,10 @@ extension QuestionAPI: BaseAPIType {
     // TODO: 필요할걸?
     public var parameters: [String : Any]? {
         switch self {
-            case .create(let text, let sectionId, let questionTypeId, let expectedTimeInSec):
-                return ["text": text,
-                        "section_id": sectionId,
-                        "questionType_id": questionTypeId,
-                        "expectedTimeInSec": expectedTimeInSec]
+            case .create(let selectableOptionValue, let position, let questionId):
+                return ["value": selectableOptionValue,
+                        "position": position,
+                        "question_id": questionId]
         }
     }
     

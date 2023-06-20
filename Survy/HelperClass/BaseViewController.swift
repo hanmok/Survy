@@ -9,7 +9,7 @@ import UIKit
 
 enum UpdatingDataType {
     case target
-    case tag
+    case genre
 }
 
 class BaseViewController: UIViewController {

@@ -8,7 +8,10 @@
 import Foundation
 
 public typealias SurveyId = Int
-public typealias TagId = Int
+public typealias GenreId = Int
 public typealias SectionId = Int
 public typealias QuestionId = Int
-
+public typealias QuestionText = String
+public typealias QuestionTypeId = Int
+public typealias SelectableOptionValue = String
+public typealias Position = Int
