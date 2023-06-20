@@ -86,7 +86,7 @@ class ConfirmationController: UIViewController, Coordinating {
             guard var sections = self?.postingService.sections else { return }
             
             var sectionIds = [SectionId]()
-//            for section in sections {
+            
             for index in sections.indices {
                 APIService.shared.postSection(title: sections[index].title, sequence: sections[index].sequence, surveyId: surveyId) { sectionId, sectionResultString in
                     guard let sectionId = sectionId else { return }

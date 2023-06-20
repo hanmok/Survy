@@ -98,7 +98,7 @@ class MainCoordinator: Coordinator {
                     case .targetSelection:
                         vc = TargetSelectionController(postingService: self.provider.postingService)
                     case .confirmation:
-                        vc = ConfirmationController(postingService: self.provider.postingService)
+                        vc = ConfirmationController(postingService: self.provider.postingService, userService: self.provider.userService)
                 }
                 
                 vc.coordinator = self

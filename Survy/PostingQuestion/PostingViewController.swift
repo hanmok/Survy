@@ -57,10 +57,21 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
-    
     private let customNavBar: CustomNavigationBar = {
         let navBar = CustomNavigationBar(title: "설문 요청")
         return navBar
+    }()
+    
+    private let titleTextField: UITextField = {
+        let textField = UITextField()
+        textField.placeholder = "설문 제목을 입력해주세요."
+        textField.layer.borderColor = UIColor.strongMainColor.cgColor
+        textField.layer.borderWidth = 3
+        textField.textAlignment = .center
+        textField.layer.cornerRadius = 10
+        textField.clipsToBounds = true
+        textField.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        return textField
     }()
     
     override func viewDidLoad() {
@@ -257,6 +268,7 @@ class PostingViewController: BaseViewController, Coordinating {
         }
         
         [
+            titleTextField,
             targetButton, categoryButton,
             selectedTargetsCollectionView,
             selectedTagsCollectionView,
@@ -295,8 +307,16 @@ class PostingViewController: BaseViewController, Coordinating {
             make.bottom.equalTo(expectedTimeGuideLabel.snp.top).offset(-10)
         }
         
+        titleTextField.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(30)
+            make.leading.equalToSuperview().inset(20)
+            make.width.equalTo(UIScreen.screenWidth - 40)
+            make.height.equalTo(40)
+        }
+        
         targetButton.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(20)
+//            make.top.equalTo(titleTextField.snp.bottom).offset(20)
+            make.top.equalTo(titleTextField.snp.bottom).offset(30)
             make.leading.equalToSuperview().inset(20)
             make.height.equalTo(26)
         }
