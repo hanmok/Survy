@@ -71,22 +71,28 @@ class PostingViewController: BaseViewController, Coordinating {
         textField.layer.cornerRadius = 10
         textField.clipsToBounds = true
         textField.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        
         return textField
     }()
+    
+    private func setupDelegates() {
+        titleTextField.delegate = self
+        customNavBar.delegate = self
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        customNavBar.delegate = self
+        
         if postingService.numberOfQuestions == 0 {
             postingService.addQuestion()
         }
-        
         registerPostingBlockCollectionView()
         
         setupTopCollectionViews()
         configureTopDataSource()
         
+        setupDelegates()
         setupLayout()
         setupTargets()
         
@@ -129,7 +135,6 @@ class PostingViewController: BaseViewController, Coordinating {
             (collectionView: UICollectionView, indexPath: IndexPath, identifier: Target) -> UICollectionViewCell? in
              return collectionView.dequeueConfiguredReusableCell(using: targetCellRegistration, for: indexPath, item: identifier)
         }
-        
         
         let tagCellRegistration = UICollectionView.CellRegistration<TagLabelCollectionViewCell, Tag> {
             (cell, indexPath, tag) in
@@ -182,7 +187,7 @@ class PostingViewController: BaseViewController, Coordinating {
     func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
-//            let contentSize = layoutEnvironment.container.effectiveContentSize
+
             let columns = 5
             let spacing = CGFloat(10)
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
@@ -203,7 +208,6 @@ class PostingViewController: BaseViewController, Coordinating {
         }
         return layout
     }
-    
     
     // MARK: - Helper functions
     
@@ -548,5 +552,14 @@ extension PostingViewController: CustomNavigationBarDelegate {
     func dismiss() {
         postingService.resetQuestions()
         self.navigationController?.popViewController(animated: true)
+    }
+}
+
+
+extension PostingViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        guard let title = textField.text else { return true }
+        postingService.setTitle(title)
+        return true
     }
 }

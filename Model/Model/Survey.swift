@@ -7,11 +7,6 @@
 
 import Foundation
 
-public typealias SurveyId = Int
-public typealias TagId = Int
-public typealias SectionId = Int
-public typealias QuestionId = Int
-
 public struct Survey: Hashable, Decodable {
     
     // API 호출 시 여기에서 생성되는게 아니구나?
@@ -30,8 +25,6 @@ public struct Survey: Hashable, Decodable {
         self.rewardRange = rewardRange
         print("survey init called")
     }
-    
-//    public mutating func setCategories(categories: [String]) {
     
     public mutating func setCategories(tags: [Tag]) {
         self.tags = tags

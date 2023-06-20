@@ -21,7 +21,9 @@ protocol PostingServiceType: AnyObject {
     var surveyTitle: String? { get set }
     var participationGoal: Int? { get set }
     var sections: [Section]? { get set }
+    var title: String? { get set }
     
+    func setTitle(_ title: String)
     func setParticipationGoal(participationGoal: Int)
     func setTargets(_ targets: [Target])
     func setTags(_ tags: [Tag])
@@ -34,6 +36,13 @@ protocol PostingServiceType: AnyObject {
 }
 
 class PostingService: PostingServiceType {
+    
+    var title: String?
+    
+    func setTitle(_ title: String) {
+        print("title set to \(title)")
+        self.title = title
+    }
     var sections: [Section]?
     
     func setSections(_ sections: [Section]) {

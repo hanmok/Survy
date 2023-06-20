@@ -21,6 +21,7 @@
 		9ACD1C2C2A13B8E80085D43E /* TargetSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACD1C2B2A13B8E80085D43E /* TargetSection.swift */; };
 		9AD2BC3B2A3C0A39007690B7 /* PostingQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC3A2A3C0A39007690B7 /* PostingQuestion.swift */; };
 		9AD2BC3D2A3C0A5A007690B7 /* BriefQuestionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC3C2A3C0A5A007690B7 /* BriefQuestionType.swift */; };
+		9AD2BC462A417963007690B7 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC452A417963007690B7 /* Typealiases.swift */; };
 		9AF935F42A1A85080002B15B /* CellHeight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935F32A1A85080002B15B /* CellHeight.swift */; };
 /* End PBXBuildFile section */
 
@@ -52,6 +53,7 @@
 		9ACD1C2B2A13B8E80085D43E /* TargetSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetSection.swift; sourceTree = "<group>"; };
 		9AD2BC3A2A3C0A39007690B7 /* PostingQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostingQuestion.swift; sourceTree = "<group>"; };
 		9AD2BC3C2A3C0A5A007690B7 /* BriefQuestionType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BriefQuestionType.swift; sourceTree = "<group>"; };
+		9AD2BC452A417963007690B7 /* Typealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
 		9AF935F32A1A85080002B15B /* CellHeight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellHeight.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				9A61142D2A0291780051FF2B /* Model.swift */,
+				9AD2BC452A417963007690B7 /* Typealiases.swift */,
 				9A6114342A0291970051FF2B /* Survey.swift */,
 				9A6114362A0291A80051FF2B /* QuestionType.swift */,
 				9A6BC78D2A39C8DA009CC23B /* SurveyTag.swift */,
@@ -162,6 +165,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9AD2BC462A417963007690B7 /* Typealiases.swift in Sources */,
 				9A6114452A02931C0051FF2B /* TestData.swift in Sources */,
 				9ACD1C2C2A13B8E80085D43E /* TargetSection.swift in Sources */,
 				9A6114412A0291F50051FF2B /* Tag.swift in Sources */,
