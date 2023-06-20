@@ -18,16 +18,39 @@ protocol PostingServiceType: AnyObject {
     var totalCost: Int { get }
     var numberOfQuestions: Int { get }
     var hasCompletedQuestion: Bool { get }
+    var surveyTitle: String? { get set }
+    var participationGoal: Int? { get set }
+    var sections: [Section]? { get set }
     
+    func setParticipationGoal(participationGoal: Int)
     func setTargets(_ targets: [Target])
     func setTags(_ tags: [Tag])
     func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
     func resetQuestions()
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int)
+    func setSurveyTitle(name: String)
+    func setSections(_ sections: [Section])
 }
 
 class PostingService: PostingServiceType {
+    var sections: [Section]?
+    
+    func setSections(_ sections: [Section]) {
+        self.sections = sections
+    }
+    
+    var participationGoal: Int?
+    
+    func setParticipationGoal(participationGoal: Int) {
+        self.participationGoal = participationGoal
+    }
+    
+    var surveyTitle: String?
+    
+    func setSurveyTitle(name: String) {
+        self.surveyTitle = name
+    }
     
     var postingQuestions: [PostingQuestion] = []
     var numberOfQuestions: Int {

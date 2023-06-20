@@ -9,6 +9,8 @@ import Foundation
 
 public typealias SurveyId = Int
 public typealias TagId = Int
+public typealias SectionId = Int
+public typealias QuestionId = Int
 
 public struct Survey: Hashable, Decodable {
     
@@ -99,4 +101,9 @@ extension Survey {
 public struct SurveyResponse: Decodable {
     public var surveys: [Survey]
 //    var count: Int
+}
+
+public struct PostResponse: Decodable {
+    public var message: String
+    public var id: Int
 }

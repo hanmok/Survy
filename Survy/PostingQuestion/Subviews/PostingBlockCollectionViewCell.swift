@@ -52,7 +52,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     }
     
     private func configure(with postingQuestion: PostingQuestion) {
-        questionTextField.text = postingQuestion.question // 왜 nil 이죠?
+        questionTextField.text = postingQuestion.text // 왜 nil 이죠?
         
         if questionTextField.text == "" { questionTextField.text = "질문을 입력해주세요." }
         

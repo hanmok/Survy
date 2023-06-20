@@ -7,6 +7,7 @@
 
 import UIKit
 import Model
+import API
 
 class ConfirmationController: UIViewController, Coordinating {
     var coordinator: Coordinator?
@@ -52,9 +53,7 @@ class ConfirmationController: UIViewController, Coordinating {
     
     private func setupTargets() {
         completeButton.addTarget(self, action: #selector(completeTapped), for: .touchUpInside)
-        
         exitButton.addTarget(self, action: #selector(exitTapped), for: .touchUpInside)
-        
         
         priceSegmentedControl.insertSegment(action: UIAction(title: "Free", handler: { [weak self] freeAction in
             guard let self = self else { return }
@@ -75,6 +74,36 @@ class ConfirmationController: UIViewController, Coordinating {
     }
     
     @objc func completeTapped() {
+        guard let surveyTitle = postingService.surveyTitle,
+              let participationGoal = postingService.participationGoal else { fatalError() }
+        
+        let userId = userService.userId
+        
+        APIService.shared.postSurvey(title: surveyTitle,
+                                     participationGoal: participationGoal,
+                                     userId: userId) { [weak self] surveyId, string in
+            guard let surveyId = surveyId else { fatalError() }
+            guard var sections = self?.postingService.sections else { return }
+            
+            var sectionIds = [SectionId]()
+//            for section in sections {
+            for index in sections.indices {
+                APIService.shared.postSection(title: sections[index].title, sequence: sections[index].sequence, surveyId: surveyId) { sectionId, sectionResultString in
+                    guard let sectionId = sectionId else { return }
+                    sections[index].setId(sectionId)
+                }
+            }
+            
+            guard let postingQuestions = self?.postingService.postingQuestions else { fatalError() }
+            
+            for index in postingQuestions.indices {
+                let question = postingQuestions[index]
+                APIService.shared.postQuestion(text: question.text!, sectionId: question.sectionId!, questionTypeId: question.briefQuestionType!.rawValue, expectedTimeInSec: 20) { questionId, string in
+                    // TODO: Selectable Option
+                    print("completed!")
+                }
+            }
+        }
         coordinator?.manipulate(.confirmation, command: .dismiss(true))
     }
     
@@ -84,9 +113,11 @@ class ConfirmationController: UIViewController, Coordinating {
     }
     
     let postingService: PostingServiceType
+    let userService: UserServiceType
     
-    init(postingService: PostingServiceType) {
+    init(postingService: PostingServiceType, userService: UserServiceType) {
         self.postingService = postingService
+        self.userService = userService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -101,9 +132,7 @@ class ConfirmationController: UIViewController, Coordinating {
         return view
     }()
     
-    
     private let priceSegmentedControl = UISegmentedControl()
-    
     
     private func setupLayout() {
         self.view.addSubview(wholeContainerView)
@@ -201,8 +230,6 @@ class ConfirmationController: UIViewController, Coordinating {
         label.textColor = .black
         return label
     }()
-    
-    
     
     private let expectedTimeInMinGuideLabel: UILabel = {
         let label = UILabel()

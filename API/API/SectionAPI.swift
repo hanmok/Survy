@@ -9,9 +9,8 @@ import Foundation
 import Moya
 
 public enum SectionAPI {
-    case create(String, Int) // title, surveyId
+    case create(String, Int, Int) // title, surveyId, Sequence
 }
-
 
 extension SectionAPI: BaseAPIType {
     
@@ -32,19 +31,21 @@ extension SectionAPI: BaseAPIType {
     }
     
     public var method: Moya.Method {
+
 //        switch self {
 //            case .fetchAll, .fetchTags:
 //                return .get
 //            case .create:
 //                return .post
 //        }
+
         return .post
     }
     
     public var parameters: [String : Any]? {
         switch self {
-            case .create(let title, let surveyId):
-                return ["title": title, "survey_id": surveyId]
+            case .create(let title, let sequence, let surveyId):
+                return ["title": title, "sequence": sequence, "survey_id": surveyId]
         }
         
 //        return ["title": String]
@@ -54,10 +55,12 @@ extension SectionAPI: BaseAPIType {
 //            default: return [:]
 //        }
 //        return [:]
+        
     }
     
     public var task: Moya.Task {
         guard let parameters = parameters else { return .requestPlain }
+        
 //        switch self {
 //            case .create:
 //                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)

@@ -10,7 +10,7 @@ import Moya
 import Model
 
 public enum SurveyAPI {
-    case create(String, Int) // title, participationGoal
+    case create(String, Int, Int) // title, participationGoal, userId
     case fetchAll
     case fetchTags(Int) // with survey id
 }
@@ -43,8 +43,8 @@ extension SurveyAPI: BaseAPIType {
     
     public var parameters: [String : Any]? {
         switch self {
-            case .create(let title, let participationGoal):
-                return ["title": title, "participationGoal": participationGoal]
+            case .create(let title, let participationGoal, let userId):
+                return ["title": title, "participationGoal": participationGoal, "user_id": userId]
             default: return [:]
         }
     }

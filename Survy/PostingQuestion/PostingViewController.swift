@@ -229,7 +229,7 @@ class PostingViewController: BaseViewController, Coordinating {
         print("number of Questions: \(postingService.numberOfQuestions)")
         
         postingService.postingQuestions.forEach {
-            print("question: \($0.question), questionType: \($0.briefQuestionType)")
+            print("question: \($0.text), questionType: \($0.briefQuestionType)")
             $0.selectableOptions.forEach {
                 print("options: \($0.value)")
             }

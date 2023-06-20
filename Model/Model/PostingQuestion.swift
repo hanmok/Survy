@@ -14,14 +14,16 @@ public class PostingQuestion {
     }
     
     public var index: Int
-    public var question: String?
+    public var text: String?
     
     public var numberOfOptions: Int {
         return selectableOptions.count
     }
     
+    public var sectionId: Int?
+    
     public var isCompleted: Bool {
-        if question != nil,
+        if text != nil,
             briefQuestionType != nil,
             let first = selectableOptions.first,
             first.value != nil || first.placeHolder != nil {
@@ -54,7 +56,7 @@ public class PostingQuestion {
     }
     
     public func updateQuestionText(questionText: String) {
-        self.question = questionText
+        self.text = questionText
     }
     
     public func addSelectableOption(selectableOption: SelectableOption) {

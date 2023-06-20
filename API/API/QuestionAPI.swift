@@ -34,7 +34,10 @@ extension QuestionAPI: BaseAPIType {
     public var parameters: [String : Any]? {
         switch self {
             case .create(let text, let sectionId, let questionTypeId, let expectedTimeInSec):
-                return ["text": text, "section_id": sectionId, "questionType_id": questionTypeId, "expectedTimeInSec": expectedTimeInSec]
+                return ["text": text,
+                        "section_id": sectionId,
+                        "questionType_id": questionTypeId,
+                        "expectedTimeInSec": expectedTimeInSec]
         }
     }
     

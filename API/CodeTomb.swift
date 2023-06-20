@@ -126,3 +126,50 @@ import Foundation
 //    }
 //    waitForExpectations(timeout: 10)
 //}
+
+
+
+
+// MARK: - Chat GPT
+// API 를 Array 요소마다 호출하기.
+
+//func performAPICall(for item: String, completion: @escaping (String?, Error?) -> Void) {
+//    // 각 아이템에 대한 API 호출을 수행하는 로직을 작성합니다.
+//    // completion 클로저를 사용하여 호출 결과를 전달합니다.
+//
+//    // 예시: 간단한 GET 요청을 수행하는 경우
+//    guard let url = URL(string: "https://api.example.com/items/\(item)") else {
+//        let error = NSError(domain: "Invalid URL", code: 0, userInfo: nil)
+//        completion(nil, error)
+//        return
+//    }
+//
+//    URLSession.shared.dataTask(with: url) { (data, response, error) in
+//        // API 요청 결과를 처리하는 로직을 작성합니다.
+//
+//        if let error = error {
+//            completion(nil, error)
+//            return
+//        }
+//
+//        if let data = data {
+//            let result = String(data: data, encoding: .utf8)
+//            completion(result, nil)
+//        }
+//    }.resume()
+//}
+//
+//let items = ["item1", "item2", "item3"]
+//
+//// 각 아이템에 대해 API 호출을 수행합니다.
+//for item in items {
+//    performAPICall(for: item) { (result, error) in
+//        if let result = result {
+//            // API 호출 결과를 처리하는 로직을 작성합니다.
+//            print("API 호출 결과: \(result)")
+//        } else if let error = error {
+//            // 에러 처리 로직을 작성합니다.
+//            print("API 호출 에러: \(error)")
+//        }
+//    }
+//}

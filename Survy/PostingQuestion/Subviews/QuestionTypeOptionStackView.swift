@@ -63,23 +63,23 @@ class QuestionTypeOptionStackView: UIStackView {
         button.addTarget(self, action: #selector(singleSelectionButtonTapped(_:)), for: .touchUpInside)
     }
     
-    
-    
     @objc func singleSelectionButtonTapped(_ sender: PostingSelectionButton) {
         if let selectedIndex = selectedIndex, sender.tag != selectedIndex {
             guard let selectedButton = questionTypeButtons.first(where: { $0.tag == selectedIndex}) else { fatalError() }
                 selectedButton.buttonSelected(false)
         }
+        
         sender.buttonSelected(true)
         selectedIndex = sender.tag
         isConditionFulfilled = true
-        guard let selectedIndex = selectedIndex,
-              let briefType = BriefQuestionType(rawValue: selectedIndex)
-        else { fatalError() }
         
+        // selectedIndex -> BriefQuestionType
+        // 0 -> 4, 1 -> 14, 2 -> 24, 3 -> 34
+        
+        guard let selectedIndex = selectedIndex else { fatalError() }
+        let briefQuestionTypeRawValue = selectedIndex * 10 + 4
+        guard let briefType = BriefQuestionType(rawValue: briefQuestionTypeRawValue) else { fatalError() }
         optionStackViewDelegate?.notifySelectionChange(to: selectedIndex)
-        
         questionOptionStackViewDelegate?.setQuestionType(briefQuestionType: briefType)
     }
 }
-

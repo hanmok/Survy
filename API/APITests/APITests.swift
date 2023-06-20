@@ -68,4 +68,52 @@ final class APITests: XCTestCase {
 
         waitForExpectations(timeout: 10)
     }
+    
+    // Done!
+    func test_postSurvey() {
+        let expectation = self.expectation(description: "post Survey")
+        let (title, participationGoal, userId) = ("something", 100, 4)
+        
+        APIService.shared.postSurvey(title: title, participationGoal: participationGoal, userId: userId) { id, string  in
+            guard let id = id else { fatalError() }
+            print("id: \(id), string: \(string)")
+            
+            // TODO: Make Section
+            
+            XCTAssertNil(id)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10)
+    }
+    
+    // TODO: Make Section
+    
+    func test_postSection() {
+        let expectation = self.expectation(description: "post section")
+        let (title, sequence, surveyId) = ("sectionTitle", 2, 4)
+        APIService.shared.postSection(title: title, sequence: sequence, surveyId: surveyId) { id, string in
+            guard let id = id else { fatalError() }
+            print("id: \(id), string: \(string)")
+            XCTAssertNil(id)
+            expectation.fulfill()
+        }
+        
+        
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_postQuestion() {
+        let expectation = self.expectation(description: "post question")
+        let (text, sectionId, questionTypeId, expectedTimeInSec) = ("Test Question Text", 34, 4, 20)
+        
+        APIService.shared.postQuestion(text: text, sectionId: sectionId, questionTypeId: questionTypeId, expectedTimeInSec: expectedTimeInSec) { questionId, string in
+            
+            guard let questionId = questionId else { fatalError() }
+            print("questionId: \(questionId), string: \(string)")
+            XCTAssertNil(questionId)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
 }

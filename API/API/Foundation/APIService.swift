@@ -23,6 +23,8 @@ public class APIService {
     private let tagProvider = MoyaProvider<TagAPI>()
     private let surveyProvider = MoyaProvider<SurveyAPI>()
     private let surveyTagProvider = MoyaProvider<SurveyTagAPI>()
+    private let sectionProvider = MoyaProvider<SectionAPI>()
+    private let questionProvider = MoyaProvider<QuestionAPI>()
 }
 
 // MARK: - Tag
@@ -48,15 +50,12 @@ extension APIService {
             
         // TODO: - StatusCode 500 이면 에러 처리.
         tagProvider.request(.create(requestingTagName)) { result in
-            
             switch result {
-                    
-            case .success(let result):
+            case .success(let response):
                     // 이게 무슨코드야? json 으로 만드는 코드.
-                    let responseDic = try! JSONSerialization.jsonObject(with: result.data, options: .allowFragments)
+                    let responseDic = try! JSONSerialization.jsonObject(with: response.data, options: .allowFragments)
                     print("someDic: \(responseDic)")
                     completion("hi")
-                    
             case .failure(let error):
                 print("error: \(error.localizedDescription)")
                 completion(nil)
@@ -73,6 +72,7 @@ extension APIService {
             switch result {
                 case .success(let response):
                     let surveysResponse = try! JSONDecoder().decode(SurveyResponse.self, from: response.data)
+                    
                     print("surveysResponse: \(surveysResponse)")
                     completion(surveysResponse.surveys)
                     
@@ -81,7 +81,58 @@ extension APIService {
             }
         }
     }
+    
+    // 테스트 반드시 해야함.
+    public func postSurvey(title: String, participationGoal: Int, userId: Int, completion: @escaping (SurveyId?, String) -> Void) {
+        surveyProvider.request(.create(title, participationGoal, userId)) { result in
+            switch result {
+                case .success(let response):
+                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
+                    let (id, message) = (postResponse.id, postResponse.message)
+                    completion(id, message)
+                    
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
 }
+
+// MARK: - Section
+
+extension APIService {
+    public func postSection(title: String, sequence: Int, surveyId: Int,  completion: @escaping (SectionId?, String) -> Void) {
+        sectionProvider.request(.create(title, sequence, surveyId)) { result in
+            switch result {
+                case .success(let response):
+                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
+                    let (id, message) = (postResponse.id, postResponse.message)
+                    completion(id, message)
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+}
+
+
+extension APIService {
+    public func postQuestion(text: String, sectionId: Int, questionTypeId: Int, expectedTimeInSec: Int, completion: @escaping (QuestionId?, String) -> Void) {
+        questionProvider.request(.create(text, sectionId, questionTypeId, expectedTimeInSec)) { result in
+            switch result {
+                case .success(let response):
+                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
+                    let (id, message) = (postResponse.id, postResponse.message)
+                    completion(id, message)
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+}
+
+
+
 
 // MARK: - SurveyTags
 
@@ -90,7 +141,6 @@ extension APIService {
         surveyTagProvider.request(.fetchAll) { result in
             switch result {
                 case .success(let response):
-//                    decoder.keyDecodingStrategy = .convertFromSnakeCase
                     let surveyTagsDic = try! JSONDecoder().decode([String: [SurveyTag]].self, from: response.data)
                     guard let surveyTags = surveyTagsDic["survey_tags"] else { completion(nil)
                         return

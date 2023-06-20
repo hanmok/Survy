@@ -8,9 +8,15 @@
 import Foundation
 
 public enum BriefQuestionType: Int {
-    case singleSelection = 0
-    case multipleSelection
-    case short
-    case essay
+    case singleSelection = 4
+    case multipleSelection = 14
+    case short = 24
+    case essay = 34
 }
 
+public enum BriefQuestionServer: Int {
+    case singleSelection = 4
+    case multipleSelection = 14
+    case short = 24
+    case essay = 34
+}
