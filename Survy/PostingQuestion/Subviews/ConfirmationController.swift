@@ -96,6 +96,18 @@ class ConfirmationController: UIViewController, Coordinating {
             guard let self = self else { fatalError() }
             guard let surveyId = surveyId else { fatalError() }
             
+            // TODO: Survey, Genre 연결
+            // TODO: Survey, UserId 연결
+            
+            let selectedGenreIds = postingService.selectedGenres.map { $0.id }
+            
+            // Survey ~ Genre
+            for genreId in selectedGenreIds {
+                APIService.shared.connectSurveyGenres(surveyId: surveyId, genreId: genreId) { result, message in
+                    guard let result = result else { fatalError() }
+                }
+            }
+            
             let testSections = [
                 Section(surveyId: surveyId, numOfQuestions: 3, sequence: 0, title: "test 1")
 //                ,Section(surveyId: surveyId, numOfQuestions: 4, sequence: 1, title: "test 2")

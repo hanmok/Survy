@@ -22,7 +22,9 @@ protocol PostingServiceType: AnyObject {
     var participationGoal: Int? { get set }
     var sections: [Section]? { get set }
     var title: String? { get set }
-    
+    var editingCellIndex: Int? { get set }
+
+    func refineSelectableOptionsOfPostingQuestions()
     func setTitle(_ title: String)
     func setParticipationGoal(participationGoal: Int)
     func setTargets(_ targets: [Target])
@@ -36,6 +38,8 @@ protocol PostingServiceType: AnyObject {
 }
 
 class PostingService: PostingServiceType {
+    
+    var editingCellIndex: Int?
     
     var title: String?
 
@@ -65,6 +69,9 @@ class PostingService: PostingServiceType {
         })
     }
     
+    func setEditingCellIndex(_ index: Int) {
+        self.editingCellIndex = index
+    }
     func setSurveyTitle(name: String) {
         self.surveyTitle = name
     }
@@ -91,6 +98,14 @@ class PostingService: PostingServiceType {
         } else {
             self.postingQuestions.append(postingQuestion)
         }
+    }
+    
+    func refineSelectableOptionsOfPostingQuestions() {
+        var postingQuestions = self.postingQuestions
+        for questionIdx in postingQuestions.indices {
+            postingQuestions[questionIdx].removeUnnecessarySelectableOptions()
+        }
+        self.postingQuestions = postingQuestions
     }
     
     func resetQuestions() {

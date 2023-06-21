@@ -9,14 +9,12 @@ import Foundation
 import Moya
 import Model
 
-public enum SurveyAPI {
-    case create(String, Int, Int) // title, participationGoal, userId
-    
-    case fetchAll
-    case fetchGenres(Int) // with survey id
+public enum UserAPI {
+//    case create(String, Int, Int) // title, participationGoal, userId
+    case connectToSurvey(UserId, SurveyId)
 }
 
-extension SurveyAPI: BaseAPIType {
+extension UserAPI: BaseAPIType {
     
     struct Super: BaseAPIType { }
     
@@ -26,37 +24,40 @@ extension SurveyAPI: BaseAPIType {
     
     public var path: String {
         switch self {
-            case .fetchGenres(let surveyId):
-                return "/surveys/\(surveyId)/genres"
+            case .connectToSurvey:
+                return "/users/posted-survey"
+//            case .fetchGenres(let surveyId):
+//                return "/surveys/\(surveyId)/genres"
             
-            default:
-                return "/surveys"
+//            default:
+//                return "/surveys"
         }
+        
     }
     
     public var method: Moya.Method {
         switch self {
-            case .fetchAll, .fetchGenres:
-                return .get
-            case .create:
+//            case .fetchAll, .fetchGenres:
+//                return .get
+//            case .create:
+//                return .post
+            case .connectToSurvey:
                 return .post
         }
     }
     
     public var parameters: [String : Any]? {
         switch self {
-            case .create(let title, let participationGoal, let userId):
-                return ["title": title, "participationGoal": participationGoal, "user_id": userId]
-            
-            default: return [:]
+            case .connectToSurvey(let userId, let surveyId):
+                return ["user_id": userId, "survey_id": surveyId]
         }
     }
     
     public var task: Moya.Task {
         guard let parameters = parameters else { return .requestPlain }
         switch self {
-            case .create :
-                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+//            case .create :
+//                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
             default:
                 return .requestParameters(parameters: parameters, encoding: parameterEncoding)
         }
@@ -64,8 +65,8 @@ extension SurveyAPI: BaseAPIType {
     
     public var parameterEncoding: ParameterEncoding {
         switch self {
-            case .create:
-                return URLEncoding.httpBody
+//            case .create:
+//                return URLEncoding.httpBody
             default:
                 return URLEncoding.queryString
         }

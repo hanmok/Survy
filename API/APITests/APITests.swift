@@ -129,4 +129,30 @@ final class APITests: XCTestCase {
         }
         waitForExpectations(timeout: 10)
     }
+    
+    func test_connectSurveyToGenres() {
+        let expectation = self.expectation(description: "post survey_genre")
+        let (surveyId, genreId) = (4, 4)
+        
+        APIService.shared.connectSurveyGenres(surveyId: surveyId, genreId: genreId) { result, message in
+            guard let result = result else { fatalError() }
+            XCTAssertNotNil(result)
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_connectUserToSurveys() {
+        let expectation = self.expectation(description: "post user_survey")
+        let (surveyId, genreId) = (4, 4)
+        
+        APIService.shared.connectSurveyGenres(surveyId: surveyId, genreId: genreId) { result, message in
+            guard let result = result else { fatalError() }
+            XCTAssertNotNil(result)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+    
 }

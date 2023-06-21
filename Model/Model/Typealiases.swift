@@ -15,3 +15,4 @@ public typealias QuestionText = String
 public typealias QuestionTypeId = Int
 public typealias SelectableOptionValue = String
 public typealias Position = Int
+public typealias UserId = Int

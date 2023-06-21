@@ -31,9 +31,11 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
+    
     private var genreDataSource: UICollectionViewDiffableDataSource<Section, Genre>!
     
     let marginSize = 12
+    
     enum Section {
         case main
     }
@@ -83,14 +85,14 @@ class PostingViewController: BaseViewController, Coordinating {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         if postingService.numberOfQuestions == 0 {
             postingService.addQuestion()
         }
         registerPostingBlockCollectionView()
         
         setupTopCollectionViews()
-        configureTopDataSource()
+        
+        configureTopDataSources()
         
         setupDelegates()
         setupLayout()
@@ -125,7 +127,13 @@ class PostingViewController: BaseViewController, Coordinating {
         selectedTargetsCollectionView.backgroundColor = .cyan
     }
     
-    private func configureTopDataSource() {
+    
+    private func configureTopDataSources() {
+        configureGenreDataSource()
+        configureTargetDataSource()
+    }
+    
+    private func configureTargetDataSource() {
         let targetCellRegistration = UICollectionView.CellRegistration<TargetLabelCollectionViewCell, Target> {
             (cell, indexPath, target) in
             cell.text = target.name
@@ -135,7 +143,9 @@ class PostingViewController: BaseViewController, Coordinating {
             (collectionView: UICollectionView, indexPath: IndexPath, identifier: Target) -> UICollectionViewCell? in
              return collectionView.dequeueConfiguredReusableCell(using: targetCellRegistration, for: indexPath, item: identifier)
         }
-        
+    }
+    
+    private func configureGenreDataSource() {
         let genreCellRegistration = UICollectionView.CellRegistration<GenreLabelCollectionViewCell, Genre> {
             (cell, indexPath, genre) in
             cell.text = genre.name
@@ -147,6 +157,7 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
+    /// Update genre, target UIs
     override func updateMyUI() {
         
         if postingService.selectedGenres != currentGenres {
@@ -164,6 +175,7 @@ class PostingViewController: BaseViewController, Coordinating {
             targetSnapshot.appendItems(currentTargets)
             self.targetDataSource.apply(targetSnapshot, animatingDifferences: true)
         }
+        
         checkIfConditionSatisfied()
     }
     
@@ -231,8 +243,19 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     @objc private func dismissKeyboard() {
+        
         UserDefaults.standard.isAddingSelectableOption = false
+        
         view.dismissKeyboard()
+
+        postingService.refineSelectableOptionsOfPostingQuestions()
+        
+        DispatchQueue.main.async {
+            self.postingBlockCollectionView.reloadData()
+        }
+        
+//         필요 없는 SelectableOption 지우기!
+//        postingService 업데이트 후 configure ?
     }
     
     @objc func targetTapped(_ sender: UIButton) {
@@ -317,7 +340,6 @@ class PostingViewController: BaseViewController, Coordinating {
         }
         
         targetButton.snp.makeConstraints { make in
-//            make.top.equalTo(titleTextField.snp.bottom).offset(20)
             make.top.equalTo(titleTextField.snp.bottom).offset(30)
             make.leading.equalToSuperview().inset(20)
             make.height.equalTo(26)
@@ -514,19 +536,27 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
         // TODO: Update PostingQuestion
     }
     
-    func updateUI(cell: PostingBlockCollectionViewCell, cellIndex: Int, postingQuestion: PostingQuestion) {
+    // FIXME: 여깄다!!! 0621,
+//    func updateUI(cell: PostingBlockCollectionViewCell, cellIndex: Int, postingQuestion: PostingQuestion) {
+    
+    func updateUI(cellIndex: Int, postingQuestion: PostingQuestion) {
         
+        // cell 필요 없는거 아니야 ? 맞아.
         guard let correspondingCellHeight = questionCellHeights.first(where: { $0.index == cellIndex }) else { fatalError() }
         
-        questionCellHeights.remove(correspondingCellHeight)
-        let numberOfSelectableOptions = postingQuestion.numberOfOptions
+        questionCellHeights.remove(correspondingCellHeight) // 뭐지? 지우는게 뭔가 있네?
 
-        let newCellHeight = CellHeight(index: cellIndex, height: defaultCellHeight + CGFloat(numberOfSelectableOptions) * self.selectableOptionHeight)
+        let numberOfSelectableOptions = postingQuestion.numberOfOptions
+        
+        let newCellHeight = CellHeight(
+            index: cellIndex,
+            height: defaultCellHeight + CGFloat(numberOfSelectableOptions) * self.selectableOptionHeight)
         
         questionCellHeights.insert(newCellHeight)
         
         postingBlockCollectionView.reloadItems(at: [IndexPath(row: cellIndex, section: 0)])
     }
+    
     /// append 기능도 수행
     func setPostingQuestionToIndex(postingQuestion: PostingQuestion, index: Int) {
         print("setPostingQuestionToIndex called, index: \(index)")

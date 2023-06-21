@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		9A4D5C612A41A41500980937 /* SelectableOptionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4D5C602A41A41500980937 /* SelectableOptionAPI.swift */; };
+		9A4D5C632A41DC6B00980937 /* UserAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A4D5C622A41DC6B00980937 /* UserAPI.swift */; };
 		9A6BC78C2A39B5DF009CC23B /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC78B2A39B5DF009CC23B /* APIError.swift */; };
 		9A6BC7902A39C96E009CC23B /* SurveyTagAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */; };
 		9A6BC7922A39CA26009CC23B /* CodeTomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A6BC7912A39CA26009CC23B /* CodeTomb.swift */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		9A4D5C602A41A41500980937 /* SelectableOptionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectableOptionAPI.swift; sourceTree = "<group>"; };
+		9A4D5C622A41DC6B00980937 /* UserAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAPI.swift; sourceTree = "<group>"; };
 		9A6BC78B2A39B5DF009CC23B /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyTagAPI.swift; sourceTree = "<group>"; };
 		9A6BC7912A39CA26009CC23B /* CodeTomb.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeTomb.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 				9AD2BC412A3C3DE6007690B7 /* SectionAPI.swift */,
 				9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */,
 				9A6BC78B2A39B5DF009CC23B /* APIError.swift */,
+				9A4D5C622A41DC6B00980937 /* UserAPI.swift */,
 				9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */,
 				9A4D5C602A41A41500980937 /* SelectableOptionAPI.swift */,
 				9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */,
@@ -281,6 +284,7 @@
 				9ACCC75E2A21F1B1006AE8CE /* TagAPI.swift in Sources */,
 				9ACCC7452A20CA6F006AE8CE /* APIService.swift in Sources */,
 				9A6BC78C2A39B5DF009CC23B /* APIError.swift in Sources */,
+				9A4D5C632A41DC6B00980937 /* UserAPI.swift in Sources */,
 				9AD2BC442A3C3E61007690B7 /* QuestionAPI.swift in Sources */,
 				9A4D5C612A41A41500980937 /* SelectableOptionAPI.swift in Sources */,
 				9A6BC7922A39CA26009CC23B /* CodeTomb.swift in Sources */,

@@ -25,7 +25,6 @@ class GenreSelectionController: UIViewController, Coordinating {
         case main
     }
     
-    
     var coordinator: Coordinator?
     
     var postingService: PostingServiceType

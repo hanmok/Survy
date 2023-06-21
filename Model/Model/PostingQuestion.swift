@@ -25,6 +25,17 @@ public class PostingQuestion {
         self.sectionId = sectionId
     }
     
+    public func removeUnnecessarySelectableOptions() {
+
+        let numOfSelectableOptions = selectableOptions.count
+        
+        for idx in 0 ..< numOfSelectableOptions {
+            if selectableOptions[numOfSelectableOptions - idx - 1].value == nil {
+                selectableOptions.remove(at: numOfSelectableOptions - idx - 1)
+            }
+        }
+    }
+    
     public var sectionId: Int?
     
     public var isCompleted: Bool {

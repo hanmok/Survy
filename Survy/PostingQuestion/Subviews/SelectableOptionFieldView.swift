@@ -8,8 +8,6 @@
 import UIKit
 import Model
 
-
-
 class SelectableOptionFieldView: UIView {
     
     var briefQuestionType: BriefQuestionType
@@ -24,7 +22,8 @@ class SelectableOptionFieldView: UIView {
         selectableOptionTextField.delegate = self
     }
     
-    init(briefQuestionType: BriefQuestionType, selectableOption: SelectableOption) {
+    init(briefQuestionType: BriefQuestionType,
+         selectableOption: SelectableOption) {
         self.briefQuestionType = briefQuestionType
         self.selectableOption = selectableOption
         
@@ -105,7 +104,6 @@ extension SelectableOptionFieldView: UITextFieldDelegate {
         guard let text = textField.text else { return true }
         print("dismisskeyboard flag 1")
         selectableOptionFieldDelegate?.selectableOptionFieldReturnTapped(text, self.selectableOption.position)
-        
         return true
     }
 }

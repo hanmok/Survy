@@ -49,8 +49,6 @@ class QuestionTypeOptionStackView: UIStackView {
     
     public func updateSelectedOption(briefType: BriefQuestionType) {
         
-//        guard let selectedButton = questionTypeButtons.first(where: {$0.tag * 10 + 4 == briefType.rawValue }) else { return }
-        
         guard let selectedButton = questionTypeButtons.first(where: {convertTagIntoRawValue($0.tag) == briefType.rawValue }) else { return }
         print("selectedButtonTag: \(selectedButton.tag), briefTypeRawValue: \(briefType.rawValue)")
         selectedButton.backgroundColor = UIColor.deeperMainColor

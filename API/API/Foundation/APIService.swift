@@ -26,6 +26,7 @@ public class APIService {
     private let sectionProvider = MoyaProvider<SectionAPI>()
     private let questionProvider = MoyaProvider<QuestionAPI>()
     private let selectableProvider = MoyaProvider<SelectableOptionAPI>()
+    private let userProvider = MoyaProvider<UserAPI>()
 }
 
 // MARK: - Genre
@@ -166,6 +167,32 @@ extension APIService {
                     completion(surveyGenres)
                 case .failure(let moyaError):
                     completion(nil)
+            }
+        }
+    }
+    
+    public func connectSurveyGenres(surveyId: SurveyId,
+                                    genreId: GenreId,
+                                    completion: @escaping (Void?, String) -> Void) {
+        surveyGenreProvider.request(.connectToGenre(surveyId, genreId)) { result in
+            switch result {
+                case .success(let response):
+                    completion((), "success")
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+}
+
+extension APIService {
+    public func postSurveyUser(userId: UserId, surveyId: SurveyId, completion: @escaping (Void?, String) -> Void) {
+        userProvider.request(.connectToSurvey(userId, surveyId)) { result in
+            switch result {
+                case .success(let response):
+                    completion((), "success")
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
             }
         }
     }

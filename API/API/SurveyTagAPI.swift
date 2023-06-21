@@ -11,6 +11,7 @@ import Model
 
 public enum SurveyGenreAPI {
     case fetchAll
+    case connectToGenre(SurveyId, GenreId)
 }
 
 extension SurveyGenreAPI: BaseAPIType {
@@ -24,6 +25,8 @@ extension SurveyGenreAPI: BaseAPIType {
         switch self {
             case .fetchAll:
                 return "/survey_genres"
+            case .connectToGenre:
+                return "/surveys/genres"
         }
     }
     
@@ -31,6 +34,8 @@ extension SurveyGenreAPI: BaseAPIType {
         switch self {
             case .fetchAll:
                 return .get
+            case .connectToGenre:
+                return .post
         }
     }
     
@@ -38,6 +43,8 @@ extension SurveyGenreAPI: BaseAPIType {
         switch self {
             case .fetchAll:
                 return [:]
+            case .connectToGenre(let surveyId, let genreId):
+                return ["survey_id": surveyId, "genre_id": genreId]
         }
     }
     
@@ -46,23 +53,17 @@ extension SurveyGenreAPI: BaseAPIType {
         switch self {
             case .fetchAll:
                 return .requestParameters(parameters: parameters, encoding: parameterEncoding)
+            case .connectToGenre:
+                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
         }
-//        switch self {
-//            case .create:
-//                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
-//            default:
-//                return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-//        }
     }
     
     public var parameterEncoding: ParameterEncoding {
         switch self {
+            case .connectToGenre:
+                return URLEncoding.httpBody
             case .fetchAll:
                 return URLEncoding.queryString
-//            case .create:
-//                return URLEncoding.httpBody
-//            default:
-//                return URLEncoding.queryString
         }
     }
 }
