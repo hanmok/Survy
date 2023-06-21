@@ -1,5 +1,5 @@
 //
-//  CategorySearchCell.swift
+//  GenreSearchCell.swift
 //  Survy
 //
 //  Created by Mac mini on 2023/05/14.
@@ -9,21 +9,21 @@ import UIKit
 import SnapKit
 import Model
 
-protocol SelectableCategoryCellDelegate: AnyObject {
-    func selectableCategoryCellTapped(_ cell: SelectableCategoryCell)
+protocol SelectableGenreCellDelegate: AnyObject {
+    func selectableGenreCellTapped(_ cell: SelectableGenreCell)
 }
 
-class SelectableCategoryCell: UICollectionViewCell {
+class SelectableGenreCell: UICollectionViewCell {
     
-    var categoryTag: Tag? {
+    var genreGenre: Genre? {
         didSet {
             configure()
         }
     }
     
-    var isTagSelected: Bool {
+    var isGenreSelected: Bool {
         didSet {
-            self.toggleSelection(isTagSelected)
+            self.toggleSelection(isGenreSelected)
         }
     }
     
@@ -33,7 +33,7 @@ class SelectableCategoryCell: UICollectionViewCell {
     }
     
     override init(frame: CGRect) {
-        self.isTagSelected = false
+        self.isGenreSelected = false
         super.init(frame: frame)
         setupLayout()
         configure()
@@ -44,7 +44,7 @@ class SelectableCategoryCell: UICollectionViewCell {
         return button
     }()
     
-    weak var delegate: SelectableCategoryCellDelegate?
+    weak var delegate: SelectableGenreCellDelegate?
     
     private func setupLayout() {
         contentView.addSubview(label)
@@ -61,16 +61,17 @@ class SelectableCategoryCell: UICollectionViewCell {
         button.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+        
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     @objc func buttonTapped() {
-        delegate?.selectableCategoryCellTapped(self)
+        delegate?.selectableGenreCellTapped(self)
     }
     
     private func configure() {
-        guard let categoryTag = categoryTag else { return }
-        label.attributedText = NSAttributedString(string: categoryTag.name, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
+        guard let genreGenre = genreGenre else { return }
+        label.attributedText = NSAttributedString(string: genreGenre.name, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
     }
     
     let label = UILabel()

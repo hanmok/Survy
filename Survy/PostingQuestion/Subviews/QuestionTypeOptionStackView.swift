@@ -9,7 +9,7 @@ import UIKit
 import Model
 
 protocol QuestionTypeOptionStackViewDelegate: AnyObject {
-    func changeQuestionType(briefQuestionType: BriefQuestionType)
+    func setQuestionType(briefQuestionType: BriefQuestionType)
 }
 
 class QuestionTypeOptionStackView: UIStackView {
@@ -20,6 +20,8 @@ class QuestionTypeOptionStackView: UIStackView {
     public var selectedIndex: Int?
     
     var questionTypeButtons: [SelectionButton] = []
+    
+    public var numberOfSelctableOptions: Int?
     
     public var isConditionFulfilled: Bool = false {
         didSet {
@@ -41,14 +43,19 @@ class QuestionTypeOptionStackView: UIStackView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func convertTagIntoRawValue(_ tag: Int) -> Int {
+        return tag * 10 + 4
+    }
+    
     public func updateSelectedOption(briefType: BriefQuestionType) {
-        guard let selectedButton = questionTypeButtons.first(where: {$0.tag == briefType.rawValue }) else { return }
+        
+        guard let selectedButton = questionTypeButtons.first(where: {convertTagIntoRawValue($0.tag) == briefType.rawValue }) else { return }
         print("selectedButtonTag: \(selectedButton.tag), briefTypeRawValue: \(briefType.rawValue)")
         selectedButton.backgroundColor = UIColor.deeperMainColor
         selectedButton.setTitleColor(.white, for: .normal)
-        // TODO: 다른 버튼들 색상 원상태로.
         
-        let otherButtons = questionTypeButtons.filter { $0.tag != briefType.rawValue }
+        let otherButtons = questionTypeButtons.filter { convertTagIntoRawValue($0.tag) != briefType.rawValue }
+        
         otherButtons.forEach {
             $0.backgroundColor = UIColor.blurredMainColor
             $0.setTitleColor(.blurredTextColor, for: .normal)
@@ -61,32 +68,23 @@ class QuestionTypeOptionStackView: UIStackView {
         button.addTarget(self, action: #selector(singleSelectionButtonTapped(_:)), for: .touchUpInside)
     }
     
-    public let numberOfSelectableOptionButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.white, for: .normal)
-        button.setTitle("옵션 수", for: .normal)
-        button.backgroundColor = .magenta
-        button.layer.cornerRadius = 6
-        return button
-    }()
-    
-    public var numberOfSelctableOptions: Int?
-    
     @objc func singleSelectionButtonTapped(_ sender: PostingSelectionButton) {
         if let selectedIndex = selectedIndex, sender.tag != selectedIndex {
             guard let selectedButton = questionTypeButtons.first(where: { $0.tag == selectedIndex}) else { fatalError() }
                 selectedButton.buttonSelected(false)
         }
+        
         sender.buttonSelected(true)
         selectedIndex = sender.tag
         isConditionFulfilled = true
-        guard let selectedIndex = selectedIndex,
-              let briefType = BriefQuestionType(rawValue: selectedIndex)
-        else { fatalError() }
         
+        // selectedIndex -> BriefQuestionType
+        // 0 -> 4, 1 -> 14, 2 -> 24, 3 -> 34
+        
+        guard let selectedIndex = selectedIndex else { fatalError() }
+        let briefQuestionTypeRawValue = selectedIndex * 10 + 4
+        guard let briefType = BriefQuestionType(rawValue: briefQuestionTypeRawValue) else { fatalError() }
         optionStackViewDelegate?.notifySelectionChange(to: selectedIndex)
-        
-        questionOptionStackViewDelegate?.changeQuestionType(briefQuestionType: briefType)
+        questionOptionStackViewDelegate?.setQuestionType(briefQuestionType: briefType)
     }
 }
-

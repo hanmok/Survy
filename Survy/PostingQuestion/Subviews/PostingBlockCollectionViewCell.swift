@@ -12,7 +12,9 @@ import Model
 protocol PostingBlockCollectionViewCellDelegate {
     func updateUI(cellIndex: Int, postingQuestion: PostingQuestion)
     func setPostingQuestionToIndex(postingQuestion: PostingQuestion, index: Int)
+    func updateQuestionText(cellIndex: Int, questionText: String, postingQuestion: PostingQuestion)
 }
+
 
 class PostingBlockCollectionViewCell: UICollectionViewCell {
     
@@ -28,14 +30,19 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    var postingBlockCollectionViewDelegate: PostingBlockCollectionViewCellDelegate?
+    var postingBlockCollectionViewCellDelegate: PostingBlockCollectionViewCellDelegate?
         
     public var postingQuestion: PostingQuestion? {
         didSet {
             guard let postingQuestion = postingQuestion else { fatalError() }
             initializeStates()
             configure(with: postingQuestion)
+            updateHeight()
         }
+    }
+    
+    public var briefQuestionType: BriefQuestionType {
+        return postingQuestion?.briefQuestionType ?? .multipleSelection
     }
     
     private func initializeStates() {
@@ -46,30 +53,26 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         selectableOptionStackView = SelectableOptionStackView()
     }
     
-    public var briefQuestionType: BriefQuestionType {
-        return postingQuestion?.briefQuestionType ?? .multipleSelection // 이게 문제가 아님
-    }
-
     private func configure(with postingQuestion: PostingQuestion) {
-        
-        questionTextField.text = postingQuestion.question
+        // 누른 후 Return 시 Trigger 됨
+        questionTextField.text = postingQuestion.questionText // 왜 nil 이죠?
         if questionTextField.text == "" { questionTextField.text = "질문을 입력해주세요." }
-        questionTextField.textColor = postingQuestion.question == "질문을 입력해주세요." ? .lightGray : .black
+        questionTextField.textColor = questionTextField.text == "질문을 입력해주세요." ? .lightGray : .black
         
-        questionTypeOptionStackView.updateSelectedOption(briefType: postingQuestion.briefQuestionType)
+        if let briefQuestionType = postingQuestion.briefQuestionType {
+            questionTypeOptionStackView.updateSelectedOption(briefType: briefQuestionType)
+        }
         
         indexLabel.text = "\((postingQuestion.index + 1))."
         
-        let numberOfOptionsText = "\(postingQuestion.numberOfOptions) 옵션"
-        
-        questionTypeOptionStackView.numberOfSelectableOptionButton.setTitle(numberOfOptionsText, for: .normal)
-        
-        print("numberOfSelectableOptions: \(postingQuestion.selectableOptions.count)")
-        
         postingQuestion.selectableOptions.forEach {
-            let selectableOptionFieldView = SelectableOptionFieldView(briefQuestionType: postingQuestion.briefQuestionType, selectableOption: $0)
-            selectableOptionFieldView.selectableOptionFieldDelegate = self
-            selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
+            if let briefQuestionType = postingQuestion.briefQuestionType {
+                let selectableOptionFieldView = SelectableOptionFieldView(
+                    briefQuestionType: briefQuestionType,
+                    selectableOption: $0)
+                selectableOptionFieldView.selectableOptionFieldDelegate = self
+                selectableOptionStackView.addSelectableOptionView(selectableOptionFieldView)
+            }
         }
         
         addSubview(selectableOptionStackView)
@@ -77,10 +80,31 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(questionTypeOptionStackView.snp.bottom).offset(20)
         }
+        
+        if postingQuestion.isCompleted {
+            layer.borderColor = UIColor.deeperMainColor.cgColor
+            layer.borderWidth = 2
+        } else {
+            layer.borderColor = UIColor.clear.cgColor
+            layer.borderWidth = 0
+        }
+        
+        let keyboardShowingUpDelay = 0.5
+        
+        if UserDefaults.standard.isAddingSelectableOption && [BriefQuestionType.singleSelection, BriefQuestionType.multipleSelection].contains(postingQuestion.briefQuestionType) {
+            Timer.scheduledTimer(withTimeInterval: keyboardShowingUpDelay, repeats: false) { _ in
+                if let last = self.selectableOptionStackView.selectableOptionFieldViews.last?.selectableOptionTextField {
+                    last.becomeFirstResponder()
+                }
+            }
+        }  else {
+            UserDefaults.standard.isAddingSelectableOption = false
+        }
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        print("postingBlockcell initialized")
         setupDelegate()
         setupLayout()
     }
@@ -97,6 +121,46 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     
     @objc func otherViewTapped() {
         dismissKeyboard()
+        // 이거 호출 안돼요. 네??
+//        guard let cellIndex = cellIndex, let postingQuestion = postingQuestion else { return }
+        
+//        postingBlockCollectionViewCellDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
+        
+        // 현재 Cell 이 어디야? 필요 없어.
+        guard let postingQuestion = postingQuestion,
+              let briefQuestionType = postingQuestion.briefQuestionType else { fatalError() }
+        
+        setQuestionType(briefQuestionType: briefQuestionType)
+        
+//        updateHeight()
+    }
+    
+    public func updateHeight() {
+        guard let cellIndex = cellIndex else { fatalError() }
+
+        // PostingQuestion 할당된게 있는지 먼저 확인
+        
+        guard let postingQuestion = postingQuestion else { fatalError() }
+            
+            postingQuestion.modifyQuestionType(briefQuestionType: briefQuestionType)
+            
+            // 여기에서, 각 BriefQuestionType case에 따라 별로 구분해줘야 할 것 같아.
+            
+            if postingQuestion.selectableOptions.count == 0 {
+                postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
+            } else {
+                if briefQuestionType == .essay || briefQuestionType == .short {
+                    postingQuestion.removeSelectableOptions()
+                    postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
+                }
+            }
+        
+            if let questionText = questionTextField.text {
+                postingBlockCollectionViewCellDelegate?.updateQuestionText(cellIndex: cellIndex, questionText: questionText, postingQuestion: postingQuestion)
+            }
+        
+            postingBlockCollectionViewCellDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
+            postingBlockCollectionViewCellDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
     }
     
     private func setupLayout() {
@@ -109,8 +173,8 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
             addSubview($0)
         }
         
-        [questionTypeButton1, questionTypeButton2, questionTypeButton3, questionTypeButton4].forEach { self.questionTypeOptionStackView.addPostingSingleSelectionButton($0)}
-        
+        [questionTypeButton1, questionTypeButton2, questionTypeButton3, questionTypeButton4].forEach { self.questionTypeOptionStackView.addPostingSingleSelectionButton($0)
+        }
         
         indexLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
@@ -147,7 +211,6 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     public var questionTextField: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        
         textView.text = "질문을 입력해주세요."
         textView.textColor = UIColor.lightGray
         textView.tag = -1
@@ -159,28 +222,27 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         return textView
     }()
     
-    
-    private var questionTypeButton1: PostingSelectionButton = {
+    private let questionTypeButton1: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "단일 선택", tag: 0)
         return singleSelection
     }()
     
-    private var questionTypeButton2: PostingSelectionButton = {
+    private let questionTypeButton2: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "다중 선택", tag: 1)
         return singleSelection
     }()
     
-    private var questionTypeButton3: PostingSelectionButton = {
+    private let questionTypeButton3: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "단답형", tag: 2)
         return singleSelection
     }()
     
-    private var questionTypeButton4: PostingSelectionButton = {
+    private let questionTypeButton4: PostingSelectionButton = {
         let singleSelection = PostingSelectionButton(text: "서술형", tag: 3)
         return singleSelection
     }()
     
-    public var questionTypeOptionStackView: QuestionTypeOptionStackView = {
+    public let questionTypeOptionStackView: QuestionTypeOptionStackView = {
         let postingOptionStackView = QuestionTypeOptionStackView()
         return postingOptionStackView
     }()
@@ -198,45 +260,49 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
 extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
     // 바꾸면 여기 호출, 처음에도 여기 호출
     func notifySelectionChange(to index: Int) {
-
+//        뭐지 ??
     }
     
     // configure 시, notifyConditionChanged 에서 한번씩 호출.
-    private func updateWithQuestionType(tag: Int) {
-        notifySelectionChange(to: tag)
+    
+    private func updateWithQuestionType(genre: Int) { // ??
+        notifySelectionChange(to: genre)
     }
     
     // 한번만 호출
     func notifyConditionChange(to condition: Bool) {
         guard let selectedIndex = questionTypeOptionStackView.selectedIndex, condition else { return }
-        updateWithQuestionType(tag: selectedIndex)
+        updateWithQuestionType(genre: selectedIndex)
     }
 }
 
 extension PostingBlockCollectionViewCell: UITextFieldDelegate {
     // Question 에서 return 눌릴 때 호출
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        UserDefaults.standard.isAddingSelectableOption = false
         guard let text = textField.text else { return true }
-//        guard let postingQuestion = postingQuestion else { fatalError() }
         return dismissKeyboard()
     }
 }
 
 extension PostingBlockCollectionViewCell: SelectableOptionFieldDelegate {
+    
     // TODO: 다음 selectableOption 값으로 이동
     func selectableOptionFieldReturnTapped(_ text: String, _ position: Int) {
+        guard let postingQuestion = postingQuestion,
+              let cellIndex = cellIndex else { fatalError() }
         
-        guard let postingQuestion = postingQuestion, let cellIndex = cellIndex else { fatalError() }
         let selectableOption = SelectableOption(position: position, value: text)
-        
         postingQuestion.modifySelectableOption(index: position, selectableOption: selectableOption)
         
-        postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: position + 1))
+        if [BriefQuestionType.singleSelection, BriefQuestionType.multipleSelection].contains(postingQuestion.briefQuestionType) {
+            postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: position + 1))
+        }
         
-        postingBlockCollectionViewDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
+        // 이거 호출되면서 TextField 가 내려감.
+        postingBlockCollectionViewCellDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
     }
 }
-
 
 extension PostingBlockCollectionViewCell: UITextViewDelegate {
     func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
@@ -246,11 +312,16 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         if text == "\n" {
+            print("return tapped!")
+            // TODO: Update PostingQuestion
+            guard let cellIndex = cellIndex, let questionText = textView.text, let postingQuestion = postingQuestion else { return false }
+            postingBlockCollectionViewCellDelegate?.updateQuestionText(cellIndex: cellIndex, questionText: questionText, postingQuestion: postingQuestion)
             textView.resignFirstResponder()
             return false
         }
         return true
     }
+    
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
@@ -261,32 +332,39 @@ extension PostingBlockCollectionViewCell: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
             textView.text = "질문을 입력해주세요."
-            textView.textColor = UIColor.lightGray
+            textView.textColor = UIColor(white: 0.7, alpha: 1)
         }
     }
 }
 
 extension PostingBlockCollectionViewCell: QuestionTypeOptionStackViewDelegate {
-    // change or set initially, 두번째로 호출
-    func changeQuestionType(briefQuestionType: BriefQuestionType) {
-
+    
+    func setQuestionType(briefQuestionType: BriefQuestionType) {
+        
         guard let cellIndex = cellIndex else { fatalError() }
 
-        if let postingQuestion = postingQuestion {
+        // PostingQuestion 할당된게 있는지 먼저 확인
+        
+        guard let postingQuestion = postingQuestion else { fatalError() }
+            
             postingQuestion.modifyQuestionType(briefQuestionType: briefQuestionType)
+            
+            // 여기에서, 각 BriefQuestionType case에 따라 별로 구분해줘야 할 것 같아.
+            
             if postingQuestion.selectableOptions.count == 0 {
                 postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
+            } else {
+                if briefQuestionType == .essay || briefQuestionType == .short {
+                    postingQuestion.removeSelectableOptions()
+                    postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
+                }
             }
-            
-            postingBlockCollectionViewDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
-            postingBlockCollectionViewDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
-            
-        } else {
-            let postingQuestion = PostingQuestion(index: cellIndex, question: questionTextField.text, questionType: briefQuestionType)
-            postingQuestion.addSelectableOption(selectableOption: SelectableOption(position: 0))
-            
-            postingBlockCollectionViewDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
-            postingBlockCollectionViewDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
-        }
+        
+            if let questionText = questionTextField.text {
+                postingBlockCollectionViewCellDelegate?.updateQuestionText(cellIndex: cellIndex, questionText: questionText, postingQuestion: postingQuestion)
+            }
+        
+            postingBlockCollectionViewCellDelegate?.setPostingQuestionToIndex(postingQuestion: postingQuestion, index: cellIndex)
+            postingBlockCollectionViewCellDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
     }
 }

@@ -49,14 +49,14 @@ extension UIView {
 }
 
 extension UIView {
-    public func addImageToCenter(image: UIImage) {
+    public func addImageToCenter(image: UIImage, dividingRatio: CGFloat = 1.2) {
         let imageView = UIImageView()
         imageView.image = image
         imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
         imageView.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.height.width.equalToSuperview().dividedBy(1.2)
+            make.height.width.equalToSuperview().dividedBy(dividingRatio)
         }
     }
 }

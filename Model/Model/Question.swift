@@ -17,6 +17,7 @@ public struct Question {
         self.expectedTimeInSec = expectedTimeInSec
         self.selectableOptions = selectableOptions
         self.correctAnswer = correctAnswer
+        self.parentSection = nil
     }
     
     public let id: Int
@@ -27,4 +28,5 @@ public struct Question {
     public let expectedTimeInSec: Int
     public let selectableOptions: [SelectableOption]
     public let correctAnswer: Int? // references selectableOption
+    public let parentSection: Section?
 }

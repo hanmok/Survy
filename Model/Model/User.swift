@@ -29,5 +29,5 @@ public struct User {
     public let age: Int
     public let isMale: Bool
     public let nickname: String
-    public let categories: [String] = []
+    public let genres: [String] = []
 }

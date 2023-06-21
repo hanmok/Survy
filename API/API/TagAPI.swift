@@ -1,5 +1,5 @@
 //
-//  Tag+Moya.swift
+//  Genre+Moya.swift
 //  API
 //
 //  Created by Mac mini on 2023/05/27.
@@ -9,14 +9,14 @@ import Foundation
 import Moya
 import Model
 
-public enum TagAPI  {
+public enum GenreAPI  {
     case fetchAll
     case fetchWith(Int)
     case create(String)
 }
 
 
-extension TagAPI: BaseAPIType {
+extension GenreAPI: BaseAPIType {
 
     struct Super: BaseAPIType {}
     
@@ -27,9 +27,9 @@ extension TagAPI: BaseAPIType {
     public var path: String {
         switch self {
             case .fetchAll, .create:
-                return "/tags"
+                return "/genres"
             case .fetchWith(let id):
-                return "/tags/\(id)"
+                return "/genres/\(id)"
         }
     }
 
@@ -53,8 +53,6 @@ extension TagAPI: BaseAPIType {
     // 음.. body 와 parameter 를 어떻게 구분하지 ?? 나중에 필요할 때 혀
     public var task: Moya.Task { // body part
         guard let parameters = parameters else { return .requestPlain }
-//        return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-//        return .
         
         switch self {
             case .create:

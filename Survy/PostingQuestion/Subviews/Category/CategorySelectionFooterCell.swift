@@ -8,21 +8,18 @@
 import UIKit
 import SnapKit
 
-protocol CategorySelectionFooterCellDelegate: AnyObject {
-    func categorySelectionFooterCellTapped()
+protocol GenreSelectionFooterCellDelegate: AnyObject {
+    func genreSelectionFooterCellTapped()
 }
 
-class CategorySelectionFooterCell: UICollectionReusableView {
+class GenreSelectionFooterCell: UICollectionReusableView {
     
-    weak var footerCellDelegate: CategorySelectionFooterCellDelegate?
+    weak var footerCellDelegate: GenreSelectionFooterCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        configureLayout()
         setupLayout()
         setTargets()
-        configureLayout()
     }
     
     required init?(coder: NSCoder) {
@@ -30,30 +27,28 @@ class CategorySelectionFooterCell: UICollectionReusableView {
     }
     
     private func setupLayout() {
-        applyCornerRadius(on: .all, radius: 10)
-        addSubview(button)
-        button.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        addSubview(addingButton)
+        addingButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+            make.width.height.equalTo(CGFloat.genreAdddingButton)
+            make.bottom.equalToSuperview()
         }
     }
     
-    private func configureLayout() {
-
-    }
-    
     private func setTargets() {
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        addingButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
     }
     
     @objc func buttonTapped() {
-        footerCellDelegate?.categorySelectionFooterCellTapped()
+        footerCellDelegate?.genreSelectionFooterCellTapped()
     }
     
-    let button: UIButton = {
+    let addingButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .magenta
-        button.setTitle("추가요청하기", for: .normal)
-        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor.deeperMainColor
+        let plusImage = UIImage.plus.withTintColor(.white, renderingMode: .alwaysOriginal)
+        button.addImageToCenter(image: plusImage, dividingRatio: 1.6)
+        button.applyCornerRadius(on: .all, radius: CGFloat.genreAdddingButton / 2)
         return button
     }()
 }

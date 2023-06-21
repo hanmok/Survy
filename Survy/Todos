@@ -2,7 +2,7 @@
 
 1. Button 들에 padding 값 주기.
 
-2. categories (개인기업, Table 사이) 넣어주기
+2. genres (개인기업, Table 사이) 넣어주기
 
 3. 개인, 기업 변경시 바 애니메이션으로 움직이도록 하기.
 
@@ -23,3 +23,10 @@ CustomNavBar 에 Gradient 는 나중에 만들기 ^^..
 선택항목 바꾸었을 때 처리
 단답형, 서술형 처리
 
+
+
+Return 버튼 통해서 Question 완성하면, 해당 selectableOption 은 추가되지 않은 상태가 됨. (value 가 정해지지 않음)
+
+음.. 이것부터 처리하자.
+
+SelectableOption 처리할 때마다, QuestionType 버튼 색상이 자꾸 토글됨 ㅋㅋㅋㅋㅋㅋ

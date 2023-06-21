@@ -1,5 +1,5 @@
 //
-//  CategorySearchCell.swift
+//  GenreSearchCell.swift
 //  Survy
 //
 //  Created by Mac mini on 2023/05/14.
@@ -9,13 +9,13 @@ import UIKit
 import SnapKit
 import Model
 
-protocol SelectedCategoryCellDelegate: AnyObject {
-    func selectedCategoryCellTapped(_ cell: SelectedCategoryCell)
+protocol SelectedGenreCellDelegate: AnyObject {
+    func selectedGenreCellTapped(_ cell: SelectedGenreCell)
 }
 
-class SelectedCategoryCell: UICollectionViewCell {
+class SelectedGenreCell: UICollectionViewCell {
     
-    var categoryTag: Tag? {
+    var genreGenre: Genre? {
         didSet {
             configure()
         }
@@ -32,7 +32,7 @@ class SelectedCategoryCell: UICollectionViewCell {
         return button
     }()
     
-    weak var delegate: SelectedCategoryCellDelegate?
+    weak var delegate: SelectedGenreCellDelegate?
     
     private func setupLayout() {
         contentView.addSubview(label)
@@ -53,12 +53,12 @@ class SelectedCategoryCell: UICollectionViewCell {
     }
     
     @objc func buttonTapped() {
-        delegate?.selectedCategoryCellTapped(self)
+        delegate?.selectedGenreCellTapped(self)
     }
     
     private func configure() {
-        guard let categoryTag = categoryTag else { return }
-        label.attributedText = NSAttributedString(string: categoryTag.name, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
+        guard let genreGenre = genreGenre else { return }
+        label.attributedText = NSAttributedString(string: genreGenre.name, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
     }
     
     let label = UILabel()

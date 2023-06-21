@@ -26,3 +26,13 @@ extension String {
         return Set(intArr)
     }
 }
+
+extension String {
+    public func getLastCharacter() -> String? {
+        guard self.count > 1 else { return nil }
+        let endIndex = self.endIndex
+        let lastIndex = self.index(endIndex, offsetBy: -1)
+        let character = String(self[lastIndex])
+        return character
+    }
+}

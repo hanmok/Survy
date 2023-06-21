@@ -5,7 +5,7 @@ print(greeting)
 
 func apiCall(){
 //    guard let url = URL(string: "https://jsonplaceholder.typicode.com/posts") else { return }
-    guard let url = URL(string: "https://dearsurvy.herokuapp.com/tags") else { return }
+    guard let url = URL(string: "https://dearsurvy.herokuapp.com/genres") else { return }
     
     var request = URLRequest(url: url)
     // method, body, headers

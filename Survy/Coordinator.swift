@@ -26,10 +26,21 @@ protocol Coordinator {
 }
 
 enum ChildView {
-    case categorySelection
+    case genreSelection(GenreSelectionPurpose?)
     
     case targetSelection
     case confirmation
+}
+
+extension ChildView: Equatable {
+    public static func == (lhs: ChildView, rhs: ChildView) -> Bool {
+        switch (lhs, rhs) {
+            case (.targetSelection, .targetSelection): return true
+            case (.confirmation, .confirmation): return true
+            case (.genreSelection, .genreSelection): return true
+            default: return false
+        }
+    }
 }
 
 enum Command {

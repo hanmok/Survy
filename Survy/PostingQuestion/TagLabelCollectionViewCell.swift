@@ -10,7 +10,7 @@ import UIKit
 import SnapKit
 import Model
 
-class TagLabelCollectionViewCell: UICollectionViewCell {
+class GenreLabelCollectionViewCell: UICollectionViewCell {
     
     var text: String? {
         didSet {
@@ -23,7 +23,7 @@ class TagLabelCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setupLayout()
     }
-//    label.attributedText = NSAttributedString(string: categoryTag.name, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
+//    label.attributedText = NSAttributedString(string: genreGenre.name, attributes: [.paragraphStyle: NSMutableParagraphStyle.centerAlignment])
     private func setupLayout() {
         
         addSubview(label)
@@ -34,6 +34,8 @@ class TagLabelCollectionViewCell: UICollectionViewCell {
         layer.borderWidth = 1
         layer.borderColor = UIColor.systemGray2.cgColor
         layer.cornerRadius = 10
+        
+//        label.adjustsFontForContentSizeCategory = true
         
         label.adjustsFontForContentSizeCategory = true
     }

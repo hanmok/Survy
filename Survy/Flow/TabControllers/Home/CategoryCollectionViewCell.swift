@@ -1,5 +1,5 @@
 //
-//  CategoryCollectionViewCell.swift
+//  GenreCollectionViewCell.swift
 //  Survy
 //
 //  Created by Mac mini on 2023/05/02.
@@ -8,12 +8,11 @@
 import UIKit
 import Model
 
-class CategoryCollectionViewCell: UICollectionViewCell {
+class GenreCollectionViewCell: UICollectionViewCell {
     
-    public var categoryCellDelegate: CategoryCellDelegate?
+    public var genreCellDelegate: GenreCellDelegate?
     
-//    var category: String? {
-    var category: Tag? {
+    var genre: Genre? {
         didSet {
             self.configureLayout()
         }
@@ -25,43 +24,43 @@ class CategoryCollectionViewCell: UICollectionViewCell {
     }()
     
     private func configureLayout() {
-        guard let category = category else { return }
-        categoryButton.setTitle(category.name, for: .normal)
+        guard let genre = genre else { return }
+        genreButton.setTitle(genre.name, for: .normal)
     }
     
-    private let categoryButton: UIButton = {
+    private let genreButton: UIButton = {
         let button = UIButton()
         return button
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        categoryButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        genreButton.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         
         setupLayout()
         
         backgroundCircularView.backgroundColor = .clear
         backgroundCircularView.layer.cornerRadius = 20
         backgroundCircularView.clipsToBounds = true
-        categoryButton.setTitleColor(UIColor(white: 0.3, alpha: 1), for: .normal)
+        genreButton.setTitleColor(UIColor(white: 0.3, alpha: 1), for: .normal)
     }
     
     @objc func buttonTapped() {
-        categoryButton.isSelected = !categoryButton.isSelected
-        toggleAppearance(categoryButton.isSelected)
+        genreButton.isSelected = !genreButton.isSelected
+        toggleAppearance(genreButton.isSelected)
     }
     
     private func toggleAppearance(_ isSelected: Bool) {
-        guard let category = category else { return }
+        guard let genre = genre else { return }
         
-        categoryCellDelegate?.categoryTapped(category: category, selected: isSelected)
+        genreCellDelegate?.genreTapped(genre: genre, selected: isSelected)
         
         if isSelected {
             backgroundCircularView.backgroundColor = UIColor(white: 0.3, alpha: 1)
-            categoryButton.setTitleColor(.white, for: .normal)
+            genreButton.setTitleColor(.white, for: .normal)
         } else {
             backgroundCircularView.backgroundColor = .clear
-            categoryButton.setTitleColor(UIColor(white: 0.3, alpha: 1), for: .normal)
+            genreButton.setTitleColor(UIColor(white: 0.3, alpha: 1), for: .normal)
         }
     }
     
@@ -71,8 +70,8 @@ class CategoryCollectionViewCell: UICollectionViewCell {
             make.edges.equalToSuperview().inset(3)
         }
         
-        addSubview(categoryButton)
-        categoryButton.snp.makeConstraints { make in
+        addSubview(genreButton)
+        genreButton.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
@@ -83,6 +82,6 @@ class CategoryCollectionViewCell: UICollectionViewCell {
 }
 
 
-protocol CategoryCellDelegate: AnyObject {
-    func categoryTapped(category: Tag, selected: Bool)
+protocol GenreCellDelegate: AnyObject {
+    func genreTapped(genre: Genre, selected: Bool)
 }

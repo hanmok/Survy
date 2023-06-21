@@ -1,5 +1,5 @@
 //
-//  CategorySelectingController.swift
+//  GenreSelectingController.swift
 //  Survy
 //
 //  Created by Mac mini on 2023/05/08.
@@ -10,32 +10,12 @@ import Model
 import SnapKit
 import API
 
-class CategorySelectionController: UIViewController, Coordinating {
-    
-    var coordinator: Coordinator?
-    
-    var postingService: PostingServiceType
-    var commonService: CommonServiceType
-    var participationService: ParticipationServiceType
-    
-    public init(postingService: PostingServiceType,
-                commonService: CommonServiceType,
-                participationService: ParticipationServiceType) {
-        self.postingService = postingService
-        self.commonService = commonService
-        self.participationService = participationService
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private var selectedTags = Set<Tag>()
-    private var selectableTags = Set<Tag>()
-    
-    var selectedTagDataSource: UICollectionViewDiffableDataSource<SelectedSection, Tag>!
-    var selectableTagDataSource: UICollectionViewDiffableDataSource<SelectableSection, Tag>!
+enum GenreSelectionPurpose {
+    case participating
+    case posting
+}
+
+class GenreSelectionController: UIViewController, Coordinating {
     
     enum SelectableSection {
         case main
@@ -45,43 +25,53 @@ class CategorySelectionController: UIViewController, Coordinating {
         case main
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        let fetchedTags = commonService.allTags
-        self.updateUI(with: fetchedTags)
-//        fetchTags()
+    var coordinator: Coordinator?
+    
+    var postingService: PostingServiceType
+    var commonService: CommonServiceType
+    var participationService: ParticipationServiceType
+    var purpose: GenreSelectionPurpose
+    
+    private var selectedGenres = Set<Genre>()
+    private var selectableGenres = Set<Genre>()
+    
+    var selectedGenreDataSource: UICollectionViewDiffableDataSource<SelectedSection, Genre>!
+    var selectableGenreDataSource: UICollectionViewDiffableDataSource<SelectableSection, Genre>!
+    
+    public init(postingService: PostingServiceType,
+                commonService: CommonServiceType,
+                participationService: ParticipationServiceType,
+                purpose: GenreSelectionPurpose) {
+        self.postingService = postingService
+        self.commonService = commonService
+        self.participationService = participationService
+        self.purpose = purpose
+        super.init(nibName: nil, bundle: nil)
     }
     
-    // 가져오지 않았을 리가 없음.
-//    private func fetchTags() {
-////        if commonService.allTags.isEmpty {
-////        if ParticipationService
-//
-//        if participationService.allTags.isEmpty {
-//
-//            self.coordinator?.setIndicatorSpinning(true)
-////            APIService.shared.fetchTags { [weak self] tags in
-////                guard let self = self else { fatalError() }
-////                commonService.setTags(tags)
-////                self.updateUI(with: tags)
-////            }
-//
-//
-//        } else {
-//            self.updateUI(with: commonService.allTags)
-//        }
-//    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    private func updateUI(with tags: [Tag]) {
-        self.selectableTags = []
+    override func viewWillAppear(_ animated: Bool) {
+        let fetchedGenres = commonService.allGenres
+        updateUI(with: fetchedGenres)
+    }
+    
+    private func updateUI(with genres: [Genre]) {
+        self.selectableGenres = []
         
-        for tag in tags.sorted(by: <) {
-            self.selectableTags.insert(tag)
+        for genre in genres.sorted(by: <) {
+            self.selectableGenres.insert(genre)
         }
         
-        selectedTags = Set(selectableTags.filter { UserDefaults.standard.myCategories.contains($0)})
-        // TODO: 해당 Cell 을 어떻게 .. 선택된 상태로 만들 수 있을까 ?
+        if purpose == .participating {
+            selectedGenres = Set(selectableGenres.filter { UserDefaults.standard.myGenres.contains($0)})
+        } else {
+            selectedGenres = Set(postingService.selectedGenres)
+        }
     
-        self.updateTags()
+        self.updateGenres()
     }
     
     override func viewDidLoad() {
@@ -97,17 +87,9 @@ class CategorySelectionController: UIViewController, Coordinating {
         setupLayout()
         
         performQuery(with: nil)
-        
     }
     
-    private let wholeContainerView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.applyCornerRadius(on: .all, radius: 10)
-        return view
-    }()
-    
-    func createSelectedTagLayout() -> UICollectionViewLayout {
+    func createSelectedGenreLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
             
@@ -134,7 +116,7 @@ class CategorySelectionController: UIViewController, Coordinating {
         return layout
     }
     
-    func createSelectableTagLayout() -> UICollectionViewLayout {
+    func createSelectableGenreLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
             let contentSize = layoutEnvironment.container.effectiveContentSize
@@ -150,13 +132,13 @@ class CategorySelectionController: UIViewController, Coordinating {
                 layoutSize: groupSize, subitem: item, count: columns
             )
             
-            let headerFooterSize = NSCollectionLayoutSize(
+            let footerSize = NSCollectionLayoutSize(
                 widthDimension: .absolute(UIScreen.screenWidth - 64),
-              heightDimension: .absolute(40)
+                heightDimension: .absolute(CGFloat.genreAdddingButton)
             )
             
             let sectionFooter = NSCollectionLayoutBoundarySupplementaryItem(
-                layoutSize: headerFooterSize,
+                layoutSize: footerSize,
                 elementKind: UICollectionView.elementKindSectionFooter,
                 alignment: .bottom
               )
@@ -176,11 +158,11 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     private func setupCollectionView() {
-        let layout = createSelectableTagLayout()
-        categoryListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        let layout = createSelectableGenreLayout()
+        genreListCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
-        let layout2 = createSelectedTagLayout()
-        selectedCategoryCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout2)
+        let layout2 = createSelectedGenreLayout()
+        selectedGenreCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout2)
     }
     
     private func setupNavigationBar() {
@@ -194,26 +176,28 @@ class CategorySelectionController: UIViewController, Coordinating {
     }
     
     @objc func exitTapped() {
-        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
+        coordinator?.manipulate(.genreSelection(nil), command: .dismiss(nil))
     }
     
     @objc func completeTapped(_ sender: UIButton) {
-        // TODO: Provider 에 selectedCategory 선택
+        // TODO: Provider 에 selectedGenre 선택
         
-        let selectedTagsArr = Array(selectedTags)
-        postingService.setTags(selectedTagsArr)
+        let selectedGenresArr = Array(selectedGenres)
+        postingService.setGenres(selectedGenresArr)
         
-        UserDefaults.standard.myCategories = selectedTagsArr
+        if purpose == .participating { // Posting 하는 경우는 아직 굳이 하지 않아도 됨.
+            UserDefaults.standard.myGenres = selectedGenresArr
+        }
         
-        coordinator?.manipulate(.categorySelection, command: .dismiss(nil))
+        coordinator?.manipulate(.genreSelection(nil), command: .dismiss(nil))
     }
     
     private func setupLayout() {
         
         self.view.addSubview(wholeContainerView)
         
-        [selectedCategoryCollectionView, searchBar,
-         categoryListCollectionView, completeButton, topViewContainer].forEach { self.wholeContainerView.addSubview($0) }
+        [selectedGenreCollectionView, searchBar,
+         genreListCollectionView, completeButton, topViewContainer].forEach { self.wholeContainerView.addSubview($0) }
         
         [topViewLabel, exitButton].forEach { self.topViewContainer.addSubview($0) }
         
@@ -237,7 +221,7 @@ class CategorySelectionController: UIViewController, Coordinating {
             make.width.height.equalTo(24)
         }
         
-        selectedCategoryCollectionView.snp.makeConstraints { make in
+        selectedGenreCollectionView.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(20)
             make.top.equalTo(topViewContainer.snp.bottom).offset(12)
             make.height.equalTo(30)
@@ -245,12 +229,12 @@ class CategorySelectionController: UIViewController, Coordinating {
         
         searchBar.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(20)
-            make.top.equalTo(selectedCategoryCollectionView.snp.bottom).offset(20)
+            make.top.equalTo(selectedGenreCollectionView.snp.bottom).offset(20)
             make.height.equalTo(46)
         }
         searchBar.delegate = self
         
-        categoryListCollectionView.snp.makeConstraints { make in
+        genreListCollectionView.snp.makeConstraints { make in
             make.top.equalTo(searchBar.snp.bottom).offset(12)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview().inset(90)
@@ -264,42 +248,62 @@ class CategorySelectionController: UIViewController, Coordinating {
     
     // TODO: 대소문자 구분 없애기.
     private func performQuery(with text: String?) {
-        var tagsToShow = [Tag]()
+        var genresToShow = [Genre]()
         if let text = text, text != "" {
-            tagsToShow = selectableTags.filter { $0.name.contains(text)}.sorted(by: { tag1, tag2 in
-                return tag1.name < tag2.name
+            genresToShow = selectableGenres.filter { $0.name.contains(text)}.sorted(by: { genre1, genre2 in
+                return genre1.name < genre2.name
             })
         } else {
-            let sortedTags = Array(selectableTags).sorted()
-            tagsToShow = sortedTags
+            let sortedGenres = Array(selectableGenres).sorted()
+            genresToShow = sortedGenres
         }
         
-        var snapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
+        var snapshot = NSDiffableDataSourceSnapshot<SelectableSection, Genre>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(tagsToShow)
-        selectableTagDataSource.apply(snapshot, animatingDifferences: true)
+        snapshot.appendItems(genresToShow)
+        selectableGenreDataSource.apply(snapshot, animatingDifferences: true)
     }
     
-    private func updateTags() {
-        print("updateTags Called")
-        var selectableSnapshot = NSDiffableDataSourceSnapshot<SelectableSection, Tag>()
+    private func updateGenres() {
+        print("updateGenres Called")
+        var selectableSnapshot = NSDiffableDataSourceSnapshot<SelectableSection, Genre>()
         selectableSnapshot.appendSections([.main])
-        let sortedTags = Array(selectableTags).sorted()
-        selectableSnapshot.appendItems(sortedTags)
-        print("updateTags called, current number: \(sortedTags.count)")
-        selectableTagDataSource.apply(selectableSnapshot, animatingDifferences: false)
+        let sortedGenres = Array(selectableGenres).sorted()
+        selectableSnapshot.appendItems(sortedGenres)
+        print("updateGenres called, current number: \(sortedGenres.count)")
+        selectableGenreDataSource.apply(selectableSnapshot, animatingDifferences: false)
         
-        var selectedSnapshot = NSDiffableDataSourceSnapshot<SelectedSection, Tag>()
+        var selectedSnapshot = NSDiffableDataSourceSnapshot<SelectedSection, Genre>()
         selectedSnapshot.appendSections([.main])
-        let sortedSelectedTags = Array(selectedTags).sorted()
-        selectedSnapshot.appendItems(sortedSelectedTags)
-        selectedTagDataSource.apply(selectedSnapshot, animatingDifferences: false)
-        
+        let sortedSelectedGenres = Array(selectedGenres).sorted()
+        selectedSnapshot.appendItems(sortedSelectedGenres)
+        selectedGenreDataSource.apply(selectedSnapshot, animatingDifferences: false)
         
         self.coordinator?.setIndicatorSpinning(false)
+    }
+    
+    private var selectedGenreCollectionView: UICollectionView!
+    
+    private var genreListCollectionView: UICollectionView!
+    
+    private func addGenreAction() {
+        let alertController = UIAlertController(title: "관심사 추가 요청", message: nil, preferredStyle: .alert)
+        alertController.addTextField { textField in
+            textField.placeholder = "New Genre Name"
+        }
         
+        let saveAction = UIAlertAction(title: "요청", style: .default) { alert -> Void in
+            guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
+            self.coordinator?.setIndicatorSpinning(true)
+            APIService.shared.postGenre(requestingGenreName: text) { [weak self] result in
+                self?.coordinator?.setIndicatorSpinning(false)
+            }
+        }
         
-        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        self.present(alertController, animated: true)
     }
     
     private let completeButton: UIButton = {
@@ -338,126 +342,102 @@ class CategorySelectionController: UIViewController, Coordinating {
         return searchBar
     }()
     
-    private var selectedCategoryCollectionView: UICollectionView!
-    
-    private var categoryListCollectionView: UICollectionView!
-    
-    private func addCategoryAction() {
-        let alertController = UIAlertController(title: "관심사 추가 요청", message: nil, preferredStyle: .alert)
-        alertController.addTextField { textField in
-            textField.placeholder = "New Category Name"
-        }
-        
-        let saveAction = UIAlertAction(title: "요청", style: .default) { alert -> Void in
-            guard let textFields = alertController.textFields, let text = textFields[0].text else { return }
-            print("input text: \(text)")
-            self.coordinator?.setIndicatorSpinning(true)
-            APIService.shared.postTag(requestingTagName: text) { [weak self] result in
-                self?.coordinator?.setIndicatorSpinning(false)
-//                self?.fetchTags()
-            }
-        }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-        alertController.addAction(cancelAction)
-        alertController.addAction(saveAction)
-        self.present(alertController, animated: true)
-    }
+    private let wholeContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        view.applyCornerRadius(on: .all, radius: 10)
+        return view
+    }()
 }
 
-extension CategorySelectionController {
+extension GenreSelectionController {
     func configureDataSource() {
         registerSupplementaryView()
         
-        let selectableCellRegistration = UICollectionView.CellRegistration<SelectableCategoryCell, Tag> { (cell, indexPath, category) in
+        let selectableCellRegistration = UICollectionView.CellRegistration<SelectableGenreCell, Genre> { (cell, indexPath, genre) in
             // 여기서 처리하면 좋을 것 같은데..
-            if self.selectedTags.contains(category) {
-                cell.isTagSelected = true
+            if self.selectedGenres.contains(genre) {
+                cell.isGenreSelected = true
             }
             
-            cell.categoryTag = category
+            cell.genreGenre = genre
             cell.delegate = self
         }
         
-        selectableTagDataSource = UICollectionViewDiffableDataSource<SelectableSection, Tag>(collectionView: categoryListCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: selectableCellRegistration, for: indexPath, item: identifier)
+        selectableGenreDataSource = UICollectionViewDiffableDataSource<SelectableSection, Genre>(collectionView: genreListCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Genre) -> UICollectionViewCell? in
+            let cell = collectionView.dequeueConfiguredReusableCell(using: selectableCellRegistration, for: indexPath, item: identifier)
+            cell.layer.cornerRadius = 10
+            return cell
          }
         
-        selectableTagDataSource.supplementaryViewProvider = {
+        selectableGenreDataSource.supplementaryViewProvider = {
             collectionView, kind, indexPath -> UICollectionReusableView? in
             guard kind == UICollectionView.elementKindSectionFooter else { return nil }
-                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: CategorySelectionFooterCell.reuseIdentifier, for: indexPath) as? CategorySelectionFooterCell
+                let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: GenreSelectionFooterCell.reuseIdentifier, for: indexPath) as? GenreSelectionFooterCell
             view?.footerCellDelegate = self
-            
             return view
         }
         
-        let selectedCellRegistration = UICollectionView.CellRegistration<SelectedCategoryCell, Tag> { (cell, indexPath, category) in
-            cell.categoryTag = category
+        let selectedCellRegistration = UICollectionView.CellRegistration<SelectedGenreCell, Genre> { (cell, indexPath, genre) in
+            cell.genreGenre = genre
             cell.delegate = self
         }
         
-        selectedTagDataSource = UICollectionViewDiffableDataSource<SelectedSection, Tag>(collectionView: selectedCategoryCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Tag) -> UICollectionViewCell? in
-            return collectionView.dequeueConfiguredReusableCell(using: selectedCellRegistration, for: indexPath, item: identifier)
+        selectedGenreDataSource = UICollectionViewDiffableDataSource<SelectedSection, Genre>(collectionView: selectedGenreCollectionView) { (collectionView: UICollectionView, indexPath: IndexPath, identifier: Genre) -> UICollectionViewCell? in
+            let cell = collectionView.dequeueConfiguredReusableCell(using: selectedCellRegistration, for: indexPath, item: identifier)
+            cell.layer.cornerRadius = 6
+            return cell
          }
     }
 }
 
-
-extension CategorySelectionController: SelectedCategoryCellDelegate {
-    func selectedCategoryCellTapped(_ cell: SelectedCategoryCell) {
-        // TODO: Update Snapshot to remove selected tag
+extension GenreSelectionController: SelectedGenreCellDelegate {
+    func selectedGenreCellTapped(_ cell: SelectedGenreCell) {
+        // TODO: Update Snapshot to remove selected genre
         
     }
 }
 
-extension CategorySelectionController: UISearchBarDelegate {
+extension GenreSelectionController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         performQuery(with: searchText)
     }
 }
 
-extension CategorySelectionController {
+extension GenreSelectionController {
     func registerSupplementaryView() {
-        categoryListCollectionView.register(CategorySelectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: CategorySelectionFooterCell.reuseIdentifier)
+        genreListCollectionView.register(GenreSelectionFooterCell.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: GenreSelectionFooterCell.reuseIdentifier)
     }
 }
 
-extension CategorySelectionController: SelectableCategoryCellDelegate {
-    func selectableCategoryCellTapped(_ cell: SelectableCategoryCell) {
-        
-        // count == 4, isSelected == false
-        // 4개 선택된 상태에서, 새로 선택한게 이미 선택된 상태가 아니어야함.
-//        guard selectedTags.count < 4 && cell.isTagSelected == true else {
-//            coordinator?.navigationController?.toastMessage(title: "관심 카테고리는 4개까지 선택 가능합니다.")
-//            return
-//        }
-        
-        if selectedTags.count == 4 && cell.isTagSelected == false {
+extension GenreSelectionController: SelectableGenreCellDelegate {
+    func selectableGenreCellTapped(_ cell: SelectableGenreCell) {
+
+        if selectedGenres.count == 4 && cell.isGenreSelected == false {
             coordinator?.navigationController?.toastMessage(title: "관심 카테고리는 4개까지 선택 가능합니다.")
             return
         }
         
-        cell.isTagSelected = !cell.isTagSelected
+        cell.isGenreSelected = !cell.isGenreSelected
         
-        guard let category = cell.categoryTag else { return }
+        guard let genre = cell.genreGenre else { return }
 
-        if cell.isTagSelected {
-            _ = selectedTags.insert(category)
+        if cell.isGenreSelected {
+            _ = selectedGenres.insert(genre)
         } else {
-            selectedTags.remove(category)
+            selectedGenres.remove(genre)
         }
         
-        let selectedTagArr = Array(selectedTags)
-        var snapshot = NSDiffableDataSourceSnapshot<SelectedSection, Tag>()
+        let selectedGenreArr = Array(selectedGenres)
+        var snapshot = NSDiffableDataSourceSnapshot<SelectedSection, Genre>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(selectedTagArr)
-        selectedTagDataSource.apply(snapshot, animatingDifferences: true)
+        snapshot.appendItems(selectedGenreArr)
+        selectedGenreDataSource.apply(snapshot, animatingDifferences: true)
     }
 }
 
-extension CategorySelectionController: CategorySelectionFooterCellDelegate {
-    func categorySelectionFooterCellTapped() {
-        addCategoryAction()
+extension GenreSelectionController: GenreSelectionFooterCellDelegate {
+    func genreSelectionFooterCellTapped() {
+        addGenreAction()
     }
 }

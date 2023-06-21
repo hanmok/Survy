@@ -10,38 +10,38 @@ import Model
 
 protocol CommonServiceType {
     var selectedIndex: Int { get set }
-    var allTags: [Tag] { get set }
+    var allGenres: [Genre] { get set }
     var allSurveys: [Survey] { get set }
     var surveysToShow: [Survey] { get }
-    var selectedCategories: Set<Tag> { get set }
+    var selectedGenres: Set<Genre> { get set }
     
     func setSelectedIndex(_ index: Int)
-    func setTags(_ tags: [Tag])
-    func toggleCategory(_ category: Tag)
+    func setGenres(_ genres: [Genre])
+    func toggleGenre(_ genre: Genre)
     func getSurveys(completion: @escaping () -> Void)
-    func getTags(completion: @escaping () -> Void)
-    func addTagsToSurveys(completion: @escaping ([Survey]?) -> Void)
+    func getGenres(completion: @escaping () -> Void)
+    func addGenresToSurveys(completion: @escaping ([Survey]?) -> Void)
 }
 
 class CommonService: CommonServiceType {
-    var selectedCategories = Set<Tag>()
+    var selectedGenres = Set<Genre>()
     
-//    func toggleCategory(_ categoryId: Int) {
-    func toggleCategory(_ category: Tag) {
-        selectedCategories.toggle(category)
+//    func toggleGenre(_ genreId: Int) {
+    func toggleGenre(_ genre: Genre) {
+        selectedGenres.toggle(genre)
     }
     
     var surveysToShow: [Survey] {
         
-        print("selectedCategories: \(selectedCategories)")
-        print("myCategories: \(UserDefaults.standard.myCategories)")
+        print("selectedGenres: \(selectedGenres)")
+        print("myGenres: \(UserDefaults.standard.myGenres)")
         
-        if selectedCategories.isEmpty {
+        if selectedGenres.isEmpty {
             var ret = [Survey]()
             for survey in allSurveys {
-                if let surveyCategories = survey.tags {
-                    let defaultCategories = Set(UserDefaults.standard.myCategories)
-                    if defaultCategories.intersection(surveyCategories).isEmpty == false {
+                if let surveyGenres = survey.genres {
+                    let defaultGenres = Set(UserDefaults.standard.myGenres)
+                    if defaultGenres.intersection(surveyGenres).isEmpty == false {
                         ret.append(survey)
                     }
                 }
@@ -49,17 +49,17 @@ class CommonService: CommonServiceType {
             return ret
         } else {
             return allSurveys.filter {
-                guard let validCategories = $0.tags else { fatalError() }
-                let categorySet = Set(validCategories)
-                print("validCategories: \(validCategories) ")
-                return categorySet.intersection(selectedCategories).isEmpty == false
+                guard let validGenres = $0.genres else { fatalError() }
+                let genreSet = Set(validGenres)
+                print("validGenres: \(validGenres) ")
+                return genreSet.intersection(selectedGenres).isEmpty == false
             }
         }
     }
     
     
     var allSurveys: [Survey] = []
-    var allTags: [Tag] = []
+    var allGenres: [Genre] = []
     
     var selectedIndex: Int = 0
     
@@ -67,8 +67,8 @@ class CommonService: CommonServiceType {
         selectedIndex = index
     }
     
-    func setTags(_ tags: [Tag]) {
-        allTags = tags
+    func setGenres(_ genres: [Genre]) {
+        allGenres = genres
     }
     
     func getSurveys(completion: @escaping () -> Void) {
@@ -79,48 +79,48 @@ class CommonService: CommonServiceType {
         }
     }
     
-    func getTags(completion: @escaping () -> Void) {
-        APIService.shared.getAllTags { tags in
-            guard let tags = tags else { return }
-            self.allTags = tags
+    func getGenres(completion: @escaping () -> Void) {
+        APIService.shared.getAllGenres { genres in
+            guard let genres = genres else { return }
+            self.allGenres = genres
             completion()
         }
     }
     
-    func addTagsToSurveys(completion: @escaping ([Survey]?) -> Void) {
-        APIService.shared.getAllSurveyTags { [weak self] surveyTags in
-            guard let surveyTags = surveyTags, let self = self  else { return }
-            guard self.allTags.isEmpty == false, self.allSurveys.isEmpty == false else {
+    func addGenresToSurveys(completion: @escaping ([Survey]?) -> Void) {
+        APIService.shared.getAllSurveyGenres { [weak self] surveyGenres in
+            guard let surveyGenres = surveyGenres, let self = self  else { return }
+            guard self.allGenres.isEmpty == false, self.allSurveys.isEmpty == false else {
                 completion(nil)
                 return
             }
             
-            var myDic = [SurveyId: [TagId]]()
+            var myDic = [SurveyId: [GenreId]]()
             
-            for (_, surveyTag) in surveyTags.enumerated() {
-                let surveyId = surveyTag.surveyId
-                let tagId = surveyTag.tagId
+            for (_, surveyGenre) in surveyGenres.enumerated() {
+                let surveyId = surveyGenre.surveyId
+                let genreId = surveyGenre.genreId
                 if myDic[surveyId] != nil {
-                    myDic[surveyId]!.append(tagId)
+                    myDic[surveyId]!.append(genreId)
                 } else {
-                    myDic[surveyId] = [tagId]
+                    myDic[surveyId] = [genreId]
                 }
             }
             
             var newSurveys = [Survey]()
-            for (surveyId, tagIds) in myDic {
-                print("surveyId: \(surveyId), tagIds: \(tagIds)")
+            for (surveyId, genreIds) in myDic {
+                print("surveyId: \(surveyId), genreIds: \(genreIds)")
                 
                 guard var correspondingSurvey = self.allSurveys.first(where: { $0.id == surveyId }) else { return }
                 
-                let tagSet = Set(self.allTags)
-                let tagIdsSet = Set(tagIds)
-                let correspondingTags = tagSet.filter { tag in
-                    tagIdsSet.contains(tag.id)
+                let genreSet = Set(self.allGenres)
+                let genreIdsSet = Set(genreIds)
+                let correspondingGenres = genreSet.filter { genre in
+                    genreIdsSet.contains(genre.id)
                 }
                 
-                let tagArr = Array(correspondingTags)
-                correspondingSurvey.setCategories(tags: tagArr)
+                let genreArr = Array(correspondingGenres)
+                correspondingSurvey.setGenres(genres: genreArr)
                 newSurveys.append(correspondingSurvey)
             }
             

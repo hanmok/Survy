@@ -56,7 +56,7 @@ class MainCoordinator: Coordinator {
     
     public func testSetup() {
 //        self.provider.participationService.currentSurvey = surveys[0]
-        self.provider.participationService.currentSection = section
+//        self.provider.participationService.currentSection = sections
         self.provider.participationService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
         self.provider.participationService.questionIndex = 0
     }
@@ -92,12 +92,13 @@ class MainCoordinator: Coordinator {
                 var vc: UIViewController & Coordinating
 
                 switch type {
-                    case .categorySelection:
-                        vc = CategorySelectionController(postingService: self.provider.postingService, commonService: self.provider.commonService, participationService: self.provider.participationService)
+                    case .genreSelection(let purpose):
+                        guard let purpose = purpose else { fatalError() }
+                        vc = GenreSelectionController(postingService: self.provider.postingService, commonService: self.provider.commonService, participationService: self.provider.participationService, purpose: purpose)
                     case .targetSelection:
                         vc = TargetSelectionController(postingService: self.provider.postingService)
                     case .confirmation:
-                        vc = ConfirmationController(postingService: self.provider.postingService)
+                        vc = ConfirmationController(postingService: self.provider.postingService, userService: self.provider.userService)
                 }
                 
                 vc.coordinator = self

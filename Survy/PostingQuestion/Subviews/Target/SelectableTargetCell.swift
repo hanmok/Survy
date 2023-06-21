@@ -1,5 +1,5 @@
 //
-//  CategorySearchCell.swift
+//  GenreSearchCell.swift
 //  Survy
 //
 //  Created by Mac mini on 2023/05/14.

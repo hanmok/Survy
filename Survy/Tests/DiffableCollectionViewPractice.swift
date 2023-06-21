@@ -36,7 +36,7 @@ class DiffableCollectionViewPractice: UIViewController {
     
     var myDataSource: UICollectionViewDiffableDataSource<Section, MyItem>!
     
-    func createSelectableTagLayout() -> UICollectionViewLayout {
+    func createSelectableGenreLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
             let contentSize = layoutEnvironment.container.effectiveContentSize
@@ -65,13 +65,13 @@ class DiffableCollectionViewPractice: UIViewController {
     private var myCollectionView: UICollectionView!
     
     private func setupCollectionView() {
-        let layout = createSelectableTagLayout()
+        let layout = createSelectableGenreLayout()
         myCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     }
     
     private func configureDataSource() {
         
-        let myCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, MyItem> { (cell, indexPath, category) in
+        let myCellRegistration = UICollectionView.CellRegistration<UICollectionViewCell, MyItem> { (cell, indexPath, genre) in
             cell.backgroundColor = .magenta
         }
 

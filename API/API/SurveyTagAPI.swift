@@ -1,5 +1,5 @@
 //
-//  SurveyTag.swift
+//  SurveyGenre.swift
 //  API
 //
 //  Created by Mac mini on 2023/06/14.
@@ -9,11 +9,12 @@ import Foundation
 import Moya
 import Model
 
-public enum SurveyTagAPI {
+public enum SurveyGenreAPI {
     case fetchAll
+    case connectToGenre(SurveyId, GenreId)
 }
 
-extension SurveyTagAPI: BaseAPIType {
+extension SurveyGenreAPI: BaseAPIType {
     struct Super: BaseAPIType { }
     
     var `super`: Super {
@@ -23,7 +24,9 @@ extension SurveyTagAPI: BaseAPIType {
     public var path: String {
         switch self {
             case .fetchAll:
-                return "/survey_tags"
+                return "/survey_genres"
+            case .connectToGenre:
+                return "/surveys/genres"
         }
     }
     
@@ -31,6 +34,8 @@ extension SurveyTagAPI: BaseAPIType {
         switch self {
             case .fetchAll:
                 return .get
+            case .connectToGenre:
+                return .post
         }
     }
     
@@ -38,6 +43,8 @@ extension SurveyTagAPI: BaseAPIType {
         switch self {
             case .fetchAll:
                 return [:]
+            case .connectToGenre(let surveyId, let genreId):
+                return ["survey_id": surveyId, "genre_id": genreId]
         }
     }
     
@@ -46,23 +53,17 @@ extension SurveyTagAPI: BaseAPIType {
         switch self {
             case .fetchAll:
                 return .requestParameters(parameters: parameters, encoding: parameterEncoding)
+            case .connectToGenre:
+                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
         }
-//        switch self {
-//            case .create:
-//                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
-//            default:
-//                return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-//        }
     }
     
     public var parameterEncoding: ParameterEncoding {
         switch self {
+            case .connectToGenre:
+                return URLEncoding.httpBody
             case .fetchAll:
                 return URLEncoding.queryString
-//            case .create:
-//                return URLEncoding.httpBody
-//            default:
-//                return URLEncoding.queryString
         }
     }
 }

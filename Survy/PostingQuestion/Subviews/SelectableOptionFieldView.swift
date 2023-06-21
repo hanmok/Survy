@@ -8,13 +8,6 @@
 import UIKit
 import Model
 
-enum BriefQuestionType: Int {
-    case singleSelection = 0
-    case multipleSelection
-    case short
-    case essay
-}
-
 class SelectableOptionFieldView: UIView {
     
     var briefQuestionType: BriefQuestionType
@@ -29,7 +22,8 @@ class SelectableOptionFieldView: UIView {
         selectableOptionTextField.delegate = self
     }
     
-    init(briefQuestionType: BriefQuestionType, selectableOption: SelectableOption) {
+    init(briefQuestionType: BriefQuestionType,
+         selectableOption: SelectableOption) {
         self.briefQuestionType = briefQuestionType
         self.selectableOption = selectableOption
         
@@ -59,22 +53,32 @@ class SelectableOptionFieldView: UIView {
         case .singleSelection:
             optionSymbolImageView.image = UIImage.emptyCircle
                 selectableOptionTextField.placeholder = String.optionPlaceholder
+                if selectableOption.value != nil {
+                    selectableOptionTextField.text = selectableOption.value
+                }
         case .multipleSelection:
             optionSymbolImageView.image = UIImage.uncheckedSquare
                 selectableOptionTextField.placeholder = String.optionPlaceholder
-        default:
-            optionSymbolImageView.image = nil
-            selectableOptionTextField.placeholder = "placeHolder"
-        }
-        
-        if selectableOption.value != nil {
-            selectableOptionTextField.text = selectableOption.value
-        } else {
-            selectableOptionTextField.placeholder = "옵션"
+                if selectableOption.value != nil {
+                    selectableOptionTextField.text = selectableOption.value
+                }
+            case .short:
+                if let value = selectableOption.value {
+                    selectableOptionTextField.text = value
+                } else {
+                    selectableOptionTextField.placeholder = "short form placeHolder"
+                }
+                optionSymbolImageView.image = nil
+                
+            case .essay:
+                if let value = selectableOption.value {
+                    selectableOptionTextField.text = value
+                } else {
+                    selectableOptionTextField.placeholder = "essay form placeHolder"
+                }
+                optionSymbolImageView.image = nil
         }
     }
-    
-    
     
     private let optionSymbolImageView: UIImageView = {
         let imageView = UIImageView()
@@ -96,11 +100,10 @@ class SelectableOptionFieldView: UIView {
 
 extension SelectableOptionFieldView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
+        UserDefaults.standard.isAddingSelectableOption = true
         guard let text = textField.text else { return true }
-        
+        print("dismisskeyboard flag 1")
         selectableOptionFieldDelegate?.selectableOptionFieldReturnTapped(text, self.selectableOption.position)
-        
         return true
     }
 }

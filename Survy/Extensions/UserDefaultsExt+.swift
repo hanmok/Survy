@@ -11,7 +11,17 @@ import Model
 extension UserDefaults {
     enum Key: String {
         case isIndivisualSelected
-        case myCategories
+        case myGenres
+        case isAddingSelectableOption
+    }
+
+    public var isAddingSelectableOption: Bool {
+        get {
+            return self.bool(forKey: .isAddingSelectableOption)
+        }
+        set {
+            set(newValue, forKey: .isAddingSelectableOption)
+        }
     }
     
     public var isIndivisualSelected: Bool {
@@ -23,23 +33,23 @@ extension UserDefaults {
         }
     }
     
-    public var myCategories: [Tag] {
+    public var myGenres: [Genre] {
         get {
-            guard  let data = object(forKey: Key.myCategories.rawValue) as? Data,
-                   let categories = try? JSONDecoder().decode([Tag].self, from: data) else {
+            guard  let data = object(forKey: Key.myGenres.rawValue) as? Data,
+                   let genres = try? JSONDecoder().decode([Genre].self, from: data) else {
                 return []
             }
-            return categories
+            return genres
         }
         set {
             if let encoded = try? JSONEncoder().encode(newValue) {
-                set(encoded, forKey: .myCategories)
+                set(encoded, forKey: .myGenres)
             }
         }
     }
     
-    func array(forKey key: Key) -> [Tag]? {
-        return array(forKey: key.rawValue) as? [Tag]
+    func array(forKey key: Key) -> [Genre]? {
+        return array(forKey: key.rawValue) as? [Genre]
     }
     
     private func string(forKey key: Key) -> String? {

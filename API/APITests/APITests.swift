@@ -34,20 +34,19 @@ final class APITests: XCTestCase {
     }
 
     func test_sth() {
-        let expectation = self.expectation(description: "post")
-//        APIService.shared.fetchTags { tags in
-        APIService.shared.getAllTags { tags in
-            print("fetched Tags: \(tags)")
-            XCTAssertNotNil(tags)
-//            XCTAssertNil(tags)
+        let expectation = self.expectation(description: "get all posts")
+//        APIService.shared.fetchGenres { genres in
+        APIService.shared.getAllGenres { genres in
+            print("fetched Genres: \(genres)")
+            XCTAssertNotNil(genres)
+//            XCTAssertNil(genres)
             expectation.fulfill()
         }
         waitForExpectations(timeout: 10)
     }
     
     func test_fetchSurveys() {
-        let expectation = self.expectation(description: "post")
-        
+        let expectation = self.expectation(description: "get all surveys")
         APIService.shared.getAllSurveys { result in
             print("myAPIResult: \(result)")
             XCTAssertNotNil(result)
@@ -56,16 +55,104 @@ final class APITests: XCTestCase {
         waitForExpectations(timeout: 10)
     }
     
-    func test_fetchSurveyTags() {
-        let expectation = self.expectation(description: "fetchSurveyTags")
+    func test_fetchSurveyGenres() {
+        let expectation = self.expectation(description: "get all survey_genres")
         
-        APIService.shared.getAllSurveyTags { surveyTags in
-            print("myAPIResult: \(surveyTags)")
-            XCTAssertNil(surveyTags)
-            XCTAssertNotNil(surveyTags)
+        APIService.shared.getAllSurveyGenres { surveyGenres in
+            print("myAPIResult: \(surveyGenres)")
+            XCTAssertNotNil(surveyGenres)
             expectation.fulfill()
         }
 
         waitForExpectations(timeout: 10)
     }
+    
+    // Done!
+    func test_postSurvey() {
+        let expectation = self.expectation(description: "post Survey")
+        let (title, participationGoal, userId) = ("something", 100, 4)
+        
+        APIService.shared.postSurvey(title: title, participationGoal: participationGoal, userId: userId) { id, string  in
+            guard let id = id else { fatalError() }
+            print("id: \(id), string: \(string)")
+            
+            // TODO: Make Section
+            XCTAssertNotNil(id)
+//            XCTAssertNil(id)
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10)
+    }
+    
+    // TODO: Make Section
+    
+    func test_postSection() {
+        let expectation = self.expectation(description: "post section")
+        let (title, sequence, surveyId) = ("sectionTitle", 2, 4)
+        APIService.shared.postSection(title: title, sequence: sequence, surveyId: surveyId) { id, string in
+            guard let id = id else { fatalError() }
+            print("id: \(id), string: \(string)")
+            XCTAssertNotNil(id)
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_postQuestion() {
+        let expectation = self.expectation(description: "post question")
+        let (text, sectionId, questionTypeId, expectedTimeInSec) = ("Test Question Text", 34, 4, 20)
+        
+        APIService.shared.postQuestion(text: text, sectionId: sectionId, questionTypeId: questionTypeId, expectedTimeInSec: expectedTimeInSec) { questionId, string in
+            
+            guard let questionId = questionId else { fatalError() }
+            print("questionId: \(questionId), string: \(string)")
+//            XCTAssertNil(questionId)
+            XCTAssertNotNil(questionId)
+            expectation.fulfill()
+            
+        }
+        
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_postSelectableOption() {
+        let expectation = self.expectation(description: "post selectableOption")
+        let (value, position, questionId) = ("test selectableOption", 0, 4)
+        
+        APIService.shared.postSelectableOption(value: value, position: position, questionId: questionId) { result, string in
+            guard let result = result else { fatalError() }
+            XCTAssertNotNil(result)
+            print("result string: \(string)")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_connectSurveyToGenres() {
+        let expectation = self.expectation(description: "post survey_genre")
+        let (surveyId, genreId) = (4, 4)
+        
+        APIService.shared.connectSurveyGenres(surveyId: surveyId, genreId: genreId) { result, message in
+            guard let result = result else { fatalError() }
+            XCTAssertNotNil(result)
+            expectation.fulfill()
+        }
+        
+        waitForExpectations(timeout: 10)
+    }
+    
+    func test_connectUserToSurveys() {
+        let expectation = self.expectation(description: "post user_survey")
+        let (surveyId, genreId) = (4, 4)
+        
+        APIService.shared.connectSurveyGenres(surveyId: surveyId, genreId: genreId) { result, message in
+            guard let result = result else { fatalError() }
+            XCTAssertNotNil(result)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
+    
 }
