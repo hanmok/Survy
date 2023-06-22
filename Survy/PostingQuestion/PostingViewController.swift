@@ -35,8 +35,6 @@ class PostingViewController: BaseViewController, Coordinating {
     
     private var genreDataSource: UICollectionViewDiffableDataSource<Section, Genre>!
     
-    let marginSize = 12
-    
     enum Section {
         case main
     }
@@ -48,9 +46,8 @@ class PostingViewController: BaseViewController, Coordinating {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+        // 어디로 스크롤 해야하지? 눌린 곳의 위치를 어떻게 알아?
         let wholeHeight = tableViewTotalHeight + 100 + 52 + 20 + 16 + 100
-        print("wholeHeight: \(wholeHeight)")
         scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: wholeHeight)
         
         // FIXME: scroll to the bottom if new question has added
@@ -482,13 +479,18 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
             self.questionCellHeights.insert(cellHeight)
         }
         
-        viewDidAppear(false)
+//        viewDidAppear(true)
         
         if postingService.postingQuestions.count > indexPath.row {
             let postingQuestion = postingService.postingQuestions[indexPath.row]
             cell.postingQuestion = postingQuestion
             checkIfConditionSatisfied()
         }
+        
+        if indexPath.row == postingService.postingQuestions.count - 1 {
+            viewDidAppear(false)
+        }
+        
         return cell
     }
     
@@ -580,6 +582,7 @@ extension PostingViewController: PostingBlockCollectionFooterDelegate {
         DispatchQueue.main.async {
             self.postingBlockCollectionView.reloadData()
         }
+//        viewDidAppear(false)
     }
 }
 
