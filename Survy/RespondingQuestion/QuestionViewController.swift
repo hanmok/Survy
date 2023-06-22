@@ -9,10 +9,13 @@ import UIKit
 import SnapKit
 import Model
 
+
+
 // Coordinator pattern 필요할 것 같은데 ??
 
 class QuestionViewController: BaseViewController, Coordinating {
-    
+
+//    private var trailingConstraint: Constraint?
     private var previousPercentage: CGFloat = 0
     
     @objc func otherViewTapped() {
@@ -54,14 +57,11 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     private func configureLayout() {
         guard let numberOfQuestions = participationService.numberOfQuestions else { return }
-        
-        var currentQuestionIndex: Int
     
         switch participationService.questionProgress {
             case .undefined:
-                currentQuestionIndex = 0
+                break
             case .inProgress(let questionIndex):
-                
                 let currentQuestionIndex = questionIndex
                 let previous = max(currentQuestionIndex - 1, 0)
                 let current = currentQuestionIndex
@@ -149,20 +149,52 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
     }
     
+    private func performSlideAnimation() {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear) {
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            UIView.animate(withDuration: 0.0) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+    
     private func updateWithNewQuestion() {
         responseOptionStackView.reset()
         configureLayout()
         
-        questionContainerView.snp.remakeConstraints { make in
-            make.leading.trailing.equalTo(view.layoutMarginsGuide)
-            make.top.equalTo(myProgressView.snp.bottom).offset(80)
-            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
+        UIView.animateKeyframes(withDuration: 1.0, delay: 0.0, options: []) {
+            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
+                self.questionContainerView.transform = CGAffineTransform(translationX: -UIScreen.screenWidth, y: 0)
+            }
+        } completion: { bool in
+            if bool {
+                
+                self.questionContainerView.isHidden = true
+                self.questionContainerView.transform = CGAffineTransform(translationX: UIScreen.screenWidth, y: 0)
+                
+                self.questionContainerView.isHidden = false
+                UIView.animateKeyframes(withDuration: 1.0, delay: 0.0, options: []) {
+                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
+                        self.questionContainerView.transform = CGAffineTransform(translationX: 0, y: 0)
+                    }
+                }
+            }
         }
         
-        nextButton.snp.remakeConstraints { make in
-            make.leading.trailing.equalTo(view.layoutMarginsGuide)
-            make.top.equalTo(questionContainerView.snp.bottom).offset(30)
-            make.height.equalTo(50)
+        questionContainerView.snp.updateConstraints { make in
+            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
+        }
+
+        // 다음 버튼 아래로 보내기.
+        UIView.animate(withDuration: 0.5) {
+            self.view.layoutIfNeeded()
+        } completion: { _ in
+            self.nextButton.snp.updateConstraints { make in
+                make.leading.trailing.equalTo(self.view.layoutMarginsGuide)
+                make.top.equalTo(self.questionContainerView.snp.bottom).offset(30)
+                make.height.equalTo(50)
+            }
         }
         
         notifyConditionChange(to: false)
@@ -192,7 +224,8 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
     
         questionContainerView.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(view.layoutMarginsGuide)
+            make.leading.equalTo(view.snp.leading).offset(20)
+            make.width.equalTo(UIScreen.screenWidth - 40)
             make.top.equalTo(myProgressView.snp.bottom).offset(80)
             make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
         }
@@ -349,3 +382,22 @@ extension QuestionViewController: OptionStackViewDelegate {
         self.nextButton.backgroundColor = condition ? .mainColor : .grayProgress
     }
 }
+
+//extension QuestionViewController {
+//    func performSlideAnimation() {
+//            boxView.snp.updateConstraints { make in
+//                make.trailing.equalToSuperview()
+//            }
+//
+//            UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveLinear, animations: {
+//                self.view.layoutIfNeeded()
+//            }) { _ in
+//                self.boxView.snp.updateConstraints { make in
+//                    make.trailing.equalToSuperview().offset(1000)
+//                }
+//
+//                self.view.layoutIfNeeded()
+//                self.performSlideAnimation()
+//            }
+//        }
+//}
