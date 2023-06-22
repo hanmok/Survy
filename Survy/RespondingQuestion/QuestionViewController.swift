@@ -13,16 +13,18 @@ import Model
 
 class QuestionViewController: BaseViewController, Coordinating {
     
+    private var previousPercentage: CGFloat = 0
+    
     @objc func otherViewTapped() {
         view.dismissKeyboard()
     }
     
     var coordinator: Coordinator?
     
-    var surveyService: ParticipationService
+    var participationService: ParticipationService
     
-    init(surveyService: ParticipationServiceType) {
-        self.surveyService = surveyService as! ParticipationService
+    init(participationService: ParticipationServiceType) {
+        self.participationService = participationService as! ParticipationService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -37,7 +39,7 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        responseOptionStackView.optionStackViewDelegate = self
         configureLayout()
         setupTargets()
         setupLayout()
@@ -51,47 +53,65 @@ class QuestionViewController: BaseViewController, Coordinating {
     }
     
     private func configureLayout() {
-//        guard let questionType = questionType else { return }
-//        guard let selectableOptions = selectableOptions else { return }
+        guard let numberOfQuestions = participationService.numberOfQuestions else { return }
         
-        optionStackView.optionStackViewDelegate = self
+        var currentQuestionIndex: Int
+    
+        switch participationService.questionProgress {
+            case .undefined:
+                currentQuestionIndex = 0
+            case .inProgress(let questionIndex):
+                
+                let currentQuestionIndex = questionIndex
+                let previous = max(currentQuestionIndex - 1, 0)
+                let current = currentQuestionIndex
+                
+                let startingPercentage = Int((CGFloat(previous) / CGFloat(numberOfQuestions)) * 100)
+                let endPercentage = Int((CGFloat(current) / CGFloat(numberOfQuestions)) * 100)
+                
+                animateCounter(prev: startingPercentage, next: endPercentage)
+                UIView.animate(withDuration: 1.0, delay: 0, options: .curveLinear) {
+                    self.myProgressView.setProgress(Float(CGFloat(current) / CGFloat(numberOfQuestions)), animated: true)
+                } completion: { _ in }
+                
+            case .ended:
+                let startingPercentage = Int((CGFloat(numberOfQuestions - 1) / CGFloat(numberOfQuestions)) * 100)
+                let endPercentage = 100
+                animateCounter(prev: startingPercentage, next: endPercentage)
+                UIView.animate(withDuration: 1.0, delay: 0, options: .curveLinear) {
+                    self.myProgressView.setProgress(1, animated: true)
+                } completion: { _ in }
+        }
         
-        guard let question = surveyService.currentQuestion,
-              let percengenree = surveyService.percengenree else { return }
-        
+        guard let question = participationService.currentQuestion else { return }
         questionLabel.text = "\(question.position). \(question.text)"
-        percengenreeLabel.text = "\(Int(percengenree * 100))%"
         
-        if surveyService.isLastQuestion {
+        if participationService.isLastQuestion {
             nextButton.setTitle("완료", for: .normal)
             nextButton.addCharacterSpacing()
         }
         
-        // Strategy Pattern 써야 하는거 아닌가 ??
-        
-        // QuestionType 에 따라 갯수, 종류를 나누어야함.
-        
         let selectableOptions = question.selectableOptions
-        optionStackView.setQuestionType(question.questionType)
+        responseOptionStackView.setQuestionType(question.questionType)
         
         switch question.questionType {
             case .singleSelection:
                 for selectableOption in selectableOptions {
                     guard let value = selectableOption.value else { return }
                     let singleChoiceButton = SingleChoiceResponseButton(text: value, tag: selectableOption.position)
-                    optionStackView.addSingleSelectionButton(singleChoiceButton)
+                    responseOptionStackView.addSingleSelectionButton(singleChoiceButton)
                 }
             case .multipleSelection:
                 for selectableOption in selectableOptions {
                     guard let value = selectableOption.value else { return }
                     let multipleChoiceButton = MultipleChoiceResponseButton(text: value, tag: selectableOption.position)
-                    optionStackView.addMultipleSelectionButton(multipleChoiceButton)
+                    responseOptionStackView.addMultipleSelectionButton(multipleChoiceButton)
                 }
             case .shortSentence: // Should have Placeholder
                 guard let first = selectableOptions.first, let textFieldPlaceholder = first.placeHolder else { return }
                 let textField = UITextField()
                 textField.placeholder = textFieldPlaceholder
-                optionStackView.addTextField(textField)
+                responseOptionStackView.addTextField(textField)
             case .essay: // Should have Placeholder
                 break
             case .multipleSentences:
@@ -99,81 +119,89 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
     }
     
-    
     @objc func nextButtonTapped() {
-        
-        guard let question = surveyService.currentQuestion else { fatalError() }
+        guard let question = participationService.currentQuestion else { fatalError() }
         
         switch question.questionType {
-            
             case .singleSelection:
-                surveyService.selectedIndex = optionStackView.selectedIndex
+                participationService.selectedIndex = responseOptionStackView.selectedIndex
             case .multipleSelection:
-                surveyService.selectedIndexes = optionStackView.selectedIndices
+                participationService.selectedIndexes = responseOptionStackView.selectedIndices
             case .shortSentence:
-                surveyService.textAnswer = optionStackView.textAnswer
+                participationService.textAnswer = responseOptionStackView.textAnswer
             case .essay:
-                surveyService.textAnswer = optionStackView.textAnswer
+                participationService.textAnswer = responseOptionStackView.textAnswer
             case .multipleSentences:
                 break
         }
         
-        if !surveyService.isLastQuestion {
-            surveyService.moveToNextQuestion()
-            coordinator?.move(to: .questionController)
+        if participationService.isLastQuestion {
+            participationService.increaseQuestionIndex()
+            updateWithNewQuestion()
+            participationService.initializeSurvey()
+            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+                // TODO: Give message
+                self?.coordinator?.move(to: .root)
+            }
         } else {
-            surveyService.initializeSurvey()
-            coordinator?.move(to: .root)
+            participationService.increaseQuestionIndex()
+            updateWithNewQuestion()
         }
     }
     
+    private func updateWithNewQuestion() {
+        responseOptionStackView.reset()
+        configureLayout()
+        
+        questionContainerView.snp.remakeConstraints { make in
+            make.leading.trailing.equalTo(view.layoutMarginsGuide)
+            make.top.equalTo(myProgressView.snp.bottom).offset(80)
+            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
+        }
+        
+        nextButton.snp.remakeConstraints { make in
+            make.leading.trailing.equalTo(view.layoutMarginsGuide)
+            make.top.equalTo(questionContainerView.snp.bottom).offset(30)
+            make.height.equalTo(50)
+        }
+        
+        notifyConditionChange(to: false)
+    }
     
     private func setupLayout() {
-        let percengenree = surveyService.percengenree ?? 0.0
-        [progressContainerView, questionContainerView, nextButton, quitButton]
-            .forEach {
+        [
+         myProgressView,
+         questionContainerView,
+         nextButton, quitButton].forEach {
             self.view.addSubview($0)
         }
         
-        [fullProgressBar, partialProgressBar, percengenreeLabel].forEach {
-            self.progressContainerView.addSubview($0)
-        }
+        myProgressView.addSubview(percentageLabel)
         
-        [questionLabel, optionStackView].forEach { self.questionContainerView.addSubview($0) }
+        [questionLabel, responseOptionStackView].forEach { self.questionContainerView.addSubview($0) }
         
-        progressContainerView.snp.makeConstraints { make in
+        myProgressView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
             make.height.equalTo(40)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
         }
         
-        fullProgressBar.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        let filledWidth = (UIScreen.screenWidth - 40) * percengenree
-        partialProgressBar.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
-            make.width.equalTo(filledWidth)
-            make.height.top.equalToSuperview()
-        }
-        
-        percengenreeLabel.snp.makeConstraints { make in
+        percentageLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.height.equalToSuperview()
         }
-        
+    
         questionContainerView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
-            make.top.equalTo(progressContainerView.snp.bottom).offset(80)
-            make.height.equalTo(optionStackView.subviews.count * 40 + 50)
+            make.top.equalTo(myProgressView.snp.bottom).offset(80)
+            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
         }
         
         questionLabel.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview().inset(12)
         }
         
-        optionStackView.snp.makeConstraints { make in
+        responseOptionStackView.snp.makeConstraints { make in
             make.top.equalTo(questionLabel.snp.bottom).offset(12)
             make.leading.trailing.equalToSuperview().inset(12)
         }
@@ -191,30 +219,53 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
     }
     
+    private func animateCounter(prev: Int, next: Int) {
+        var tracker = prev
+        let interval = 1.0 / Double(next - prev)
+        
+        Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] timer in
+            tracker += 1
+            DispatchQueue.main.async {
+                self?.percentageLabel.text = "\(tracker)%"
+            }
+            if tracker == next {
+                timer.invalidate()
+            }
+        }
+    }
     
     // MARK: - UI Properties
     
-    // MARK: - Percengenree Bar
-    private let progressContainerView: UIView = {
-        let view = UIView()
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 12
-        return view
+    private let myProgressView: UIProgressView = {
+        let pv = UIProgressView()
+        pv.progressTintColor = UIColor.mainColor
+        pv.trackTintColor = .grayProgress
+        pv.layer.cornerRadius = 12
+        
+        pv.clipsToBounds = true
+        return pv
     }()
     
-    private let fullProgressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.grayProgress
-        return view
-    }()
+//    private let progressContainerView: UIView = {
+//        let view = UIView()
+//        view.clipsToBounds = true
+//        view.layer.cornerRadius = 12
+//        return view
+//    }()
     
-    private let partialProgressBar: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor.mainColor
-        return view
-    }()
+//    private let fullProgressBar: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = UIColor.grayProgress
+//        return view
+//    }()
+//
+//    private let partialProgressBar: UIView = {
+//        let view = UIView()
+//        view.backgroundColor = UIColor.mainColor
+//        return view
+//    }()
     
-    private let percengenreeLabel: UILabel = {
+    private let percentageLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
         label.text = "0%"
@@ -238,7 +289,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         return label
     }()
     
-    private let optionStackView: ResponseOptionStackView = {
+    private let responseOptionStackView: ResponseOptionStackView = {
         let stackView = ResponseOptionStackView()
         return stackView
     }()
@@ -247,7 +298,6 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     private let nextButton: UIButton = {
         let button = UIButton()
-//        button.backgroundColor = UIColor.mainColor
         button.backgroundColor = .grayProgress
         button.setTitle("다음", for: .normal)
         button.layer.cornerRadius = 7
@@ -274,7 +324,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         let quitAction = UIAlertAction(title: "종료", style: .destructive) { _ in
             DispatchQueue.main.async {
-                self.surveyService.initializeSurvey()
+                self.participationService.initializeSurvey()
                 self.coordinator?.move(to: .root)
             }
         }

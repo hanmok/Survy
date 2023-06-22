@@ -22,10 +22,18 @@ class ResponseOptionStackView: UIStackView {
     
     var buttons: [SelectionButton] = []
     
+    public func reset() {
+        for button in buttons {
+            button.removeFromSuperview()
+            removeArrangedSubview(button)
+        }
+        isConditionFulfilled = false
+        buttons.removeAll()
+    }
+    
     public var isConditionFulfilled: Bool = false {
         didSet {
-            if oldValue != isConditionFulfilled {
-                // TODO: Notify to ViewController
+            if oldValue != isConditionFulfilled { // 이거.. 좀 이상해 전 값과 다르면, notify
                 optionStackViewDelegate?.notifyConditionChange(to: isConditionFulfilled)
             }
         }
@@ -35,7 +43,6 @@ class ResponseOptionStackView: UIStackView {
         self.questionType = questionType
         super.init(frame: .zero)
         self.axis = axis
-        setupLayout()
     }
     
     public func setQuestionType(_ questionType: QuestionType) {
@@ -53,19 +60,10 @@ class ResponseOptionStackView: UIStackView {
     init() {
         super.init(frame: .zero)
         self.axis = .vertical
-        setupLayout()
     }
     
     required init(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupLayout() {
-        
-    }
-    
-    private func configureLayout() {
-        
     }
     
     private func addArrangedSubviews(_ selectionButtons: [SelectionButton]) {
@@ -88,34 +86,34 @@ class ResponseOptionStackView: UIStackView {
         self.buttons.append(button)
         button.addTarget(self, action: #selector(singleSelectionButtonTapped(_:)), for: .touchUpInside)
     }
-    
-    
-    
+
+    // 음.. 이렇게 진행하면 안될 것 같은데 ??
     public func addTextField(_ textField: UITextField) {
         addArrangedSubview(textField)
         textField.delegate = self
         textField.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged)
-        // how to observe textField Change Here ??
+        // how to observe textField Change Here ?? 여기에 있는 textField 는 대체 뭐지 ??
     }
     
     @objc func textChanged(_ sender: UITextField) {
         // 호출 안됨
         guard let text = sender.text else { return }
-        
         isConditionFulfilled = text != ""
-        
     }
     
     public func setMultipleSelectionButtons(_ buttons: [MultipleChoiceResponseButton]) {
+        
         addArrangedSubviews(buttons)
         buttons.forEach {
             $0.addTarget(self, action: #selector(multipleSelectionButtonTapped(_:)), for: .touchUpInside)
         }
+        self.buttons = buttons
     }
     
     public func addMultipleSelectionButton(_ button: MultipleChoiceResponseButton) {
         addArrangedSubview(button)
         button.addTarget(self, action: #selector(multipleSelectionButtonTapped(_:)), for: .touchUpInside)
+        self.buttons.append(button)
     }
     
     // 현재 선택된 것과 비교, 다를 경우 이미 선택된 것을 unselected 로 변경

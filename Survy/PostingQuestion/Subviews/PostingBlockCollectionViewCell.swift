@@ -32,6 +32,7 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
     
     var postingBlockCollectionViewCellDelegate: PostingBlockCollectionViewCellDelegate?
         
+    
     public var postingQuestion: PostingQuestion? {
         didSet {
             guard let postingQuestion = postingQuestion else { fatalError() }

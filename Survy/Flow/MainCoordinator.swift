@@ -41,7 +41,7 @@ class MainCoordinator: Coordinator {
                 initialController = MainTabController(provider: self.provider, coordinator: self)
                 
             case .responsdingQuestion:
-                initialController = QuestionViewController(surveyService: self.provider.participationService)
+                initialController = QuestionViewController(participationService: self.provider.participationService)
             case .postingQuestion:
                 initialController = PostingViewController(postingService: self.provider.postingService)
                 
@@ -58,13 +58,14 @@ class MainCoordinator: Coordinator {
 //        self.provider.participationService.currentSurvey = surveys[0]
 //        self.provider.participationService.currentSection = sections
         self.provider.participationService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
-        self.provider.participationService.questionIndex = 0
+//        self.provider.participationService.questionIndex = 0
+        self.provider.participationService.questionProgress = .inProgress(0)
     }
     
     func move(to destination: Destination) {
         switch destination {
             case .questionController:
-                let questionController = QuestionViewController(surveyService: provider.participationService)
+                let questionController = QuestionViewController(participationService: provider.participationService)
                 questionController.coordinator = self
                 navigationController?.pushViewController(questionController, animated: true)
             case .root:

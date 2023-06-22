@@ -9,11 +9,17 @@ import Foundation
 import Model
 import API
 
+enum QuestionProgressIndex {
+    case undefined
+    case inProgress(Int)
+    case ended
+}
+
 protocol ParticipationServiceType: AnyObject {
     var currentSurvey: Survey? { get set }
     var currentSection: Section? { get set }
     var currentQuestion: Question? { get }
-    var questionIndex: Int? { get set }
+    var questionProgress: QuestionProgressIndex { get set }
     var questionsToConduct: [Question]? { get set }
     var isLastQuestion: Bool { get }
     var selectedIndexes: Set<Int>? { get set }
@@ -23,12 +29,15 @@ protocol ParticipationServiceType: AnyObject {
     var allGenres: [Genre] { get set }
     var surveysToShow: [Survey] { get }
     var selectedGenres: Set<Int> { get set }
+    var numberOfQuestions: Int? { get }
     
-    func moveToNextQuestion()
+    func increaseQuestionIndex()
     func initializeSurvey()
 }
 
 class ParticipationService: ParticipationServiceType {
+    var questionProgress: QuestionProgressIndex = .undefined
+
     var allGenres = [Genre]()
     
     var selectedIndexes: Set<Int>?
@@ -42,39 +51,61 @@ class ParticipationService: ParticipationServiceType {
     func initializeSurvey() {
         currentSurvey = nil
         currentSection = nil
-        questionIndex = nil
         questionsToConduct = nil
+        questionProgress = .undefined
     }
     
     var currentSurvey: Survey?
     var currentSection: Section?
     var currentQuestion: Question? {
-        guard let questionsToConduct = questionsToConduct, let questionIndex = questionIndex else { return nil }
-        if questionsToConduct.count != questionIndex {
-            return questionsToConduct[questionIndex]
+        guard let questionsToConduct = questionsToConduct else { return nil }
+        switch questionProgress {
+            case .undefined:
+                return nil
+            case .inProgress(let questionIndex):
+                return questionsToConduct[questionIndex]
+            case .ended:
+                return nil
         }
-        return nil
     }
     
     var isLastQuestion: Bool {
-        guard let questionsToConduct = questionsToConduct, let questionIndex = questionIndex else { return false }
-        return questionsToConduct.count - 1 == questionIndex
-    }
-    
-    var questionsToConduct: [Question]?
-    
-    func moveToNextQuestion() {
-        if questionIndex != nil {
-            questionIndex! += 1
-        } else {
-            questionIndex = 0
+        guard let questionsToConduct = questionsToConduct else { return false }
+        switch questionProgress {
+            case .undefined:
+                return false
+            case .inProgress(let questionIdx):
+                return questionIdx == questionsToConduct.count - 1
+            case .ended:
+                return false
         }
     }
     
-    var questionIndex: Int?
-    var percengenree: CGFloat? {
-        guard let questionsToConduct = questionsToConduct, let questionIndex = questionIndex else { return 0 }
-        return CGFloat(questionIndex) / CGFloat(questionsToConduct.count)
+    var questionsToConduct: [Question]?
+    var numberOfQuestions: Int? {
+        if let questionsToConduct = questionsToConduct {
+            return questionsToConduct.count
+        }
+        return 0
+    }
+    
+    func increaseQuestionIndex() {
+        switch questionProgress {
+            case .undefined:
+                questionProgress = .inProgress(0)
+            case .inProgress(let idx):
+                guard let numberOfQuestions = numberOfQuestions else { return }
+                if numberOfQuestions - 1 != idx {
+                    questionProgress = .inProgress(idx + 1)
+                } else {
+                    questionProgress = .ended
+                }
+            case .ended:
+                questionProgress = .undefined
+        }
+        
+        print("current questionProgress: \(questionProgress)")
+        // ended 로 잘 되는데 ?
     }
     
     var selectedGenres = Set<Int>() // Genre Id
