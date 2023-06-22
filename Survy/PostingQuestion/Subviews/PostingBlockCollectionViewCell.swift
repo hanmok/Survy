@@ -42,8 +42,9 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    public var briefQuestionType: BriefQuestionType {
-        return postingQuestion?.briefQuestionType ?? .multipleSelection
+    public var briefQuestionType: BriefQuestionType? {
+//        return postingQuestion?.briefQuestionType ?? .multipleSelection
+        return postingQuestion?.briefQuestionType
     }
     
     private func initializeStates() {
@@ -124,27 +125,23 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
         dismissKeyboard()
         // 이거 호출 안돼요. 네??
 //        guard let cellIndex = cellIndex, let postingQuestion = postingQuestion else { return }
-        
+
 //        postingBlockCollectionViewCellDelegate?.updateUI(cellIndex: cellIndex, postingQuestion: postingQuestion)
         
         // 현재 Cell 이 어디야? 필요 없어.
+        
         guard let postingQuestion = postingQuestion,
               let briefQuestionType = postingQuestion.briefQuestionType else { fatalError() }
         
         setQuestionType(briefQuestionType: briefQuestionType)
         
-//        updateHeight()
     }
     
     public func updateHeight() {
         guard let cellIndex = cellIndex else { fatalError() }
 
         // PostingQuestion 할당된게 있는지 먼저 확인
-        
         guard let postingQuestion = postingQuestion else { fatalError() }
-            
-            postingQuestion.modifyQuestionType(briefQuestionType: briefQuestionType)
-            
             // 여기에서, 각 BriefQuestionType case에 따라 별로 구분해줘야 할 것 같아.
             
             if postingQuestion.selectableOptions.count == 0 {

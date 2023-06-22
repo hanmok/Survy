@@ -171,7 +171,6 @@ class QuestionViewController: BaseViewController, Coordinating {
         } completion: { bool in
             if bool {
                 self.questionContainerView.transform = CGAffineTransform(translationX: UIScreen.screenWidth, y: 0)
-                
                 UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
                         self.questionContainerView.transform = CGAffineTransform(translationX: 0, y: 0)

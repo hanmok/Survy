@@ -474,7 +474,7 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         
         cell.postingBlockCollectionViewCellDelegate = self
         cell.cellIndex = indexPath.row
-                
+        
         let cellHeight = CellHeight(index: indexPath.row, height: defaultCellHeight + 20)
         if self.questionCellHeights.filter ({ $0.index == indexPath.row }).isEmpty {
             self.questionCellHeights.insert(cellHeight)
@@ -483,7 +483,8 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         viewDidAppear(false)
         
         if postingService.postingQuestions.count > indexPath.row {
-            cell.postingQuestion = postingService.postingQuestions[indexPath.row]
+            let postingQuestion = postingService.postingQuestions[indexPath.row]
+            cell.postingQuestion = postingQuestion
             checkIfConditionSatisfied()
         }
         return cell
@@ -537,8 +538,6 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
     }
     
     // FIXME: 여깄다!!! 0621,
-//    func updateUI(cell: PostingBlockCollectionViewCell, cellIndex: Int, postingQuestion: PostingQuestion) {
-    
     func updateUI(cellIndex: Int, postingQuestion: PostingQuestion) {
         
         // cell 필요 없는거 아니야 ? 맞아.

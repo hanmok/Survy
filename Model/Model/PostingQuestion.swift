@@ -51,7 +51,11 @@ public class PostingQuestion {
     }
     
     /// QuestionTypeId
-    public var briefQuestionType: BriefQuestionType?
+    public var briefQuestionType: BriefQuestionType? {
+        didSet {
+            print("briefQuestionType set to \(briefQuestionType)")
+        }
+    }
     
     public var selectableOptions: [SelectableOption] = []
     
