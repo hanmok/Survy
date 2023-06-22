@@ -163,25 +163,24 @@ class QuestionViewController: BaseViewController, Coordinating {
         responseOptionStackView.reset()
         configureLayout()
         
-        UIView.animateKeyframes(withDuration: 1.0, delay: 0.0, options: []) {
+        UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
                 self.questionContainerView.transform = CGAffineTransform(translationX: -UIScreen.screenWidth, y: 0)
+                self.nextButton.alpha = 0.0
             }
         } completion: { bool in
             if bool {
-                
-                self.questionContainerView.isHidden = true
                 self.questionContainerView.transform = CGAffineTransform(translationX: UIScreen.screenWidth, y: 0)
                 
-                self.questionContainerView.isHidden = false
-                UIView.animateKeyframes(withDuration: 1.0, delay: 0.0, options: []) {
+                UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
                     UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
                         self.questionContainerView.transform = CGAffineTransform(translationX: 0, y: 0)
+                        self.nextButton.alpha = 1.0
                     }
                 }
             }
         }
-        
+
         questionContainerView.snp.updateConstraints { make in
             make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
         }
@@ -196,7 +195,6 @@ class QuestionViewController: BaseViewController, Coordinating {
                 make.height.equalTo(50)
             }
         }
-        
         notifyConditionChange(to: false)
     }
     
