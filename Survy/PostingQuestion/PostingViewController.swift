@@ -20,6 +20,7 @@ class PostingViewController: BaseViewController, Coordinating {
     
     var numOfSpecimen: Int = 100
     private let selectableOptionHeight: CGFloat = 27
+//    private let defaultCellHeight: CGFloat = 120
     private let defaultCellHeight: CGFloat = 120
     
     var postingService: PostingServiceType
@@ -27,7 +28,7 @@ class PostingViewController: BaseViewController, Coordinating {
     var questionCellHeights = Set<CellHeight>()
     
     var tableViewTotalHeight: CGFloat {
-        return questionCellHeights.map { $0.height }.reduce(0, +)
+        return questionCellHeights.map {$0.height + 20}.reduce(0, +)
     }
     
     private var targetDataSource: UICollectionViewDiffableDataSource<Section, Target>!
@@ -47,6 +48,7 @@ class PostingViewController: BaseViewController, Coordinating {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
         let wholeHeight = tableViewTotalHeight + 100 + 52 + 20 + 16 + 100
         print("wholeHeight: \(wholeHeight)")
         scrollView.contentSize = CGSize(width: UIScreen.screenWidth, height: wholeHeight)
@@ -547,6 +549,10 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
 
         let numberOfSelectableOptions = postingQuestion.numberOfOptions
         
+//        let newCellHeight = CellHeight(
+//            index: cellIndex,
+//            height: defaultCellHeight + CGFloat(numberOfSelectableOptions) * self.selectableOptionHeight)
+        
         let newCellHeight = CellHeight(
             index: cellIndex,
             height: defaultCellHeight + CGFloat(numberOfSelectableOptions) * self.selectableOptionHeight)
@@ -570,6 +576,7 @@ extension PostingViewController: PostingBlockCollectionFooterDelegate {
         
         print("postingService's numberOfQuestion: \(postingService.postingQuestions.count)")
         
+        // TODO: Need to update Cell Height
         DispatchQueue.main.async {
             self.postingBlockCollectionView.reloadData()
         }
