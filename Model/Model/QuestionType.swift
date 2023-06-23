@@ -7,10 +7,10 @@
 
 import Foundation
 
-public enum QuestionType: String {
-    case singleSelection
-    case multipleSelection
-    case shortSentence
-    case essay
-    case multipleSentences
-}
+//public enum QuestionType: String {
+//    case singleSelection
+//    case multipleSelection
+//    case shortSentence
+//    case essay
+//    case multipleSentences
+//}

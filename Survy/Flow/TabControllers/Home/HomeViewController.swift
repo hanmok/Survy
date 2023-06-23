@@ -59,7 +59,7 @@ class HomeViewController: TabController, Coordinating {
         self.setupLayout()
         
         coordinator?.setIndicatorSpinning(true)
-        // TODO: Get all genres, match them to surveys and update
+        // Get all genres, match them to surveys and update UI
         
         commonService.getSurveys { [weak self] in
             self?.commonService.getGenres(completion: { [weak self] in
@@ -117,7 +117,10 @@ class HomeViewController: TabController, Coordinating {
             self.surveyTableView.reloadData()
         }
         
+        print("fetchedSurveys: \(commonService.surveysToShow)")
+        
         if commonService.surveysToShow.isEmpty {
+            
             if UserDefaults.standard.myGenres.isEmpty {
                 noDataLabel.text = "Select Genre first"
             } else {
@@ -138,7 +141,6 @@ class HomeViewController: TabController, Coordinating {
     }
     
     @objc func genreSelectionButtonTapped() {
-//        coordinator?.manipulate(.genreSelection, command: .present)
         coordinator?.manipulate(.genreSelection(.participating), command: .present)
     }
     

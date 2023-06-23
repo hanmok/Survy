@@ -21,36 +21,24 @@ protocol PostingServiceType: AnyObject {
     var surveyTitle: String? { get set }
     var participationGoal: Int? { get set }
     var sections: [Section]? { get set }
-    var title: String? { get set }
-    var editingCellIndex: Int? { get set }
 
     func refineSelectableOptionsOfPostingQuestions()
-    func setTitle(_ title: String)
+    func setSurveyTitle(_ surveyTitle: String)
     func setParticipationGoal(participationGoal: Int)
     func setTargets(_ targets: [Target])
     func setGenres(_ genres: [Genre])
     func setNumberOfSpecimens(_ num: Int)
     func addQuestion()
-    func resetQuestions()
     func setPostingQuestion(postingQuestion: PostingQuestion, index: Int)
-    func setSurveyTitle(name: String)
     func setSections(_ sections: [Section])
+    func reset()
 }
 
 class PostingService: PostingServiceType {
-    
-    var editingCellIndex: Int?
-    
-    var title: String?
-
     var sections: [Section]?
-    
     var participationGoal: Int?
-    
     var surveyTitle: String?
-    
     var postingQuestions: [PostingQuestion] = []
-    
     var numberOfQuestions: Int {
         return postingQuestions.count
     }
@@ -62,23 +50,15 @@ class PostingService: PostingServiceType {
     }
     var selectedTargets: [Target] = []
     var selectedGenres: [Genre] = []
-    
     var hasCompletedQuestion: Bool {
         return postingQuestions.contains(where: { postingQuestion in
             postingQuestion.isCompleted == true
         })
     }
     
-    func setEditingCellIndex(_ index: Int) {
-        self.editingCellIndex = index
-    }
-    func setSurveyTitle(name: String) {
-        self.surveyTitle = name
-    }
-    
-    func setTitle(_ title: String) {
-        print("title set to \(title)")
-        self.title = title
+    func setSurveyTitle(_ surveyTitle: String) {
+        print("title set to \(surveyTitle)")
+        self.surveyTitle = surveyTitle
     }
     
     func setSections(_ sections: [Section]) {
@@ -108,8 +88,13 @@ class PostingService: PostingServiceType {
         self.postingQuestions = postingQuestions
     }
     
-    func resetQuestions() {
+    func reset() {
+        sections = nil
+        participationGoal = nil
+        surveyTitle = nil
         postingQuestions = []
+        selectedTargets = []
+        selectedGenres = []
     }
     
     func addQuestion() {

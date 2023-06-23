@@ -126,7 +126,6 @@ class PostingViewController: BaseViewController, Coordinating {
         selectedTargetsCollectionView.backgroundColor = .cyan
     }
     
-    
     private func configureTopDataSources() {
         configureGenreDataSource()
         configureTargetDataSource()
@@ -158,7 +157,6 @@ class PostingViewController: BaseViewController, Coordinating {
     
     /// Update genre, target UIs
     override func updateMyUI() {
-        
         if postingService.selectedGenres != currentGenres {
             currentGenres = postingService.selectedGenres
             var genreSnapshot = NSDiffableDataSourceSnapshot<Section, Genre>()
@@ -179,15 +177,13 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     private func checkIfConditionSatisfied() {
-        if postingService.selectedGenres.isEmpty == false && postingService.hasCompletedQuestion && postingService.title != nil {
-            setRequestingButtonStatus(to: true)
-            print("selectableOptions:")
-            for eachQuestion in postingService.postingQuestions {
-                print(eachQuestion.selectableOptions)
-            }
-        } else {
-            setRequestingButtonStatus(to: false)
-        }
+        // Category 선택되어야함, 완료된 질문 있어야함, title 뭔가 입력되어있어야함.
+        let isSatisfied = postingService.selectedGenres.isEmpty == false
+        && postingService.hasCompletedQuestion
+        && postingService.surveyTitle != nil
+
+        requestingButton.isUserInteractionEnabled = isSatisfied
+        requestingButton.backgroundColor = isSatisfied ? .deeperMainColor : .grayProgress
     }
     
     private func setupInitialSnapshot() {
@@ -205,17 +201,21 @@ class PostingViewController: BaseViewController, Coordinating {
     func createLayout() -> UICollectionViewLayout {
         let layout = UICollectionViewCompositionalLayout { (sectionIndex: Int,
             layoutEnvironment: NSCollectionLayoutEnvironment) -> NSCollectionLayoutSection in
-
+            // 이게 꼭 Diffable 이어야해? Nope. 이걸 왜 지금하고있어?
             let columns = 5
             let spacing = CGFloat(10)
+            
             let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                   heightDimension: .fractionalHeight(1.0))
+            
             let item = NSCollectionLayoutItem(layoutSize: itemSize)
             
             let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
                                                    heightDimension: .fractionalHeight(1.0))
             
-            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: columns)
+            let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize,
+                                                           subitem: item,
+                                                           count: columns)
             
             group.interItemSpacing = .fixed(spacing)
 
@@ -243,23 +243,25 @@ class PostingViewController: BaseViewController, Coordinating {
     
     @objc private func dismissKeyboard() {
         
-        UserDefaults.standard.isAddingSelectableOption = false
+        // 음.. 왜그럴까 ??
+        // 인식을 마쳐야하는데..
         
-        view.dismissKeyboard()
+        print("dismisskeyboardCalled")
+        
+        UserDefaults.standard.isAddingSelectableOption = false
 
+        view.dismissKeyboard()
+        
         postingService.refineSelectableOptionsOfPostingQuestions()
         
         DispatchQueue.main.async {
             self.postingBlockCollectionView.reloadData()
         }
-        
-//         필요 없는 SelectableOption 지우기!
-//        postingService 업데이트 후 configure ?
+        checkIfConditionSatisfied()
     }
     
     @objc func targetTapped(_ sender: UIButton) {
         dismissKeyboard()
-
         coordinator?.manipulate(.targetSelection, command: .present)
     }
     
@@ -269,11 +271,23 @@ class PostingViewController: BaseViewController, Coordinating {
     }
     
     @objc func requestSurveyTapped(_ sender: UIButton) {
+        let postingQuestions = postingService.postingQuestions
+        print("0623 flag 1")
+        for eachQuestion in postingQuestions {
+            print("title: \(eachQuestion.questionText)")
+            print("selectableOptions:")
+            for eachSelectableOption in eachQuestion.selectableOptions {
+                print("value: \(eachSelectableOption.value)")
+                print("some: \(eachSelectableOption.position)")
+            }
+        }
+        
+        print("current postingQuestions: \(postingService.postingQuestions)")
         coordinator?.manipulate(.confirmation, command: .present)
     }
     
     @objc func dismissTapped() {
-        postingService.resetQuestions()
+        postingService.reset()
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -378,11 +392,6 @@ class PostingViewController: BaseViewController, Coordinating {
         }
     }
     
-    private func setRequestingButtonStatus(to active: Bool) {
-        requestingButton.isUserInteractionEnabled = active
-        requestingButton.backgroundColor = active ? .deeperMainColor : .grayProgress
-    }
-    
     private func setupLeftNavigationBar() {
         let backButton = UIBarButtonItem(image: UIImage.leftChevron, style: .plain, target: self, action: #selector(dismissTapped))
         self.navigationItem.leftBarButtonItem = backButton
@@ -463,7 +472,6 @@ class PostingViewController: BaseViewController, Coordinating {
 
 extension PostingViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        print("flag 6161, numberOfQuestions: \(postingService.numberOfQuestions)")
         return postingService.numberOfQuestions
     }
     
@@ -478,8 +486,6 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
         if self.questionCellHeights.filter ({ $0.index == indexPath.row }).isEmpty {
             self.questionCellHeights.insert(cellHeight)
         }
-        
-//        viewDidAppear(true)
         
         if postingService.postingQuestions.count > indexPath.row {
             let postingQuestion = postingService.postingQuestions[indexPath.row]
@@ -536,12 +542,21 @@ extension PostingViewController: UICollectionViewDataSource, UICollectionViewDel
 
 extension PostingViewController: PostingBlockCollectionViewCellDelegate {
     
+    func returnTapped(from cell: PostingBlockCollectionViewCell) {
+        print("count: \(cell.postingQuestion?.selectableOptions.count)")
+        if cell.postingQuestion?.selectableOptions.count != 1 {
+            postingService.refineSelectableOptionsOfPostingQuestions()
+            DispatchQueue.main.async {
+                self.postingBlockCollectionView.reloadData()
+            }
+        }
+    }
+    
     func updateQuestionText(cellIndex: Int, questionText: String, postingQuestion: PostingQuestion) {
         postingQuestion.updateQuestionText(questionText: questionText)
         // TODO: Update PostingQuestion
     }
     
-    // FIXME: 여깄다!!! 0621,
     func updateUI(cellIndex: Int, postingQuestion: PostingQuestion) {
         
         // cell 필요 없는거 아니야 ? 맞아.
@@ -550,10 +565,6 @@ extension PostingViewController: PostingBlockCollectionViewCellDelegate {
         questionCellHeights.remove(correspondingCellHeight) // 뭐지? 지우는게 뭔가 있네?
 
         let numberOfSelectableOptions = postingQuestion.numberOfOptions
-        
-//        let newCellHeight = CellHeight(
-//            index: cellIndex,
-//            height: defaultCellHeight + CGFloat(numberOfSelectableOptions) * self.selectableOptionHeight)
         
         let newCellHeight = CellHeight(
             index: cellIndex,
@@ -582,13 +593,12 @@ extension PostingViewController: PostingBlockCollectionFooterDelegate {
         DispatchQueue.main.async {
             self.postingBlockCollectionView.reloadData()
         }
-//        viewDidAppear(false)
     }
 }
 
 extension PostingViewController: CustomNavigationBarDelegate {
     func dismiss() {
-        postingService.resetQuestions()
+        postingService.reset()
         self.navigationController?.popViewController(animated: true)
     }
 }
@@ -597,7 +607,9 @@ extension PostingViewController: CustomNavigationBarDelegate {
 extension PostingViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let title = textField.text else { return true }
-        postingService.setTitle(title)
+        postingService.setSurveyTitle(title)
+        self.view.dismissKeyboard()
+        checkIfConditionSatisfied()
         return true
     }
 }

@@ -7,27 +7,30 @@
 
 import Foundation
 
-public struct Section {
-    
-//    public init(surveyId: Int, numOfQuestions: Int) {
-//        self.surveyId = surveyId
-//        self.numOfQuestions = numOfQuestions
-//    }
-    
-    public init(surveyId: Int, numOfQuestions: Int, sequence: Int = 0, title: String) {
-        self.surveyId = surveyId
-        self.sequence = sequence
-        self.numOfQuestions = numOfQuestions
+public struct Section: Decodable {
+    public init(title: String, sequence: Int = 0) {
         self.title = title
+        self.sequence = sequence
     }
     
+    public enum CodingKeys: String, CodingKey {
+        case title
+        case sequence
+        case id
+        case surveyId = "survey_id"
+        case expectedTimeInSec
+        case reward
+    }
+    
+    public var title: String = ""
     public let sequence: Int
-    public var id: Int?
-    public let surveyId: Int
+    public var id: Int? = nil
+    public var surveyId: Int? = nil
     public let expectedTimeInSec: Int = 5
     public let reward: Int = 100
-    public var title: String = ""
-    public let numOfQuestions: Int
+    
+    public var postingQuestions: [PostingQuestion]?
+    public var questions: [Question]?
     
     mutating public func setTitle(_ title: String) {
         self.title = title

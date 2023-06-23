@@ -17,3 +17,4 @@ public struct SurveyGenre: Codable {
     }
 }
 
+//public struct 나중에 해. '

@@ -10,6 +10,7 @@ import Moya
 
 public enum SectionAPI {
     case create(String, Int, Int) // title, surveyId, Sequence
+    case fetchAll
 }
 
 extension SectionAPI: BaseAPIType {
@@ -21,63 +22,43 @@ extension SectionAPI: BaseAPIType {
     }
     
     public var path: String {
-//        switch self {
-//            case .fetchGenres(let surveyId):
-//                return "/surveys/\(surveyId)/genres"
-//            default:
-//                return "/surveys"
-//        }
         return "/sections"
     }
     
     public var method: Moya.Method {
-
-//        switch self {
-//            case .fetchAll, .fetchGenres:
-//                return .get
-//            case .create:
-//                return .post
-//        }
-
-        return .post
+        switch self {
+            case .create:
+                return .post
+            default:
+                return .get
+        }
     }
     
     public var parameters: [String : Any]? {
         switch self {
             case .create(let title, let sequence, let surveyId):
                 return ["title": title, "sequence": sequence, "survey_id": surveyId]
+            case .fetchAll:
+                return [:]
         }
-        
-//        return ["title": String]
-//        switch self {
-//            case .create(let title, let participationGoal):
-//                return ["title": title, "participationGoal": participationGoal]
-//            default: return [:]
-//        }
-//        return [:]
-        
     }
     
     public var task: Moya.Task {
         guard let parameters = parameters else { return .requestPlain }
-        
-//        switch self {
-//            case .create:
-//                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
-//            default:
-//                return .requestParameters(parameters: parameters, encoding: parameterEncoding)
-//        }
-    
-        return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+        switch self {
+            case .create:
+                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+            default:
+                return .requestParameters(parameters: parameters, encoding: parameterEncoding)
+        }
     }
     
     public var parameterEncoding: ParameterEncoding {
-//        switch self {
-//            case .create:
-//                return URLEncoding.httpBody
-//            default:
-//                return URLEncoding.queryString
-//        }
-        return URLEncoding.httpBody
+        switch self {
+            case .create:
+                return URLEncoding.httpBody
+            default:
+                return URLEncoding.queryString
+        }
     }
 }

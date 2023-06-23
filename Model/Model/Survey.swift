@@ -88,14 +88,3 @@ extension Survey {
         }
     }
 }
-
-
-public struct SurveyResponse: Decodable {
-    public var surveys: [Survey]
-//    var count: Int
-}
-
-public struct PostResponse: Decodable {
-    public var message: String
-    public var id: Int
-}

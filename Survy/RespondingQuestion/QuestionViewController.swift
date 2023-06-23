@@ -15,7 +15,6 @@ import Model
 
 class QuestionViewController: BaseViewController, Coordinating {
 
-//    private var trailingConstraint: Constraint?
     private var previousPercentage: CGFloat = 0
     
     @objc func otherViewTapped() {
@@ -38,6 +37,12 @@ class QuestionViewController: BaseViewController, Coordinating {
     private func setupTargets() {
         quitButton.addTarget(self, action: #selector(quitButtonTapped), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextButtonTapped), for: .touchUpInside)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // MARK: - Fetch participation No. Not here.
+        
     }
     
     override func viewDidLoad() {
@@ -91,8 +96,12 @@ class QuestionViewController: BaseViewController, Coordinating {
             nextButton.addCharacterSpacing()
         }
         
-        let selectableOptions = question.selectableOptions
-        responseOptionStackView.setQuestionType(question.questionType)
+//        let selectableOptions = question.selectableOptions
+        
+        guard let selectableOptions = question.selectableOptions else { fatalError() }
+        guard let questionType = question.questionType else { fatalError() }
+//        responseOptionStackView.setQuestionType(question.questionType)
+        responseOptionStackView.setQuestionType(questionType)
         
         switch question.questionType {
             case .singleSelection:
@@ -107,14 +116,15 @@ class QuestionViewController: BaseViewController, Coordinating {
                     let multipleChoiceButton = MultipleChoiceResponseButton(text: value, tag: selectableOption.position)
                     responseOptionStackView.addMultipleSelectionButton(multipleChoiceButton)
                 }
-            case .shortSentence: // Should have Placeholder
+//            case .shortSentence: // Should have Placeholder
+            case .short:
                 guard let first = selectableOptions.first, let textFieldPlaceholder = first.placeHolder else { return }
                 let textField = UITextField()
                 textField.placeholder = textFieldPlaceholder
                 responseOptionStackView.addTextField(textField)
             case .essay: // Should have Placeholder
                 break
-            case .multipleSentences:
+            case .none:
                 break
         }
     }
@@ -127,11 +137,11 @@ class QuestionViewController: BaseViewController, Coordinating {
                 participationService.selectedIndex = responseOptionStackView.selectedIndex
             case .multipleSelection:
                 participationService.selectedIndexes = responseOptionStackView.selectedIndices
-            case .shortSentence:
+            case .short:
                 participationService.textAnswer = responseOptionStackView.textAnswer
             case .essay:
                 participationService.textAnswer = responseOptionStackView.textAnswer
-            case .multipleSentences:
+            case .none:
                 break
         }
         

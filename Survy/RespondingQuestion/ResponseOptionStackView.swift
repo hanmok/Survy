@@ -10,7 +10,7 @@ import Model
 
 class ResponseOptionStackView: UIStackView {
     
-    var questionType: QuestionType = .singleSelection
+    var questionType: BriefQuestionType = .singleSelection
 
     var optionStackViewDelegate: OptionStackViewDelegate?
     
@@ -39,18 +39,26 @@ class ResponseOptionStackView: UIStackView {
         }
     }
     
-    init(questionType: QuestionType = .singleSelection, axis: NSLayoutConstraint.Axis = .vertical) {
+//    init(questionType: QuestionType = .singleSelection, axis: NSLayoutConstraint.Axis = .vertical) {
+//        self.questionType = questionType
+//        super.init(frame: .zero)
+//        self.axis = axis
+//    }
+    
+    init(questionType: BriefQuestionType = .singleSelection, axis: NSLayoutConstraint.Axis = .vertical) {
         self.questionType = questionType
         super.init(frame: .zero)
         self.axis = axis
     }
     
-    public func setQuestionType(_ questionType: QuestionType) {
+//    public func setQuestionType(_ questionType: QuestionType) {
+    public func setQuestionType(_ questionType: BriefQuestionType) {
         self.questionType = questionType
         switch questionType {
             case .multipleSelection:
                 selectedIndices = Set<Int>()
-            case .essay, .shortSentence:
+//            case .essay, .shortSentence:
+            case .short, .essay:
                 textAnswer = ""
             default:
                 break

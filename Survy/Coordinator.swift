@@ -23,6 +23,8 @@ protocol Coordinator {
     func setIndicatorSpinning(_ shouldSpin: Bool)
     
     func toastMessage(title: String, message: String)
+    
+//    func resetPostingService
 }
 
 enum ChildView {

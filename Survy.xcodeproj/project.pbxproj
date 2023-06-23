@@ -43,7 +43,6 @@
 		9ABBC35929DC787A006980E6 /* UIViewControllerExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ABBC35829DC787A006980E6 /* UIViewControllerExt+.swift */; };
 		9ACCC6EF2A1B522C006AE8CE /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6EE2A1B522C006AE8CE /* CustomNavigationBar.swift */; };
 		9ACCC6F12A1B7332006AE8CE /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6F02A1B7332006AE8CE /* Menu.swift */; };
-		9ACCC6F32A1C7AD1006AE8CE /* StringExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6F22A1C7AD1006AE8CE /* StringExt+.swift */; };
 		9ACCC6F52A2099AD006AE8CE /* AlwaysSafeAreaInsetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6F42A2099AD006AE8CE /* AlwaysSafeAreaInsetsView.swift */; };
 		9ACCC6F82A209FDA006AE8CE /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6F72A209FDA006AE8CE /* TabController.swift */; };
 		9ACCC6FA2A20B4E1006AE8CE /* CategorySelectionFooterCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC6F92A20B4E1006AE8CE /* CategorySelectionFooterCell.swift */; };
@@ -155,7 +154,6 @@
 		9ACA894243BBFA2D37D1A82C /* Pods-Survy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Survy.debug.xcconfig"; path = "Target Support Files/Pods-Survy/Pods-Survy.debug.xcconfig"; sourceTree = "<group>"; };
 		9ACCC6EE2A1B522C006AE8CE /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		9ACCC6F02A1B7332006AE8CE /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
-		9ACCC6F22A1C7AD1006AE8CE /* StringExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StringExt+.swift"; sourceTree = "<group>"; };
 		9ACCC6F42A2099AD006AE8CE /* AlwaysSafeAreaInsetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlwaysSafeAreaInsetsView.swift; sourceTree = "<group>"; };
 		9ACCC6F72A209FDA006AE8CE /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		9ACCC6F92A20B4E1006AE8CE /* CategorySelectionFooterCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategorySelectionFooterCell.swift; sourceTree = "<group>"; };
@@ -434,7 +432,6 @@
 				9A6113CF2A00D5F40051FF2B /* NSMutableParagraphStyle.swift */,
 				9A6113D52A0134F80051FF2B /* SetExt+.swift */,
 				9A6114C92A069D6B0051FF2B /* UIStackViewExt+.swift */,
-				9ACCC6F22A1C7AD1006AE8CE /* StringExt+.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -687,7 +684,6 @@
 				9AF935F22A1A7CB90002B15B /* CompleteViewController.swift in Sources */,
 				9A6114D72A07E5BA0051FF2B /* SelectableOptionFieldView.swift in Sources */,
 				9ACD1C752A15F62D0085D43E /* PersonFollowingTableViewCell.swift in Sources */,
-				9ACCC6F32A1C7AD1006AE8CE /* StringExt+.swift in Sources */,
 				9A6113D62A0134F80051FF2B /* SetExt+.swift in Sources */,
 				9AE2960129D714F800387883 /* UICollectionViewCellExt+.swift in Sources */,
 				9ACD1C6E2A152C560085D43E /* TargetLabelCollectionViewCell.swift in Sources */,

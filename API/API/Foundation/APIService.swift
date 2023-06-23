@@ -116,6 +116,18 @@ extension APIService {
             }
         }
     }
+    
+    public func getSections(completion: @escaping ([Section]?, String) -> Void) {
+        sectionProvider.request(.fetchAll) { result in
+            switch result {
+                case .success(let response):
+                    let sectionResponse = try! JSONDecoder().decode(SectionResponse.self, from: response.data)
+                    completion(sectionResponse.sections, "success")
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
 }
 
 
@@ -127,6 +139,18 @@ extension APIService {
                     let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
                     let (id, message) = (postResponse.id, postResponse.message)
                     completion(id, message)
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+    
+    public func getQuestions(completion: @escaping ([Question]?, String) -> Void) {
+        questionProvider.request(.fetchAll) { result in
+            switch result {
+                case .success(let response):
+                    let questionResponse = try! JSONDecoder().decode(QuestionResponse.self, from: response.data)
+                    completion(questionResponse.questions, "success")
                 case .failure(let error):
                     completion(nil, error.localizedDescription)
             }

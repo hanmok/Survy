@@ -30,12 +30,19 @@ protocol ParticipationServiceType: AnyObject {
     var surveysToShow: [Survey] { get }
     var selectedGenres: Set<Int> { get set }
     var numberOfQuestions: Int? { get }
-    
+    var sections: [Section]? { get set }
     func increaseQuestionIndex()
     func initializeSurvey()
+    func setSections(_ sections: [Section])
 }
 
 class ParticipationService: ParticipationServiceType {
+    
+    var sections: [Section]?
+    
+    func setSections(_ sections: [Section]) {
+        self.sections = sections
+    }
     var questionProgress: QuestionProgressIndex = .undefined
 
     var allGenres = [Genre]()

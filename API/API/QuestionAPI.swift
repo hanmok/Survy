@@ -10,8 +10,8 @@ import Moya
 import Model
 
 public enum QuestionAPI {
-//    case create(String, Int, Int, Int) // text, section_id, questionType_id, expectedTimeInSec
     case create(QuestionText, SectionId, QuestionTypeId, Int) // text, section_id, questionType_id, expectedTimeInSec
+    case fetchAll
 }
 
 
@@ -28,10 +28,12 @@ extension QuestionAPI: BaseAPIType {
     }
     
     public var method: Moya.Method {
-        return .post
+        switch self {
+            case .create: return .post
+            case .fetchAll: return .get
+        }
     }
-    
-    // TODO: 필요할걸?
+
     public var parameters: [String : Any]? {
         switch self {
             case .create(let text, let sectionId, let questionTypeId, let expectedTimeInSec):
@@ -39,16 +41,26 @@ extension QuestionAPI: BaseAPIType {
                         "section_id": sectionId,
                         "questionType_id": questionTypeId,
                         "expectedTimeInSec": expectedTimeInSec]
+            case .fetchAll: return [:]
         }
     }
     
     public var task: Moya.Task {
         guard let parameters = parameters else { return .requestPlain }
-    
-        return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+        switch self {
+            case .create :
+                return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
+            default:
+                return .requestParameters(parameters: parameters, encoding: parameterEncoding)
+        }
     }
     
     public var parameterEncoding: ParameterEncoding {
-        return URLEncoding.httpBody
+        switch self {
+            case .create:
+                return URLEncoding.httpBody
+            default:
+                return URLEncoding.queryString
+        }
     }
 }

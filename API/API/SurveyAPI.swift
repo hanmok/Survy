@@ -11,7 +11,6 @@ import Model
 
 public enum SurveyAPI {
     case create(String, Int, Int) // title, participationGoal, userId
-    
     case fetchAll
     case fetchGenres(Int) // with survey id
 }
@@ -28,7 +27,6 @@ extension SurveyAPI: BaseAPIType {
         switch self {
             case .fetchGenres(let surveyId):
                 return "/surveys/\(surveyId)/genres"
-            
             default:
                 return "/surveys"
         }
@@ -71,5 +69,3 @@ extension SurveyAPI: BaseAPIType {
         }
     }
 }
-
-

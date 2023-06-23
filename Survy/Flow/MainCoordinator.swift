@@ -9,6 +9,7 @@ import UIKit
 import Model
 import SnapKit
 import Toast
+import API
 
 enum InitialScreen {
     case mainTab
@@ -39,27 +40,47 @@ class MainCoordinator: Coordinator {
         switch initialScreen {
             case .mainTab:
                 initialController = MainTabController(provider: self.provider, coordinator: self)
-                
             case .responsdingQuestion:
                 initialController = QuestionViewController(participationService: self.provider.participationService)
             case .postingQuestion:
                 initialController = PostingViewController(postingService: self.provider.postingService)
-                
             case .test:
                 initialController = ViewController6()
         }
-        
         navigationController?.setViewControllers([initialController], animated: false)
-        
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
     public func testSetup() {
-//        self.provider.participationService.currentSurvey = surveys[0]
-//        self.provider.participationService.currentSection = sections
-        self.provider.participationService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
-//        self.provider.participationService.questionIndex = 0
-        self.provider.participationService.questionProgress = .inProgress(0)
+        // 언제 호출해야하지? 음..  QuestionViewController 로 넘어왔을 때.
+//        self.provider.participationService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
+//        self.provider.participationService.questionProgress = .inProgress(0)
+    }
+    
+    public func setupQuestions(completion: @escaping (Void?) -> Void) {
+        // 1. 선택한 survey id 는 ?
+//        self.provider.participationService.allSurveys
+        
+        var sectionIds = [SectionId: [QuestionId]]()
+        
+        APIService.shared.getSections { [weak self] allSections, message in
+            guard let allSections = allSections else { fatalError() }
+            guard let currentSurvey = self?.provider.participationService.currentSurvey else { fatalError() }
+            let correspondingSections = allSections.filter { $0.surveyId == currentSurvey.id }
+            
+            for sectionIndex in correspondingSections.indices {
+                // TODO: 모든 질문 받기.
+                
+                APIService.shared.getQuestions { questions, message in
+                    guard let questions = questions else { fatalError() }
+                    
+                    // TODO: 각 Section 에 맞게 .. 순서는 임의로 들어옴.
+//                    let correspondingQuestions =
+                        // 음.. Section 에 Questions 넣어주기.
+                }
+            }
+        }
+        completion(())
     }
     
     func move(to destination: Destination) {
@@ -67,7 +88,11 @@ class MainCoordinator: Coordinator {
             case .questionController:
                 let questionController = QuestionViewController(participationService: provider.participationService)
                 questionController.coordinator = self
-                navigationController?.pushViewController(questionController, animated: true)
+                self.setupQuestions { [weak self] result in
+                    guard result != nil else { fatalError() }
+                    self?.navigationController?.pushViewController(questionController, animated: true)
+                }
+                
             case .root:
                 navigationController?.popToRootViewController(animated: true)
             case .postingController:

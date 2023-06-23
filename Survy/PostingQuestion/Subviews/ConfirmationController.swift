@@ -75,50 +75,49 @@ class ConfirmationController: UIViewController, Coordinating {
     }
     
     @objc func completeTapped() {
-        postingService.setSurveyTitle(name: "testing")
         postingService.setParticipationGoal(participationGoal: 100)
         
-        guard let surveyTitle = postingService.surveyTitle,
-              let participationGoal = postingService.participationGoal else { fatalError() }
-        
+        guard let surveyTitle = postingService.surveyTitle else { fatalError() }
+        guard let participationGoal = postingService.participationGoal else { fatalError() }
         let userId = userService.userId
-        
-        // postSurvey -> id 받아낸 후 postSection 시 사용, section id 받아오고, postQuestion 시 사용. 시간이 너무 오래걸리지는 않을까?
-        // 음.. ProgressBar 라도 하나 만들어줘야 할 것 같은데.. ?
-        // 모든 과정 내에서
-        // Perfect!
-        
+       
         let dispatchGroup = DispatchGroup()
         
+        // Post Survey
         APIService.shared.postSurvey(title: surveyTitle,
                                      participationGoal: participationGoal,
                                      userId: userId) { [weak self] surveyId, string in
             guard let self = self else { fatalError() }
             guard let surveyId = surveyId else { fatalError() }
             
-            // TODO: Survey, Genre 연결
-            // TODO: Survey, UserId 연결
-            
             let selectedGenreIds = postingService.selectedGenres.map { $0.id }
             
             // Survey ~ Genre
             for genreId in selectedGenreIds {
                 APIService.shared.connectSurveyGenres(surveyId: surveyId, genreId: genreId) { result, message in
-                    guard let result = result else { fatalError() }
+                    guard result != nil else { fatalError() }
                 }
             }
             
-            let testSections = [
-                Section(surveyId: surveyId, numOfQuestions: 3, sequence: 0, title: "test 1")
-//                ,Section(surveyId: surveyId, numOfQuestions: 4, sequence: 1, title: "test 2")
-            ]
+            // 흐음.. 어떻게 하면 좋을까? 뭐를 ? 일단.. 더 테스트 해봐. 일단 테스트 ㅇㅇ
+            // 그리고 ?
             
-            self.postingService.setSections(testSections)
+            // TODO: Survey, UserId 연결
+            APIService.shared.postSurveyUser(userId: userId, surveyId: surveyId) { result, message in
+                guard result != nil else { fatalError("user and post not connected ") }
+            }
             
-            guard var sections = self.postingService.sections else { return }
+            if postingService.sections == nil { // section.. 에 이게 반드시 필요해?
+                let initialSection = Section(title: "test section", sequence: 0)
+                postingService.setSections([initialSection])
+            }
             
+            guard var sections = postingService.sections else {fatalError("cannot happen")}
+            
+            // 각 Section 에 대해 API LOOP
             for index in sections.indices {
                 dispatchGroup.enter()
+                
                 APIService.shared.postSection(title: sections[index].title,
                                               sequence: sections[index].sequence,
                                               surveyId: surveyId) { sectionId, sectionResultString in
@@ -126,13 +125,11 @@ class ConfirmationController: UIViewController, Coordinating {
                     guard let sectionId = sectionId else { return }
                     sections[index].setId(sectionId)
                     
-//                    guard let postingQuestions = self?.postingService.postingQuestions else { fatalError() }
-                    
+                    // TODO: Section 에 있는 각 postingQuestions 로 설정하기. (section 만들어진 후)
                     let postingQuestions = self.postingService.postingQuestions
                     
                     // Posting Questions
                     for index in postingQuestions.indices {
-                        
                         var question = postingQuestions[index]
                         question.setSectionId(sectionId)
                         APIService.shared.postQuestion(text: question.questionText!,
@@ -141,8 +138,6 @@ class ConfirmationController: UIViewController, Coordinating {
                                                        expectedTimeInSec: 20) { questionId, string in
                             guard let questionId = questionId else { fatalError() }
                             
-                            // TODO: Posting Selectable Option
-                             // 왜 이거 두번 호출될까 ?
                             let selectableOptions = postingQuestions[index].selectableOptions
                             print("selectableOptions: \(selectableOptions), the number of selectableOptions: \(selectableOptions.count)")
                             
@@ -155,7 +150,7 @@ class ConfirmationController: UIViewController, Coordinating {
                                                                            position: selectableOption.position,
                                                                            questionId: questionId) { void, message in
                                         dispatchGroup.leave()
-                                        guard let void = void else { fatalError(message) }
+                                        guard void != nil else { fatalError(message) }
                                     }
                                 }
                             }
@@ -165,8 +160,8 @@ class ConfirmationController: UIViewController, Coordinating {
                     dispatchGroup.leave()
                 }
             }
-            
             dispatchGroup.notify(queue: .main) {
+                self.postingService.reset()
                 self.coordinator?.manipulate(.confirmation, command: .dismiss(true))
             }
         }
