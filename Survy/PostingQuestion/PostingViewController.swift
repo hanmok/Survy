@@ -281,7 +281,6 @@ class PostingViewController: BaseViewController, Coordinating {
                 print("some: \(eachSelectableOption.position)")
             }
         }
-        
         print("current postingQuestions: \(postingService.postingQuestions)")
         coordinator?.manipulate(.confirmation, command: .present)
     }

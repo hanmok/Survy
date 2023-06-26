@@ -81,12 +81,12 @@ class MainCoordinator: Coordinator {
                     for eachQuestion in sortedQuestions {
                         questionToSelectableOption[eachQuestion.id] = []
                     }
-                    
+                        
                     APIService.shared.getAllSelectableOptions { selectableOptions, message in
                         guard let selectableOptions = selectableOptions else { return }
                         
                         for selectableOption in selectableOptions {
-                            questionToSelectableOption[selectableOption.id!]?.append(selectableOption)
+                            questionToSelectableOption[selectableOption.questionId!]?.append(selectableOption)
                         }
                         
                         for questionIndex in sortedQuestions.indices {
@@ -94,10 +94,6 @@ class MainCoordinator: Coordinator {
                             sortedQuestions[questionIndex].setSelectableOptions(questionToSelectableOption[selectedQuestion.id]!)
                             sortedQuestions[questionIndex].setQuestionType(questionTypeId: selectedQuestion.questionTypeId)
                         }
-                        
-                        // 음.. 여기서 잘못된 것 같은데 ? questionsToConduct 가 말이 안됨.. Section 에 따라 바뀌어야해.
-//                        self?.provider.participationService.questionsToConduct = sortedQuestions
-//                        sectionDic
                         
                         for question in sortedQuestions {
                             if sectionDic[question.sectionId] != nil {

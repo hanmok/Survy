@@ -131,8 +131,8 @@ extension APIService {
 
 
 extension APIService {
-    public func postQuestion(text: String, sectionId: Int, questionTypeId: Int, expectedTimeInSec: Int, completion: @escaping (QuestionId?, String) -> Void) {
-        questionProvider.request(.create(text, sectionId, questionTypeId, expectedTimeInSec)) { result in
+    public func postQuestion(questionPosition: Int, text: String, sectionId: Int, questionTypeId: Int, expectedTimeInSec: Int, completion: @escaping (QuestionId?, String) -> Void) {
+        questionProvider.request(.create(questionPosition, text, sectionId, questionTypeId, expectedTimeInSec)) { result in
             switch result {
                 case .success(let response):
                     let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)

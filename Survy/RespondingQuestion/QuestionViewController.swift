@@ -87,7 +87,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         guard let question = participationService.currentQuestion else { return }
 
-        let questionText = "\(question.position). \(question.text)"
+        let questionText = "\(question.position + 1). \(question.text)" // position: 0 부터 시작.
         
         questionLabel.text = questionText
         
@@ -154,7 +154,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         if participationService.isLastQuestion {
             participationService.increaseQuestionIndex()
-            updateWithNewQuestion()
+            updateWithNewQuestion(isLast: true)
             participationService.resetSurvey()
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
                 // TODO: Give message
@@ -162,7 +162,7 @@ class QuestionViewController: BaseViewController, Coordinating {
             }
         } else {
             participationService.increaseQuestionIndex()
-            updateWithNewQuestion()
+            updateWithNewQuestion(isLast: false)
         }
     }
     
@@ -199,38 +199,46 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
     }
     
-    private func updateWithNewQuestion() {
+    private func updateWithNewQuestion(isLast: Bool) {
         resetResponseOptionStackView()
         configureLayout()
         updateQuestionBoxSize()
         
-        UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
-            UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
-                self.questionContainerView.transform = CGAffineTransform(translationX: -UIScreen.screenWidth, y: 0)
-                self.nextButton.alpha = 0.0
-            }
-        } completion: { bool in
-            if bool {
-                self.questionContainerView.transform = CGAffineTransform(translationX: UIScreen.screenWidth, y: 0)
-                UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
-                    UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
-                        self.questionContainerView.transform = CGAffineTransform(translationX: 0, y: 0)
-                        self.nextButton.alpha = 1.0
+        if !isLast {
+            UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
+                UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
+                    self.questionContainerView.transform = CGAffineTransform(translationX: -UIScreen.screenWidth, y: 0)
+                    self.nextButton.alpha = 0.0
+                }
+            } completion: { bool in
+                if bool {
+                    self.questionContainerView.transform = CGAffineTransform(translationX: UIScreen.screenWidth, y: 0)
+                    UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
+                        UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
+                            self.questionContainerView.transform = CGAffineTransform(translationX: 0, y: 0)
+                            self.nextButton.alpha = 1.0
+                        }
                     }
                 }
             }
-        }
-
-        // 다음 버튼 아래로 보내기.
-        UIView.animate(withDuration: 0.5) {
-            self.view.layoutIfNeeded()
-        } completion: { _ in
-            self.nextButton.snp.updateConstraints { make in
-                make.leading.trailing.equalTo(self.view.layoutMarginsGuide)
-                make.top.equalTo(self.questionContainerView.snp.bottom).offset(30)
-                make.height.equalTo(50)
+            
+            // 다음 버튼 아래로 보내기.
+            UIView.animate(withDuration: 0.5) {
+                self.view.layoutIfNeeded()
+            } completion: { _ in
+                self.nextButton.snp.updateConstraints { make in
+                    make.leading.trailing.equalTo(self.view.layoutMarginsGuide)
+                    make.top.equalTo(self.questionContainerView.snp.bottom).offset(30)
+                    make.height.equalTo(50)
+                }
+            }
+        } else {
+            UIView.animate(withDuration: 0.5) {
+                self.nextButton.alpha = 0.0
+                self.questionContainerView.alpha = 0.0
             }
         }
+        
         notifyConditionChange(to: false)
     }
     

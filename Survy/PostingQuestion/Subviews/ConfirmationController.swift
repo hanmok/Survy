@@ -129,10 +129,12 @@ class ConfirmationController: UIViewController, Coordinating {
                     for index in postingQuestions.indices {
                         var question = postingQuestions[index]
                         question.setSectionId(sectionId)
-                        APIService.shared.postQuestion(text: question.questionText!,
+                        APIService.shared.postQuestion(questionPosition: question.index,
+                                                       text: question.questionText!,
                                                        sectionId: question.sectionId!,
                                                        questionTypeId: question.briefQuestionType!.rawValue,
                                                        expectedTimeInSec: 20) { questionId, string in
+                            
                             guard let questionId = questionId else { fatalError() }
                             
                             let selectableOptions = postingQuestions[index].selectableOptions

@@ -13,6 +13,7 @@ public typealias SectionId = Int
 public typealias QuestionId = Int
 public typealias QuestionText = String
 public typealias QuestionTypeId = Int
+public typealias QuestionPosition = Int
 public typealias SelectableOptionValue = String
 public typealias Position = Int
 public typealias UserId = Int

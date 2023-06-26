@@ -10,7 +10,7 @@ import Moya
 import Model
 
 public enum QuestionAPI {
-    case create(QuestionText, SectionId, QuestionTypeId, Int) // text, section_id, questionType_id, expectedTimeInSec
+    case create(QuestionPosition, QuestionText, SectionId, QuestionTypeId, Int) // text, section_id, questionType_id, expectedTimeInSec
     case fetchAll
 }
 
@@ -36,8 +36,9 @@ extension QuestionAPI: BaseAPIType {
 
     public var parameters: [String : Any]? {
         switch self {
-            case .create(let text, let sectionId, let questionTypeId, let expectedTimeInSec):
-                return ["text": text,
+            case .create(let questionPosition, let text, let sectionId, let questionTypeId, let expectedTimeInSec):
+                return ["position": questionPosition,
+                        "text": text,
                         "section_id": sectionId,
                         "questionType_id": questionTypeId,
                         "expectedTimeInSec": expectedTimeInSec]
