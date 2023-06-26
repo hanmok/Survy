@@ -85,7 +85,6 @@ extension APIService {
         }
     }
     
-    // 테스트 반드시 해야함.
     public func postSurvey(title: String, participationGoal: Int, userId: Int, completion: @escaping (SurveyId?, String) -> Void) {
         surveyProvider.request(.create(title, participationGoal, userId)) { result in
             switch result {

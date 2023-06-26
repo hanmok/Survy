@@ -58,6 +58,11 @@ class HomeViewController: TabController, Coordinating {
         self.setupGenreCollectionView()
         self.setupLayout()
         
+//        fetchSurveys(completion: () -)
+        fetchSurveys { }
+    }
+    
+    private func fetchSurveys(completion: @escaping () -> Void) {
         coordinator?.setIndicatorSpinning(true)
         // Get all genres, match them to surveys and update UI
         
@@ -66,6 +71,7 @@ class HomeViewController: TabController, Coordinating {
                 self?.commonService.addGenresToSurveys(completion: { [weak self] surveys in
                     self?.coordinator?.setIndicatorSpinning(false)
                     self?.updateSurveys()
+                    completion()
                 })
                 self?.genreSelectionButton.isUserInteractionEnabled = true
             })
@@ -137,6 +143,14 @@ class HomeViewController: TabController, Coordinating {
     private func setupTargets() {
         requestingButton.addTarget(self, action: #selector(moveToPostSurvey), for: .touchUpInside)
         genreSelectionButton.addTarget(self, action: #selector(genreSelectionButtonTapped), for: .touchUpInside)
+        refreshControl.addTarget(self, action: #selector(refreshAction), for: .valueChanged)
+    }
+    
+    @objc func refreshAction(_ sender: UIRefreshControl) {
+        fetchSurveys {
+            print("refreshCalled")
+            sender.endRefreshing()
+        }
     }
     
     @objc func genreSelectionButtonTapped() {
@@ -161,7 +175,7 @@ class HomeViewController: TabController, Coordinating {
         
         [
          genreSelectionCoveringView, collectedRewardLabel, surveyTableView, noDataLabel,
-         genreSelectionButton, genreCollectionView].forEach {
+         genreSelectionButton, genreCollectionView, refreshControl].forEach {
              self.wholeScrollView.addSubview($0)
          }
         
@@ -242,6 +256,8 @@ class HomeViewController: TabController, Coordinating {
         let scrollView = UIScrollView()
         return scrollView
     }()
+    
+    private let refreshControl = UIRefreshControl()
     
     private let noDataLabel: UILabel = {
         let label = UILabel()

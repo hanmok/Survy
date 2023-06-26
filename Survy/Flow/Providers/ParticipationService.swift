@@ -31,14 +31,19 @@ protocol ParticipationServiceType: AnyObject {
     var selectedGenres: Set<Int> { get set }
     var numberOfQuestions: Int? { get }
     var sections: [Section]? { get set }
+
     func increaseQuestionIndex()
     func resetSurvey()
     func setSections(_ sections: [Section])
     func startSurvey()
+    func setQuestions(_ questions: [Question])
 }
 
 class ParticipationService: ParticipationServiceType {
     
+    func setQuestions(_ questions: [Question]) {
+        self.questionsToConduct = questions
+    }
     var sections: [Section]?
     
     func setSections(_ sections: [Section]) {

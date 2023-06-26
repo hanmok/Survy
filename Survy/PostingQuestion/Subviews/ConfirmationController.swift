@@ -90,7 +90,6 @@ class ConfirmationController: UIViewController, Coordinating {
                                      userId: userId) { [weak self] surveyId, string in
             guard let self = self else { fatalError() }
             guard let surveyId = surveyId else { fatalError() }
-            
             let selectedGenreIds = postingService.selectedGenres.map { $0.id }
             
             // Survey ~ Genre
@@ -100,10 +99,7 @@ class ConfirmationController: UIViewController, Coordinating {
                 }
             }
             
-            // 흐음.. 어떻게 하면 좋을까? 뭐를 ? 일단.. 더 테스트 해봐. 일단 테스트 ㅇㅇ
-            // 그리고 ?
-            
-            // TODO: Survey, UserId 연결
+            // Survey, UserId 연결
             APIService.shared.postSurveyUser(userId: userId, surveyId: surveyId) { result, message in
                 guard result != nil else { fatalError("user and post not connected ") }
             }

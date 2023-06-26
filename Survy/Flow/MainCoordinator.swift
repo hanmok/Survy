@@ -60,12 +60,17 @@ class MainCoordinator: Coordinator {
             guard let allSections = allSections else { fatalError() }
             guard let currentSurvey = self?.provider.participationService.currentSurvey else { fatalError() }
             
-            let correspondingSections = allSections.filter { $0.surveyId == currentSurvey.id }
+            var correspondingSections = allSections.filter { $0.surveyId == currentSurvey.id }
             
             print("correspondingSections: \(correspondingSections)")
             print("allSections: \(allSections)")
-            // 이게 뭐하는 짓거리여
-//            for sectionIndex in correspondingSections.indices {
+            // TODO: [SectionIds: [Questions]]
+            var sectionDic = [SectionId: [Question]]()
+
+            for correspondingSection in correspondingSections {
+                sectionDic[correspondingSection.id!] = []
+            }
+            
                 APIService.shared.getQuestions { questions, message in
                     guard let questions = questions else { fatalError() }
                     var sortedQuestions = questions.sorted { $0.position < $1.position }
@@ -89,7 +94,31 @@ class MainCoordinator: Coordinator {
                             sortedQuestions[questionIndex].setSelectableOptions(questionToSelectableOption[selectedQuestion.id]!)
                             sortedQuestions[questionIndex].setQuestionType(questionTypeId: selectedQuestion.questionTypeId)
                         }
-                        self?.provider.participationService.questionsToConduct = sortedQuestions
+                        
+                        // 음.. 여기서 잘못된 것 같은데 ? questionsToConduct 가 말이 안됨.. Section 에 따라 바뀌어야해.
+//                        self?.provider.participationService.questionsToConduct = sortedQuestions
+//                        sectionDic
+                        
+                        for question in sortedQuestions {
+                            if sectionDic[question.sectionId] != nil {
+                                sectionDic[question.sectionId]!.append(question)
+                            }
+                        }
+                        
+                        for sectionIndex in correspondingSections.indices {
+                            let currentSectionId = correspondingSections[sectionIndex].id!
+                            correspondingSections[sectionIndex].setQuestions(sectionDic[currentSectionId]!)
+                        }
+                        
+                        let sortedSectionIds = sectionDic.keys.sorted()
+                        var allQuestions = [Question]()
+                        for key in sortedSectionIds {
+                            sectionDic[key]!.sorted { $0.position < $1.position }.forEach {
+                                allQuestions.append($0)
+                            }
+                        }
+                        self?.provider.participationService.setSections(correspondingSections)
+                        self?.provider.participationService.setQuestions(allQuestions)
                         self?.setIndicatorSpinning(false)
                         completion(())
                     }

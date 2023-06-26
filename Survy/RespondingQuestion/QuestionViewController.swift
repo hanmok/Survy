@@ -185,7 +185,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         let questionText = "\(question.position). \(question.text)"
         
         questionLabel.text = questionText
-
+        
         let approximatedWidthOfBioTextView = UIScreen.screenWidth - 20 * 2 - 12 * 2
 
         let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)

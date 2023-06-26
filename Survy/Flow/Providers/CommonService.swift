@@ -74,7 +74,7 @@ class CommonService: CommonServiceType {
     func getSurveys(completion: @escaping () -> Void) {
         APIService.shared.getAllSurveys { surveys in
             guard let surveys = surveys else { return }
-            self.allSurveys = surveys
+            self.allSurveys = surveys.sorted { $0.id < $1.id }
             completion()
         }
     }

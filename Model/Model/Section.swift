@@ -32,6 +32,9 @@ public struct Section: Decodable {
     public var postingQuestions: [PostingQuestion]?
     public var questions: [Question]?
     
+    mutating public func setQuestions(_ questions: [Question]) {
+        self.questions = questions
+    }
     mutating public func setTitle(_ title: String) {
         self.title = title
     }
