@@ -173,9 +173,21 @@ extension APIService {
             }
         }
     }
+    
+    public func getAllSelectableOptions(completion: @escaping ([SelectableOption]?, String?) -> Void ) {
+        //        surveyProvider.request(.fetchAll) { result in
+        selectableProvider.request(.fetchAll) { result in
+            switch result {
+                case .success(let response):
+                    let selectableOptionResponse = try! JSONDecoder().decode(SelectableOptionResponse.self, from: response.data)
+                    print("surveysResponse: \(selectableOptionResponse)")
+                    completion(selectableOptionResponse.selectableOptions, nil)
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
 }
-
-
 
 // MARK: - SurveyGenres
 

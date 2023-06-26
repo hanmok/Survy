@@ -23,7 +23,6 @@ class MainCoordinator: Coordinator {
     
     init() {
         self.provider = Provider()
-        testSetup()
     }
     
     func setIndicatorSpinning(_ shouldSpin: Bool) {
@@ -51,45 +50,62 @@ class MainCoordinator: Coordinator {
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
     
-    public func testSetup() {
-        // 언제 호출해야하지? 음..  QuestionViewController 로 넘어왔을 때.
-//        self.provider.participationService.questionsToConduct = [dietQuestion1, dietQuestion2, dietQuestion3]
-//        self.provider.participationService.questionProgress = .inProgress(0)
-    }
-    
     public func setupQuestions(completion: @escaping (Void?) -> Void) {
-        // 1. 선택한 survey id 는 ?
-//        self.provider.participationService.allSurveys
-        
         var sectionIds = [SectionId: [QuestionId]]()
         
         APIService.shared.getSections { [weak self] allSections, message in
             guard let allSections = allSections else { fatalError() }
             guard let currentSurvey = self?.provider.participationService.currentSurvey else { fatalError() }
+            
             let correspondingSections = allSections.filter { $0.surveyId == currentSurvey.id }
             
+            print("correspondingSections: \(correspondingSections)")
+            print("allSections: \(allSections)")
+            
             for sectionIndex in correspondingSections.indices {
-                // TODO: 모든 질문 받기.
-                
                 APIService.shared.getQuestions { questions, message in
                     guard let questions = questions else { fatalError() }
-                    
                     // TODO: 각 Section 에 맞게 .. 순서는 임의로 들어옴.
-//                    let correspondingQuestions =
-                        // 음.. Section 에 Questions 넣어주기.
+                    var sortedQuestions = questions.sorted { $0.position < $1.position }
+                    
+                    print("fetchedQuestions: \(sortedQuestions), numberOfFetchedQuestions: \(sortedQuestions.count)")
+                    
+                    var questionToSelectableOption = [QuestionId: [SelectableOption]]()
+                    for eachQuestion in sortedQuestions {
+                        questionToSelectableOption[eachQuestion.id] = []
+                        
+                    }
+                    
+                    APIService.shared.getAllSelectableOptions { selectableOptions, message in
+                        guard let selectableOptions = selectableOptions else { return }
+                        // 순서 없이 진행되므로, 일단.. 넣어야함. ? 음..
+                        
+                        for selectableOption in selectableOptions {
+                            questionToSelectableOption[selectableOption.id!]?.append(selectableOption)
+                        }
+                        
+                        for questionIndex in sortedQuestions.indices {
+                            let selectedQuestion = sortedQuestions[questionIndex]
+                            sortedQuestions[questionIndex].setSelectableOptions(questionToSelectableOption[selectedQuestion.id]!)
+                            sortedQuestions[questionIndex].setQuestionType(questionTypeId: selectedQuestion.questionTypeId)
+                        }
+                        self?.provider.participationService.questionsToConduct = sortedQuestions
+                        completion(())
+                    }
+                    self?.provider.participationService.startSurvey()
                 }
             }
         }
-        completion(())
     }
     
     func move(to destination: Destination) {
         switch destination {
             case .questionController:
-                let questionController = QuestionViewController(participationService: provider.participationService)
-                questionController.coordinator = self
                 self.setupQuestions { [weak self] result in
                     guard result != nil else { fatalError() }
+                    guard let participationService = self?.provider.participationService else { fatalError() }
+                    let questionController = QuestionViewController(participationService: participationService)
+                    questionController.coordinator = self
                     self?.navigationController?.pushViewController(questionController, animated: true)
                 }
                 

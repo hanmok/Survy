@@ -18,13 +18,9 @@ protocol Coordinator {
     
     func manipulate(_ childView: ChildView, command: Command)
     
-    func testSetup()
-    
     func setIndicatorSpinning(_ shouldSpin: Bool)
     
     func toastMessage(title: String, message: String)
-    
-//    func resetPostingService
 }
 
 enum ChildView {

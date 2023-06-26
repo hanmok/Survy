@@ -9,10 +9,6 @@ import UIKit
 import SnapKit
 import Model
 
-
-
-// Coordinator pattern 필요할 것 같은데 ??
-
 class QuestionViewController: BaseViewController, Coordinating {
 
     private var previousPercentage: CGFloat = 0
@@ -42,7 +38,6 @@ class QuestionViewController: BaseViewController, Coordinating {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // MARK: - Fetch participation No. Not here.
-        
     }
     
     override func viewDidLoad() {
@@ -62,7 +57,7 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     private func configureLayout() {
         guard let numberOfQuestions = participationService.numberOfQuestions else { return }
-    
+        print("current Questions: \(participationService.questionsToConduct)")
         switch participationService.questionProgress {
             case .undefined:
                 break
@@ -96,11 +91,8 @@ class QuestionViewController: BaseViewController, Coordinating {
             nextButton.addCharacterSpacing()
         }
         
-//        let selectableOptions = question.selectableOptions
-        
         guard let selectableOptions = question.selectableOptions else { fatalError() }
         guard let questionType = question.questionType else { fatalError() }
-//        responseOptionStackView.setQuestionType(question.questionType)
         responseOptionStackView.setQuestionType(questionType)
         
         switch question.questionType {
@@ -116,7 +108,6 @@ class QuestionViewController: BaseViewController, Coordinating {
                     let multipleChoiceButton = MultipleChoiceResponseButton(text: value, tag: selectableOption.position)
                     responseOptionStackView.addMultipleSelectionButton(multipleChoiceButton)
                 }
-//            case .shortSentence: // Should have Placeholder
             case .short:
                 guard let first = selectableOptions.first, let textFieldPlaceholder = first.placeHolder else { return }
                 let textField = UITextField()
@@ -134,6 +125,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         switch question.questionType {
             case .singleSelection:
+                // 이거 설정해서 달라지는게 뭐야 ? API 를 나중에 호출해야하는데, 그 전까지는 아무것도 없음.
                 participationService.selectedIndex = responseOptionStackView.selectedIndex
             case .multipleSelection:
                 participationService.selectedIndexes = responseOptionStackView.selectedIndices
@@ -145,10 +137,12 @@ class QuestionViewController: BaseViewController, Coordinating {
                 break
         }
         
+        resetResponseOptionStackView()
+        
         if participationService.isLastQuestion {
             participationService.increaseQuestionIndex()
             updateWithNewQuestion()
-            participationService.initializeSurvey()
+            participationService.resetSurvey()
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
                 // TODO: Give message
                 self?.coordinator?.move(to: .root)
@@ -157,6 +151,10 @@ class QuestionViewController: BaseViewController, Coordinating {
             participationService.increaseQuestionIndex()
             updateWithNewQuestion()
         }
+    }
+    
+    private func resetResponseOptionStackView() {
+        responseOptionStackView.reset()
     }
     
     private func performSlideAnimation() {
@@ -170,7 +168,7 @@ class QuestionViewController: BaseViewController, Coordinating {
     }
     
     private func updateWithNewQuestion() {
-        responseOptionStackView.reset()
+        resetResponseOptionStackView()
         configureLayout()
         
         UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
@@ -329,7 +327,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         return label
     }()
     
-    private let responseOptionStackView: ResponseOptionStackView = {
+    private var responseOptionStackView: ResponseOptionStackView = {
         let stackView = ResponseOptionStackView()
         return stackView
     }()
@@ -364,7 +362,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         let quitAction = UIAlertAction(title: "종료", style: .destructive) { _ in
             DispatchQueue.main.async {
-                self.participationService.initializeSurvey()
+                self.participationService.resetSurvey()
                 self.coordinator?.move(to: .root)
             }
         }
@@ -378,8 +376,6 @@ class QuestionViewController: BaseViewController, Coordinating {
 }
 
 extension QuestionViewController: OptionStackViewDelegate {
-    
-    
     func notifySelectionChange(to index: Int) {
         
     }

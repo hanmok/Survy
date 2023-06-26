@@ -23,12 +23,14 @@ class ResponseOptionStackView: UIStackView {
     var buttons: [SelectionButton] = []
     
     public func reset() {
+        
         for button in buttons {
             button.removeFromSuperview()
             removeArrangedSubview(button)
         }
         isConditionFulfilled = false
         buttons.removeAll()
+        selectedIndex = nil
     }
     
     public var isConditionFulfilled: Bool = false {
@@ -39,25 +41,17 @@ class ResponseOptionStackView: UIStackView {
         }
     }
     
-//    init(questionType: QuestionType = .singleSelection, axis: NSLayoutConstraint.Axis = .vertical) {
-//        self.questionType = questionType
-//        super.init(frame: .zero)
-//        self.axis = axis
-//    }
-    
-    init(questionType: BriefQuestionType = .singleSelection, axis: NSLayoutConstraint.Axis = .vertical) {
+    init(questionType: BriefQuestionType = .singleSelection) {
         self.questionType = questionType
         super.init(frame: .zero)
-        self.axis = axis
+        self.axis = .vertical
     }
     
-//    public func setQuestionType(_ questionType: QuestionType) {
     public func setQuestionType(_ questionType: BriefQuestionType) {
         self.questionType = questionType
         switch questionType {
             case .multipleSelection:
                 selectedIndices = Set<Int>()
-//            case .essay, .shortSentence:
             case .short, .essay:
                 textAnswer = ""
             default:
@@ -126,12 +120,20 @@ class ResponseOptionStackView: UIStackView {
     
     // 현재 선택된 것과 비교, 다를 경우 이미 선택된 것을 unselected 로 변경
     @objc func singleSelectionButtonTapped(_ sender: SingleChoiceResponseButton) {
-        if let selectedIndex = selectedIndex, sender.tag != selectedIndex {
-            guard let selectedButton = buttons.first(where: { $0.tag == selectedIndex}) else { fatalError() }
+        
+        // selectedIndex: 1, tag: 0
+//        print("selectedIndex: \()")
+        
+        if let selectedIndex = selectedIndex,
+            sender.tag != selectedIndex {
+            let allTags = buttons.map { $0.tag }
+            guard let selectedButton = buttons.first(where: { $0.tag == selectedIndex } ) else { fatalError("selectedIndex: \(selectedIndex), buttons: \(allTags)") }
                 selectedButton.buttonSelected(false)
         }
+        
         sender.buttonSelected(true)
         selectedIndex = sender.tag
+        print("selectedIndex changed to \(selectedIndex)")
         isConditionFulfilled = true
     }
     

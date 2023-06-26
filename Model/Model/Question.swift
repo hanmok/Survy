@@ -21,7 +21,6 @@ public struct Question: Decodable {
         self.position = position
         self.text = text
         self.expectedTimeInSec = expectedTimeInSec
-//        self.parentSection = nil
     }
     
     public enum CodingKeys: String, CodingKey {
@@ -47,4 +46,9 @@ public struct Question: Decodable {
     public var questionType: BriefQuestionType?
     public var selectableOptions: [SelectableOption]?
     public var parentSection: Section?
+    
+    public mutating func setQuestionType(questionTypeId: Int) {
+        guard let questionType = BriefQuestionType(rawValue: questionTypeId) else { fatalError() }
+        self.questionType = questionType
+    }
 }

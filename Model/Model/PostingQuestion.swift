@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-// FIXME: 왜 이건 Class야..?
 public class PostingQuestion {
     
     public init(index: Int) {
@@ -30,7 +28,9 @@ public class PostingQuestion {
            questionText != String.longerPlaceholder,
            briefQuestionType != nil,
            let first = selectableOptions.first,
-           first.value != nil || first.placeHolder != nil {
+           first.value != nil
+            || first.placeHolder != nil
+        {
             print("isCompleted changed to true")
             return true
         }

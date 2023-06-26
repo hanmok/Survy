@@ -67,13 +67,11 @@ extension Survey {
             return [self.numOfParticipation ?? 0, participationGoal ?? 1]
         }
         public var rewardString: String? {
-        
             guard let rewardRange = rewardRange else { return nil }
             return separateRange(rewardRange)
         }
     
     func separateRange(_ range: String) -> String {
-        
         let components = range.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces)}
         guard components.count <= 2 else { fatalError() }
                 

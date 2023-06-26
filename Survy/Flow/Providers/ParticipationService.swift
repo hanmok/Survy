@@ -32,8 +32,9 @@ protocol ParticipationServiceType: AnyObject {
     var numberOfQuestions: Int? { get }
     var sections: [Section]? { get set }
     func increaseQuestionIndex()
-    func initializeSurvey()
+    func resetSurvey()
     func setSections(_ sections: [Section])
+    func startSurvey()
 }
 
 class ParticipationService: ParticipationServiceType {
@@ -55,11 +56,16 @@ class ParticipationService: ParticipationServiceType {
     
     var allSurveys: [Survey] = []
     
-    func initializeSurvey() {
+    func resetSurvey() {
         currentSurvey = nil
         currentSection = nil
         questionsToConduct = nil
         questionProgress = .undefined
+//        questionProgress = .inProgress(0)
+    }
+    
+    func startSurvey() {
+        questionProgress = .inProgress(0)
     }
     
     var currentSurvey: Survey?

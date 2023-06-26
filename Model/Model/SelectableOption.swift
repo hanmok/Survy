@@ -7,15 +7,25 @@
 
 import Foundation
 
-public struct SelectableOption {
-    public init(position: Int, value: String? = nil, placeHolder: String? = nil) {
+public struct SelectableOption: Decodable {
+    public init(position: Int, value: String? = nil
+                ,placeHolder: String? = nil
+    ) {
         self.position = position
         self.value = value
         self.placeHolder = placeHolder
     }
+    public var id: Int?
+    public var position: Int
+    public var questionId: Int?
+    public var value: String?
+    public var placeHolder: String?
     
-    public let id: Int = Int.random(in: 0 ... 10000)
-    public let position: Int
-    public var value: String? = nil
-    public var placeHolder: String? = nil
+    public enum CodingKeys: String, CodingKey {
+        case id
+        case position
+        case questionId = "question_id"
+        case value
+        case placeHolder = "placeholder"
+    }
 }
