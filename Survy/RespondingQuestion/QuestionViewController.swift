@@ -284,25 +284,6 @@ class QuestionViewController: BaseViewController, Coordinating {
         return pv
     }()
     
-//    private let progressContainerView: UIView = {
-//        let view = UIView()
-//        view.clipsToBounds = true
-//        view.layer.cornerRadius = 12
-//        return view
-//    }()
-    
-//    private let fullProgressBar: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = UIColor.grayProgress
-//        return view
-//    }()
-//
-//    private let partialProgressBar: UIView = {
-//        let view = UIView()
-//        view.backgroundColor = UIColor.mainColor
-//        return view
-//    }()
-    
     private let percentageLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
@@ -385,22 +366,3 @@ extension QuestionViewController: OptionStackViewDelegate {
         self.nextButton.backgroundColor = condition ? .mainColor : .grayProgress
     }
 }
-
-//extension QuestionViewController {
-//    func performSlideAnimation() {
-//            boxView.snp.updateConstraints { make in
-//                make.trailing.equalToSuperview()
-//            }
-//
-//            UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveLinear, animations: {
-//                self.view.layoutIfNeeded()
-//            }) { _ in
-//                self.boxView.snp.updateConstraints { make in
-//                    make.trailing.equalToSuperview().offset(1000)
-//                }
-//
-//                self.view.layoutIfNeeded()
-//                self.performSlideAnimation()
-//            }
-//        }
-//}

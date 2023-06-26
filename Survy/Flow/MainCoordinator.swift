@@ -10,6 +10,8 @@ import Model
 import SnapKit
 import Toast
 import API
+import Dispatch
+
 
 enum InitialScreen {
     case mainTab
@@ -51,8 +53,9 @@ class MainCoordinator: Coordinator {
     }
     
     public func setupQuestions(completion: @escaping (Void?) -> Void) {
-        var sectionIds = [SectionId: [QuestionId]]()
+//        var sectionIds = [SectionId: [QuestionId]]()
         
+        setIndicatorSpinning(true)
         APIService.shared.getSections { [weak self] allSections, message in
             guard let allSections = allSections else { fatalError() }
             guard let currentSurvey = self?.provider.participationService.currentSurvey else { fatalError() }
@@ -61,11 +64,10 @@ class MainCoordinator: Coordinator {
             
             print("correspondingSections: \(correspondingSections)")
             print("allSections: \(allSections)")
-            
-            for sectionIndex in correspondingSections.indices {
+            // 이게 뭐하는 짓거리여
+//            for sectionIndex in correspondingSections.indices {
                 APIService.shared.getQuestions { questions, message in
                     guard let questions = questions else { fatalError() }
-                    // TODO: 각 Section 에 맞게 .. 순서는 임의로 들어옴.
                     var sortedQuestions = questions.sorted { $0.position < $1.position }
                     
                     print("fetchedQuestions: \(sortedQuestions), numberOfFetchedQuestions: \(sortedQuestions.count)")
@@ -73,12 +75,10 @@ class MainCoordinator: Coordinator {
                     var questionToSelectableOption = [QuestionId: [SelectableOption]]()
                     for eachQuestion in sortedQuestions {
                         questionToSelectableOption[eachQuestion.id] = []
-                        
                     }
                     
                     APIService.shared.getAllSelectableOptions { selectableOptions, message in
                         guard let selectableOptions = selectableOptions else { return }
-                        // 순서 없이 진행되므로, 일단.. 넣어야함. ? 음..
                         
                         for selectableOption in selectableOptions {
                             questionToSelectableOption[selectableOption.id!]?.append(selectableOption)
@@ -90,11 +90,11 @@ class MainCoordinator: Coordinator {
                             sortedQuestions[questionIndex].setQuestionType(questionTypeId: selectedQuestion.questionTypeId)
                         }
                         self?.provider.participationService.questionsToConduct = sortedQuestions
+                        self?.setIndicatorSpinning(false)
                         completion(())
                     }
                     self?.provider.participationService.startSurvey()
                 }
-            }
         }
     }
     
