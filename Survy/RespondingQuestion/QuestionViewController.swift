@@ -17,6 +17,8 @@ class QuestionViewController: BaseViewController, Coordinating {
         view.dismissKeyboard()
     }
     
+    private var questionHeight: CGFloat?
+    
     var coordinator: Coordinator?
     
     var participationService: ParticipationService
@@ -84,7 +86,18 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
         
         guard let question = participationService.currentQuestion else { return }
-        questionLabel.text = "\(question.position). \(question.text)"
+
+        let questionText = "\(question.position). \(question.text)"
+        
+        questionLabel.text = questionText
+        
+        let approximatedWidthOfBioTextView = UIScreen.screenWidth - 20 * 2 - 12 * 2
+        
+        let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
+        
+        let frame = NSString(string: questionText).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: questionLabel.font.pointSize)], context: nil)
+        
+        questionHeight = frame.height
         
         if participationService.isLastQuestion {
             nextButton.setTitle("완료", for: .normal)
@@ -167,9 +180,29 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
     }
     
+    private func updateQuestionBoxSize() {
+        guard let question = participationService.currentQuestion else { return }
+        let questionText = "\(question.position). \(question.text)"
+        
+        questionLabel.text = questionText
+
+        let approximatedWidthOfBioTextView = UIScreen.screenWidth - 20 * 2 - 12 * 2
+
+        let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
+
+        let frame = NSString(string: questionText).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: questionLabel.font.pointSize)], context: nil)
+        
+        questionHeight = frame.height
+        
+        questionContainerView.snp.updateConstraints { make in
+            make.height.equalTo(12 + questionHeight! + 12 + CGFloat(responseOptionStackView.subviews.count * 40) + 12)
+        }
+    }
+    
     private func updateWithNewQuestion() {
         resetResponseOptionStackView()
         configureLayout()
+        updateQuestionBoxSize()
         
         UIView.animateKeyframes(withDuration: 0.5, delay: 0.0, options: []) {
             UIView.addKeyframe(withRelativeStartTime: 0.0, relativeDuration: 0.5) {
@@ -186,10 +219,6 @@ class QuestionViewController: BaseViewController, Coordinating {
                     }
                 }
             }
-        }
-
-        questionContainerView.snp.updateConstraints { make in
-            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
         }
 
         // 다음 버튼 아래로 보내기.
@@ -227,12 +256,16 @@ class QuestionViewController: BaseViewController, Coordinating {
             make.center.equalToSuperview()
             make.height.equalToSuperview()
         }
-    
+        
+        print("questionHeight: \(questionHeight!)")
+        
         questionContainerView.snp.makeConstraints { make in
             make.leading.equalTo(view.snp.leading).offset(20)
             make.width.equalTo(UIScreen.screenWidth - 40)
             make.top.equalTo(myProgressView.snp.bottom).offset(80)
-            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50)
+//            make.height.equalTo(CGFloat(responseOptionStackView.subviews.count * 40) + questionHeight! + 12 + 12) // 12, 12: top, bottom inset
+            make.height.equalTo(12 + questionHeight! + 12 + CGFloat(responseOptionStackView.subviews.count * 40) + 12)
+//            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50) // 이거.. 높이 바꿔야함.
         }
         
         questionLabel.snp.makeConstraints { make in
@@ -305,6 +338,10 @@ class QuestionViewController: BaseViewController, Coordinating {
     private let questionLabel: UILabel = {
         let label = UILabel()
         label.textColor = .black
+        
+        label.font = UIFont.systemFont(ofSize: label.font.pointSize)
+        label.lineBreakMode = .byWordWrapping
+        label.numberOfLines = 0
         return label
     }()
     

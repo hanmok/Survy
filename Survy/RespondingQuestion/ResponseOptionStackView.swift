@@ -90,6 +90,8 @@ class ResponseOptionStackView: UIStackView {
     }
 
     // 음.. 이렇게 진행하면 안될 것 같은데 ??
+    // TextView 이어야 함.
+    
     public func addTextField(_ textField: UITextField) {
         addArrangedSubview(textField)
         textField.delegate = self
