@@ -29,3 +29,15 @@ Return 버튼 통해서 Question 완성하면, 해당 selectableOption 은 추�
 포스팅 시,
 // postSurvey -> id 받아낸 후 postSection 시 사용, section id 받아오고, postQuestion 시 사용. 시간이 너무 오래걸리지는 않을까?
 // 음.. ProgressBar 라도 하나 만들어줘야 할 것 같은데.. ? // Good idea ~
+
+
+Survey 참여시
+응답 시 Response DB Post
+Participate DB 에 추가 (이미 했으면 다음에 보이지 않도록)
+SurveyDB 에 참여 인원 추가.
+돈 증가시키기.
+
+
+회원가입은 언제하지 ??
+
+

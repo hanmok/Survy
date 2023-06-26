@@ -90,6 +90,7 @@ class ConfirmationController: UIViewController, Coordinating {
                                      userId: userId) { [weak self] surveyId, string in
             guard let self = self else { fatalError() }
             guard let surveyId = surveyId else { fatalError() }
+            coordinator?.setIndicatorSpinning(true)
             let selectedGenreIds = postingService.selectedGenres.map { $0.id }
             
             // Survey ~ Genre
@@ -109,7 +110,7 @@ class ConfirmationController: UIViewController, Coordinating {
                 postingService.setSections([initialSection])
             }
             
-            guard var sections = postingService.sections else {fatalError("cannot happen")}
+            guard var sections = postingService.sections else { fatalError("cannot happen") }
             
             // 각 Section 에 대해 API LOOP
             for index in sections.indices {
@@ -160,6 +161,7 @@ class ConfirmationController: UIViewController, Coordinating {
                 }
             }
             dispatchGroup.notify(queue: .main) {
+                self.coordinator?.setIndicatorSpinning(false)
                 self.postingService.reset()
                 self.coordinator?.manipulate(.confirmation, command: .dismiss(true))
             }

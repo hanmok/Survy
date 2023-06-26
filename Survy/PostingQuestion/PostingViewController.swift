@@ -233,8 +233,16 @@ class PostingViewController: BaseViewController, Coordinating {
         requestingButton.addTarget(self, action: #selector(requestSurveyTapped), for: .touchUpInside)
         targetButton.addTarget(self, action: #selector(targetTapped), for: .touchUpInside)
         genreButton.addTarget(self, action: #selector(genreTapped), for: .touchUpInside)
+//        titleTextField.keyboardToolbar.doneBarButton.setTarget(self, action: #selector(doneTapped(_:)))
+        titleTextField.keyboardToolbar.doneBarButton.setTarget(self, action: #selector(doneTapped(_:)))
     }
     
+    @objc func doneTapped(_ sender: UITextField) {
+        guard let title = sender.text else { return }
+        postingService.setSurveyTitle(title)
+        self.view.dismissKeyboard()
+        checkIfConditionSatisfied()
+    }
     // MARK: - Button Actions
     
     override func viewWillDisappear(_ animated: Bool) {
