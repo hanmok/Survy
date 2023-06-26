@@ -18,6 +18,7 @@ enum InitialScreen {
     case responsdingQuestion
     case postingQuestion
     case test
+    case login
 }
 
 class MainCoordinator: Coordinator {
@@ -36,7 +37,9 @@ class MainCoordinator: Coordinator {
         var initialScreen: InitialScreen = .mainTab
         var initialController: UIViewController
 
-        initialScreen = .mainTab
+//        initialScreen = .mainTab
+        
+        initialScreen = .login
         
         switch initialScreen {
             case .mainTab:
@@ -47,6 +50,8 @@ class MainCoordinator: Coordinator {
                 initialController = PostingViewController(postingService: self.provider.postingService)
             case .test:
                 initialController = ViewController6()
+            case .login:
+                initialController = LoginViewController()
         }
         navigationController?.setViewControllers([initialController], animated: false)
         navigationController?.setNavigationBarHidden(true, animated: false)
