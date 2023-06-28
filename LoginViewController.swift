@@ -11,29 +11,12 @@ import API
 
 class LoginViewController: UIViewController, Coordinating {
     
-    
-    private let usernameTextField: UITextField = {
-        let tf = UITextField()
-        tf.keyboardType = .emailAddress
-        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [.foregroundColor: UIColor(white: 0.3, alpha: 1)])
-        tf.layer.borderColor = UIColor.deeperMainColor.cgColor
-        tf.layer.borderWidth = 2
-        tf.backgroundColor = UIColor.mainColor
-        tf.backgroundColor = UIColor(white: 0.9, alpha: 1)
-        tf.layer.cornerRadius = 10
-        tf.clipsToBounds = true
-        tf.setLeftPaddingPoints(10)
-        tf.tag = 1
-        return tf
-    }()
-    
     var coordinator: Coordinator?
     var userService: UserServiceType
     
     init(userService: UserServiceType, coordinator: Coordinator) {
         self.userService = userService
         self.coordinator = coordinator
-//        super.init()
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -43,54 +26,6 @@ class LoginViewController: UIViewController, Coordinating {
     
     private var username: String = ""
     private var password: String = ""
-    
-    private let separatorView: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0.8, alpha: 1)
-        return view
-    }()
-    
-    private let passwordTextField: UITextField = {
-        let tf = UITextField()
-        tf.attributedPlaceholder = NSAttributedString(string: "Password",
-                                                      attributes: [.foregroundColor: UIColor(white: 0.3, alpha: 1)])
-        tf.textColor = .black
-        tf.isSecureTextEntry = true
-        tf.layer.borderColor = UIColor.deeperMainColor.cgColor
-        tf.layer.borderWidth = 2
-        tf.backgroundColor = UIColor(white: 0.9, alpha: 1)
-        tf.layer.cornerRadius = 10
-        tf.clipsToBounds = true
-        tf.setLeftPaddingPoints(10)
-        tf.tag = 2
-        return tf
-    }()
-    
-    private let logoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "sampleIcon")
-        return imageView
-    }()
-    
-    private let thirdPartyStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        return stackView
-    }()
-    
-    private let loginStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .horizontal
-        stackView.distribution = .fillEqually
-        stackView.spacing = 12
-        return stackView
-    }()
-    
-    private let kakaoLogin = UIButton()
-    private let googleLogin = UIButton()
-    private let appleLogin = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -150,7 +85,6 @@ class LoginViewController: UIViewController, Coordinating {
         [
             logoImageView,
             usernameTextField, passwordTextField,
-//            loginButton, registerButton,
             loginStackView,
             separatorView,
             thirdPartyStackView
@@ -196,10 +130,79 @@ class LoginViewController: UIViewController, Coordinating {
         }
     }
     
+    private let logoImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = UIImage(named: "sampleIcon")
+        return imageView
+    }()
+    
+    private let usernameTextField: UITextField = {
+        let tf = UITextField()
+        tf.keyboardType = .emailAddress
+        tf.attributedPlaceholder = NSAttributedString(string: "Email", attributes: [.foregroundColor: UIColor(white: 0.5, alpha: 1)])
+        tf.layer.borderColor = UIColor.deeperMainColor.cgColor
+        tf.layer.borderWidth = 2
+        tf.backgroundColor = UIColor.mainColor
+        tf.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        tf.layer.cornerRadius = 10
+        tf.clipsToBounds = true
+        tf.setLeftPaddingPoints(10)
+        tf.tag = 1
+        return tf
+    }()
+    
+    private let passwordTextField: UITextField = {
+        let tf = UITextField()
+        tf.attributedPlaceholder = NSAttributedString(
+            string: "Password",
+            attributes: [.foregroundColor: UIColor(white: 0.5, alpha: 1)])
+        tf.textColor = .black
+        tf.isSecureTextEntry = true
+        
+        tf.layer.borderColor = UIColor.deeperMainColor.cgColor
+        tf.layer.borderWidth = 2
+        tf.backgroundColor = UIColor(white: 0.9, alpha: 1)
+        tf.layer.cornerRadius = 10
+        tf.clipsToBounds = true
+        
+        tf.setLeftPaddingPoints(10)
+        tf.tag = 2
+        return tf
+    }()
+    
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(white: 0.8, alpha: 1)
+        return view
+    }()
+    
+    private let loginStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 12
+        return stackView
+    }()
+    
+    private let thirdPartyStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        return stackView
+    }()
+    
+    private let kakaoLogin = UIButton()
+    private let googleLogin = UIButton()
+    private let appleLogin = UIButton()
+    
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Login", for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .mainColor
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
         return button
     }()
     
@@ -207,6 +210,10 @@ class LoginViewController: UIViewController, Coordinating {
         let button = UIButton()
         button.setTitle("Register", for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.backgroundColor = .mainColor
+        button.layer.cornerRadius = 10
+        button.clipsToBounds = true
+        
         return button
     }()
 }
