@@ -24,6 +24,10 @@ public struct PostResponse: Decodable {
     public var id: Int
 }
 
+public struct UserResponse: Decodable {
+    public var user: User
+}
+
 
 public struct SelectableOptionResponse: Decodable {
     public var selectableOptions: [SelectableOption]

@@ -220,12 +220,39 @@ extension APIService {
     }
 }
 
+// MARK: - User
 extension APIService {
     public func postSurveyUser(userId: UserId, surveyId: SurveyId, completion: @escaping (Void?, String) -> Void) {
         userProvider.request(.connectToSurvey(userId, surveyId)) { result in
             switch result {
                 case .success(let response):
                     completion((), "success")
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+    
+    public func postUser(username: Username, password: Password, completion: @escaping (UserId?, String) -> Void) {
+        userProvider.request(.create(username, password)) { result in
+            switch result {
+                case .success(let response):
+                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
+                    let (id, message) = (postResponse.id, postResponse.message)
+                    completion(id, message)
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+    
+    public func login(username: Username, password: Password, completion: @escaping (User?, String?) -> Void) {
+        userProvider.request(.login(username, password)) { result in
+            switch result {
+                case .success(let response):
+                    let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
+//                    completion(userResponse.user, nil)
+                    completion(userResponse.user, nil)
                 case .failure(let error):
                     completion(nil, error.localizedDescription)
             }

@@ -18,3 +18,5 @@ public typealias SelectableOptionValue = String
 public typealias Position = Int
 public typealias UserId = Int
 public typealias QuestionIndex = Int
+public typealias Username = String
+public typealias Password = String

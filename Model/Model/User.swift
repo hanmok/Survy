@@ -7,27 +7,29 @@
 
 import Foundation
 
-public struct User {
-    public init(id: Int, username: String, collectedReward: Int, fatigue: Int, creditAmount: Int, deviceToken: String, age: Int, isMale: Bool, nickname: String) {
+public struct User: Decodable {
+    public init(id: Int,
+                username: String,
+                collectedReward: Int,
+                fatigue: Int,
+                deviceToken: String,
+                isMale: Int,
+                nickname: String) {
         self.id = id
         self.username = username
         self.collectedReward = collectedReward
         self.fatigue = fatigue
-        self.creditAmount = creditAmount
         self.deviceToken = deviceToken
-        self.age = age
         self.isMale = isMale
         self.nickname = nickname
     }
     
-    public let id: Int
-    public let username: String
-    public let collectedReward: Int
-    public let fatigue: Int
-    public let creditAmount: Int
-    public let deviceToken: String
-    public let age: Int
-    public let isMale: Bool
-    public let nickname: String
-    public let genres: [String] = []
+    public var id: Int
+    public var collectedReward: Int
+    public var fatigue: Int
+    public var birthDate: Date?
+    public var nickname: String?
+    public var isMale: Int
+    public var deviceToken: String?
+    public var username: String
 }
