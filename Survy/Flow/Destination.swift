@@ -9,6 +9,7 @@ import Foundation
 
 enum Destination {
     case root
+    case mainTab
     case questionController
     case postingController
 }

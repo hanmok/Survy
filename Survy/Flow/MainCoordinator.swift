@@ -51,8 +51,9 @@ class MainCoordinator: Coordinator {
             case .test:
                 initialController = ViewController6()
             case .login:
-                initialController = LoginViewController()
+                initialController = LoginViewController(userService: self.provider.userService, coordinator: self)
         }
+        
         navigationController?.setViewControllers([initialController], animated: false)
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
@@ -130,6 +131,10 @@ class MainCoordinator: Coordinator {
     
     func move(to destination: Destination) {
         switch destination {
+            case .mainTab:
+                let mainTabController = MainTabController(provider: self.provider, coordinator: self)
+                self.navigationController?.pushViewController(mainTabController, animated: true)
+                
             case .questionController:
                 self.setupQuestions { [weak self] result in
                     guard result != nil else { fatalError() }

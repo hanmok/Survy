@@ -7,10 +7,11 @@
 
 import UIKit
 import SnapKit
+import API
 
-
-class LoginViewController: UIViewController {
-
+class LoginViewController: UIViewController, Coordinating {
+    
+    
     private let usernameTextField: UITextField = {
         let tf = UITextField()
         tf.keyboardType = .emailAddress
@@ -25,6 +26,20 @@ class LoginViewController: UIViewController {
         tf.tag = 1
         return tf
     }()
+    
+    var coordinator: Coordinator?
+    var userService: UserServiceType
+    
+    init(userService: UserServiceType, coordinator: Coordinator) {
+        self.userService = userService
+        self.coordinator = coordinator
+//        super.init()
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private var username: String = ""
     private var password: String = ""
@@ -65,6 +80,14 @@ class LoginViewController: UIViewController {
         return stackView
     }()
     
+    private let loginStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.distribution = .fillEqually
+        stackView.spacing = 12
+        return stackView
+    }()
+    
     private let kakaoLogin = UIButton()
     private let googleLogin = UIButton()
     private let appleLogin = UIButton()
@@ -85,21 +108,33 @@ class LoginViewController: UIViewController {
     }
     
     @objc func loginTapped() {
-        loginAction()
+        guard username != "", password != "" else { fatalError() }
+        loginAction(username, password)
     }
     
-    private func loginAction() {
-        // Login
-        
+    private func loginAction(_ username: String, _ password: String) {
+        coordinator?.setIndicatorSpinning(true)
+        APIService.shared.login(username: username, password: password) { [weak self] user, message in
+            guard let user = user, let self = self  else { fatalError("user not fetched successfully")}
+            coordinator?.setIndicatorSpinning(false)
+            self.coordinator?.move(to: .mainTab)
+        }
     }
     
     @objc func registerTapped() {
-        registerAction()
+        guard username != "", password != "" else { fatalError() }
+        
+        registerAction(username, password)
     }
     
-    private func registerAction() {
+    private func registerAction(_ username: String, _ password: String) {
         // Register
-        
+        coordinator?.setIndicatorSpinning(true)
+        APIService.shared.postUser(username: username, password: password) { [weak self] userId, message in
+            guard let userId = userId, let self = self else { fatalError("user not created successfully") }
+            coordinator?.setIndicatorSpinning(false)
+            self.coordinator?.move(to: .mainTab)
+        }
     }
     
     private func configureLayout() {
@@ -115,7 +150,8 @@ class LoginViewController: UIViewController {
         [
             logoImageView,
             usernameTextField, passwordTextField,
-            loginButton, registerButton,
+//            loginButton, registerButton,
+            loginStackView,
             separatorView,
             thirdPartyStackView
         ].forEach { self.view.addSubview($0) }
@@ -144,7 +180,9 @@ class LoginViewController: UIViewController {
             make.top.equalTo(usernameTextField.snp.bottom).offset(12)
         }
         
-        loginButton.snp.makeConstraints { make in
+        loginStackView.addArrangedSubviews([loginButton, registerButton])
+        
+        loginStackView.snp.makeConstraints { make in
             make.leading.trailing.equalTo(view.layoutMarginsGuide)
             make.height.equalTo(50)
             make.top.equalTo(passwordTextField.snp.bottom).offset(20)
@@ -161,12 +199,14 @@ class LoginViewController: UIViewController {
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Login", for: .normal)
+        button.setTitleColor(.black, for: .normal)
         return button
     }()
     
     private let registerButton: UIButton = {
         let button = UIButton()
         button.setTitle("Register", for: .normal)
+        button.setTitleColor(.black, for: .normal)
         return button
     }()
 }
