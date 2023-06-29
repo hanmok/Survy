@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import API
+import Model
 
 class LoginViewController: UIViewController, Coordinating {
     
@@ -35,6 +36,23 @@ class LoginViewController: UIViewController, Coordinating {
         setupLayout()
         setupTargets()
         setupDelegates()
+        
+        autoLogin()
+        
+    }
+    
+    private func autoLogin() {
+        
+        usernameTextField.text = UserDefaults.standard.defaultUsername
+        username = UserDefaults.standard.defaultUsername
+        
+        passwordTextField.text = UserDefaults.standard.defaultPassword
+        password = UserDefaults.standard.defaultPassword
+        
+        guard username != "", password != "" else { return }
+        if UserDefaults.standard.autoLoginEnabled {
+            loginAction(username, password)
+        }
     }
     
     private func setupTargets() {
@@ -47,28 +65,33 @@ class LoginViewController: UIViewController, Coordinating {
         loginAction(username, password)
     }
     
+    private func enterAction(_ username: String, _ password: String, user: User) {
+        UserDefaults.standard.defaultUsername = username
+        UserDefaults.standard.defaultPassword = password
+        UserDefaults.standard.autoLoginEnabled = true
+        coordinator?.setIndicatorSpinning(false)
+        self.coordinator?.move(to: .mainTab)
+    }
+    
     private func loginAction(_ username: String, _ password: String) {
         coordinator?.setIndicatorSpinning(true)
         APIService.shared.login(username: username, password: password) { [weak self] user, message in
-            guard let user = user, let self = self  else { fatalError("user not fetched successfully")}
-            coordinator?.setIndicatorSpinning(false)
-            self.coordinator?.move(to: .mainTab)
+            guard let user = user, let self = self else { fatalError("user not fetched successfully")}
+            userService.currentUser = user
+            self.enterAction(username, password, user: user)
         }
     }
     
     @objc func registerTapped() {
         guard username != "", password != "" else { fatalError() }
-        
         registerAction(username, password)
     }
     
     private func registerAction(_ username: String, _ password: String) {
-        // Register
         coordinator?.setIndicatorSpinning(true)
-        APIService.shared.postUser(username: username, password: password) { [weak self] userId, message in
-            guard let userId = userId, let self = self else { fatalError("user not created successfully") }
-            coordinator?.setIndicatorSpinning(false)
-            self.coordinator?.move(to: .mainTab)
+        APIService.shared.postUser(username: username, password: password) { [weak self] user, errorMessage in
+            guard let user = user, let self = self else { fatalError("user not created successfully") }
+            self.enterAction(username, password, user: user)
         }
     }
     

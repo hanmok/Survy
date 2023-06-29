@@ -148,10 +148,9 @@ final class APITests: XCTestCase {
         let randomString = String.generateShortUUID()
         let (username, password) = (randomString, randomString)
         
-        APIService.shared.postUser(username: username, password: password) { result, string in
-            guard let result = result else { fatalError() }
-            XCTAssertNotNil(result)
-            print("result string: \(string)")
+        APIService.shared.postUser(username: username, password: password) { user, errorMessage in
+            guard let user = user else { fatalError() }
+            XCTAssertNil(user)
             expectation.fulfill()
         }
         waitForExpectations(timeout: 10)

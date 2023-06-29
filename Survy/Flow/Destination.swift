@@ -12,4 +12,5 @@ enum Destination {
     case mainTab
     case questionController
     case postingController
+    case loginPage
 }

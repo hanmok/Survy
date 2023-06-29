@@ -23,13 +23,12 @@ public struct User: Decodable {
         self.isMale = isMale
         self.nickname = nickname
     }
-    
     public var id: Int
     public var collectedReward: Int
     public var fatigue: Int
     public var birthDate: Date?
     public var nickname: String?
-    public var isMale: Int
+    public var isMale: Int?
     public var deviceToken: String?
     public var username: String
 }

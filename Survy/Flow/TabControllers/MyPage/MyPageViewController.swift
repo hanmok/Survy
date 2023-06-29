@@ -8,8 +8,9 @@
 import SnapKit
 import UIKit
 
-class MyPageViewController: TabController {
-
+class MyPageViewController: TabController, Coordinating {
+    var coordinator: Coordinator?
+    
     let collectedMoney = 56000
     
     var moreInfos: [Info] = [
@@ -19,7 +20,10 @@ class MyPageViewController: TabController {
         Info(text: "회원탈퇴", nextViewController: UIViewController())
     ]
     
-    override init(index: Int) {
+    var userService: UserServiceType
+    
+    init(index: Int, userService: UserServiceType) {
+        self.userService = userService
         super.init(index: index)
     }
     
@@ -36,6 +40,20 @@ class MyPageViewController: TabController {
         configureTableView()
         setupLayout()
         configureLayout()
+        setupTargets() 
+    }
+    
+    private func setupTargets() {
+        logoutButton.addTarget(self, action: #selector(logoutAction), for: .touchUpInside)
+    }
+    
+    @objc func logoutAction() {
+        UserDefaults.standard.autoLoginEnabled = false
+        // TODO: Logout
+//        coordinator?.move(to: .log)
+        coordinator?.move(to: .root)
+        
+        
     }
     
     private func configureTableView() {

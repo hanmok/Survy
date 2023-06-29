@@ -13,8 +13,40 @@ extension UserDefaults {
         case isIndivisualSelected
         case myGenres
         case isAddingSelectableOption
+        case defaultUsername
+        case defaultPassword
+        case autoLoginEnabled
     }
+    
+    public var autoLoginEnabled: Bool {
+        get {
+            return self.bool(forKey: .autoLoginEnabled)
+        }
+        set {
+            set(newValue, forKey: .autoLoginEnabled)
+        }
+    }
+    
 
+    public var defaultUsername: String {
+        get {
+            return self.string(forKey: .defaultUsername) ?? ""
+        }
+        set {
+            set(newValue, forKey: .defaultUsername)
+        }
+    }
+    
+    public var defaultPassword: String {
+        get {
+            return self.string(forKey: .defaultPassword) ?? ""
+        }
+        set {
+            set(newValue, forKey: .defaultPassword)
+        }
+    }
+    
+    
     public var isAddingSelectableOption: Bool {
         get {
             return self.bool(forKey: .isAddingSelectableOption)

@@ -233,13 +233,14 @@ extension APIService {
         }
     }
     
-    public func postUser(username: Username, password: Password, completion: @escaping (UserId?, String) -> Void) {
+    public func postUser(username: Username, password: Password, completion: @escaping (User?, String?) -> Void) {
         userProvider.request(.create(username, password)) { result in
             switch result {
                 case .success(let response):
-                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
-                    let (id, message) = (postResponse.id, postResponse.message)
-                    completion(id, message)
+//                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
+                    let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
+                    let createdUser = userResponse.user
+                    completion(createdUser, nil)
                 case .failure(let error):
                     completion(nil, error.localizedDescription)
             }
@@ -251,6 +252,7 @@ extension APIService {
             switch result {
                 case .success(let response):
                     let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
+                    
 //                    completion(userResponse.user, nil)
                     completion(userResponse.user, nil)
                 case .failure(let error):

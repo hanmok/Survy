@@ -55,8 +55,9 @@ class MainTabController: UITabBarController, UINavigationControllerDelegate, Coo
         let storeVC = StoreViewController(index: 1)
         storeVC.title = "스토어"
         
-        let myPageVC = MyPageViewController(index: 2)
+        let myPageVC = MyPageViewController(index: 2, userService: self.provider.userService)
         myPageVC.title = "마이페이지"
+        myPageVC.coordinator = coordinator
         
         let home = templateNavigationController(
             unselectedImage: UIImage.unselectedHomeIcon,

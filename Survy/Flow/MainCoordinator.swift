@@ -131,6 +131,9 @@ class MainCoordinator: Coordinator {
     
     func move(to destination: Destination) {
         switch destination {
+            case .loginPage:
+//                self.navigationController?.popViewController(animated: true)
+                self.navigationController?.popToRootViewController(animated: true)
             case .mainTab:
                 let mainTabController = MainTabController(provider: self.provider, coordinator: self)
                 self.navigationController?.pushViewController(mainTabController, animated: true)
