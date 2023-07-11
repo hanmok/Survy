@@ -12,9 +12,12 @@ import Toast
  NavigationController 에서 처음으로 띄어지는 Controller. Loading Bar, Alert 등을 일부 맡음.
  */
 class StartingNavigationController: UINavigationController {
-
     public func toastMessage(title: String, message: String? = nil) {
-        self.view.makeToast(title, duration: 3, position: .top, title: nil, image: nil, style: .init()) { didTap in }
+        if let message = message {
+            self.view.makeToast(message, duration: 3, position: .top, title: title, image: nil, style: .init()) { didTap in }
+        } else {
+            self.view.makeToast(title, duration: 3, position: .top, title: nil, image: nil, style: .init()) { didTap in }
+        }
     }
     
     public let indicatorView = UIActivityIndicatorView()

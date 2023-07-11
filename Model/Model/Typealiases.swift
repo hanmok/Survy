@@ -20,3 +20,5 @@ public typealias UserId = Int
 public typealias QuestionIndex = Int
 public typealias Username = String
 public typealias Password = String
+public typealias RefreshToken = String
+public typealias AccessToken = String

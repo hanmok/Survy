@@ -237,23 +237,64 @@ extension APIService {
         userProvider.request(.create(username, password)) { result in
             switch result {
                 case .success(let response):
-//                    let postResponse = try! JSONDecoder().decode(PostResponse.self, from: response.data)
-                    let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
-                    let createdUser = userResponse.user
-                    completion(createdUser, nil)
+//                    let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
+                    if let userResponse = try? JSONDecoder().decode(UserResponse.self, from: response.data) {
+                        let createdUser = userResponse.user
+                        completion(createdUser, nil)
+                    } else {
+                        completion(nil, "error!")
+                    }
                 case .failure(let error):
                     completion(nil, error.localizedDescription)
             }
         }
     }
     
+    // 로그인 실패시 -> 음.. Error Code 에 따라 달라질 것 같은데?
     public func login(username: Username, password: Password, completion: @escaping (User?, String?) -> Void) {
         userProvider.request(.login(username, password)) { result in
             switch result {
                 case .success(let response):
+                    // Error -> Auth Error;
+//                    let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
+                    if let userResponse = try? JSONDecoder().decode(UserResponse.self, from: response.data) {
+                        if let accessToken = userResponse.accessToken {
+                            KeychainManager.shared.saveAccessToken(accessToken)
+                        }
+                        if let refreshToken = userResponse.refreshToken {
+                            KeychainManager.shared.saveRefreshToken(refreshToken)
+                        }
+                        print("result: \(userResponse)")
+                        completion(userResponse.user, nil)
+                    } else {
+                        // 갖고있는 refreshToken 으로 로그인!
+                        if let refreshToken = KeychainManager.shared.loadRefreshToken() {
+                            APIService.shared.autoLogin(username: username, refreshToken: refreshToken) { [weak self] user, message in
+                                guard let self = self else { return }
+                                guard let user = user else {
+                                    return
+                                }
+                                completion(user, nil)
+                            }
+                        } else{
+                            completion(nil, "error")
+                        }
+                    }
+                case .failure(let error):
+                    completion(nil, error.localizedDescription)
+            }
+        }
+    }
+    
+    public func autoLogin(username: Username, refreshToken: RefreshToken, completion: @escaping (User?, String?) -> Void) {
+        userProvider.request(.regenerateAccessToken(username, refreshToken)) { result in
+            switch result {
+                case .success(let response):
+                    print("username: \(username), refreshToken: \(refreshToken)")
                     let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
-                    
-//                    completion(userResponse.user, nil)
+                    if let accessToken = userResponse.accessToken {
+                        KeychainManager.shared.saveAccessToken(accessToken)
+                    }
                     completion(userResponse.user, nil)
                 case .failure(let error):
                     completion(nil, error.localizedDescription)

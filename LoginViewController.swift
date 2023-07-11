@@ -32,26 +32,43 @@ class LoginViewController: UIViewController, Coordinating {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        configureLayout()
         setupLayout()
         setupTargets()
         setupDelegates()
         
-        autoLogin()
+//        autoLogin()
         
+        KeychainManager2.shared.saveRefreshToken("myToken")
+        if let fetchedKey = KeychainManager2.shared.getRefreshToken() {
+            print("fetchedRefreshToken: \(fetchedKey)")
+        }
+        KeychainManager2.shared.saveRefreshToken("myToken2")
+        if let fetchedKey2 = KeychainManager2.shared.getRefreshToken() {
+            print("fetchedRefreshToken: \(fetchedKey2)")
+        }
     }
     
     private func autoLogin() {
-        
         usernameTextField.text = UserDefaults.standard.defaultUsername
         username = UserDefaults.standard.defaultUsername
         
-        passwordTextField.text = UserDefaults.standard.defaultPassword
-        password = UserDefaults.standard.defaultPassword
+        UserDefaults.standard.autoLoginEnabled = false
         
-        guard username != "", password != "" else { return }
         if UserDefaults.standard.autoLoginEnabled {
-            loginAction(username, password)
+            coordinator?.setIndicatorSpinning(true)
+            if let refreshToken = KeychainManager.shared.loadRefreshToken() {
+                APIService.shared.autoLogin(username: username, refreshToken: refreshToken) { [weak self] user, message in
+                    guard let self = self else { return }
+                    guard let user = user else {
+                        self.coordinator?.handleAPIFailWithMessage(title: "AutoLogin Failed", message: nil)
+                        return
+                    }
+                    self.enterAction(self.username, user: user)
+                    self.userService.setUser(user)
+                }
+            } else {
+                coordinator?.setIndicatorSpinning(false)
+            }
         }
     }
     
@@ -61,13 +78,12 @@ class LoginViewController: UIViewController, Coordinating {
     }
     
     @objc func loginTapped() {
-        guard username != "", password != "" else { fatalError() }
+        guard username != "", password != "" else { fatalError("username: \(username), password: \(password)") }
         loginAction(username, password)
     }
     
-    private func enterAction(_ username: String, _ password: String, user: User) {
+    private func enterAction(_ username: String, user: User) {
         UserDefaults.standard.defaultUsername = username
-        UserDefaults.standard.defaultPassword = password
         UserDefaults.standard.autoLoginEnabled = true
         coordinator?.setIndicatorSpinning(false)
         self.coordinator?.move(to: .mainTab)
@@ -76,9 +92,12 @@ class LoginViewController: UIViewController, Coordinating {
     private func loginAction(_ username: String, _ password: String) {
         coordinator?.setIndicatorSpinning(true)
         APIService.shared.login(username: username, password: password) { [weak self] user, message in
-            guard let user = user, let self = self else { fatalError("user not fetched successfully")}
-            userService.currentUser = user
-            self.enterAction(username, password, user: user)
+            guard let user = user else {
+                self?.coordinator?.handleAPIFailWithMessage(title: "Login Failed", message: nil)
+                return
+            }
+            self?.userService.setUser(user)
+            self?.enterAction(username, user: user)
         }
     }
     
@@ -90,13 +109,13 @@ class LoginViewController: UIViewController, Coordinating {
     private func registerAction(_ username: String, _ password: String) {
         coordinator?.setIndicatorSpinning(true)
         APIService.shared.postUser(username: username, password: password) { [weak self] user, errorMessage in
-            guard let user = user, let self = self else { fatalError("user not created successfully") }
-            self.enterAction(username, password, user: user)
+            guard let self = self else { fatalError() }
+            if let user = user {
+                self.enterAction(username, user: user)
+            } else {
+                self.coordinator?.handleAPIFailWithMessage(title: "account with \(username) and \(password) cannot be created", message: nil)
+            }
         }
-    }
-    
-    private func configureLayout() {
-        
     }
     
     private func setupDelegates() {
@@ -182,7 +201,6 @@ class LoginViewController: UIViewController, Coordinating {
             attributes: [.foregroundColor: UIColor(white: 0.5, alpha: 1)])
         tf.textColor = .black
         tf.isSecureTextEntry = true
-        
         tf.layer.borderColor = UIColor.deeperMainColor.cgColor
         tf.layer.borderWidth = 2
         tf.backgroundColor = UIColor(white: 0.9, alpha: 1)

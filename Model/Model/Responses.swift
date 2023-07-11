@@ -26,6 +26,8 @@ public struct PostResponse: Decodable {
 
 public struct UserResponse: Decodable {
     public var user: User
+    public var accessToken: String?
+    public var refreshToken: String?
 }
 
 

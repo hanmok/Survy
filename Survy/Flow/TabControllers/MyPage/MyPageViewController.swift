@@ -49,11 +49,7 @@ class MyPageViewController: TabController, Coordinating {
     
     @objc func logoutAction() {
         UserDefaults.standard.autoLoginEnabled = false
-        // TODO: Logout
-//        coordinator?.move(to: .log)
         coordinator?.move(to: .root)
-        
-        
     }
     
     private func configureTableView() {

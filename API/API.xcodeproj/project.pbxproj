@@ -23,7 +23,7 @@
 		9ACCC7582A21F181006AE8CE /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 9ACCC7572A21F181006AE8CE /* Moya */; };
 		9ACCC75A2A21F181006AE8CE /* ReactiveMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 9ACCC7592A21F181006AE8CE /* ReactiveMoya */; };
 		9ACCC75C2A21F181006AE8CE /* RxMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 9ACCC75B2A21F181006AE8CE /* RxMoya */; };
-		9ACCC75E2A21F1B1006AE8CE /* TagAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */; };
+		9ACCC75E2A21F1B1006AE8CE /* GenreAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC75D2A21F1B1006AE8CE /* GenreAPI.swift */; };
 		9ACCC7602A21F349006AE8CE /* BaseAPIType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */; };
 		9AD2BC422A3C3DE6007690B7 /* SectionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC412A3C3DE6007690B7 /* SectionAPI.swift */; };
 		9AD2BC442A3C3E61007690B7 /* QuestionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */; };
@@ -53,7 +53,7 @@
 		9ACCC7392A20CA60006AE8CE /* APITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APITests.swift; sourceTree = "<group>"; };
 		9ACCC7442A20CA6F006AE8CE /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		9ACCC74E2A20CD12006AE8CE /* libModel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libModel.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagAPI.swift; sourceTree = "<group>"; };
+		9ACCC75D2A21F1B1006AE8CE /* GenreAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenreAPI.swift; sourceTree = "<group>"; };
 		9ACCC75F2A21F349006AE8CE /* BaseAPIType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseAPIType.swift; sourceTree = "<group>"; };
 		9AD2BC412A3C3DE6007690B7 /* SectionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionAPI.swift; sourceTree = "<group>"; };
 		9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAPI.swift; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 			children = (
 				9ACCC72F2A20CA60006AE8CE /* API.h */,
 				9AD2BC402A3C3DB1007690B7 /* Foundation */,
-				9ACCC75D2A21F1B1006AE8CE /* TagAPI.swift */,
+				9ACCC75D2A21F1B1006AE8CE /* GenreAPI.swift */,
 				9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */,
 				9AD2BC412A3C3DE6007690B7 /* SectionAPI.swift */,
 				9A6BC78F2A39C96E009CC23B /* SurveyTagAPI.swift */,
@@ -281,7 +281,7 @@
 			files = (
 				9ACCC7602A21F349006AE8CE /* BaseAPIType.swift in Sources */,
 				9AD647842A36E7F900ED6DC0 /* SurveyAPI.swift in Sources */,
-				9ACCC75E2A21F1B1006AE8CE /* TagAPI.swift in Sources */,
+				9ACCC75E2A21F1B1006AE8CE /* GenreAPI.swift in Sources */,
 				9ACCC7452A20CA6F006AE8CE /* APIService.swift in Sources */,
 				9A6BC78C2A39B5DF009CC23B /* APIError.swift in Sources */,
 				9A4D5C632A41DC6B00980937 /* UserAPI.swift in Sources */,

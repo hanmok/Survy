@@ -22,7 +22,13 @@ enum InitialScreen {
 }
 
 class MainCoordinator: Coordinator {
+    
     var provider: ProviderType
+    
+    func handleAPIFailWithMessage(title: String, message: String? = nil) {
+        navigationController?.setIndicatorSpin(false)
+        toastMessage(title: title, message: message)
+    }
     
     init() {
         self.provider = Provider()
@@ -156,7 +162,7 @@ class MainCoordinator: Coordinator {
         }
     }
     
-    func toastMessage(title: String, message: String) {
+    func toastMessage(title: String, message: String? = nil) {
         navigationController?.toastMessage(title: title, message: message)
     }
     

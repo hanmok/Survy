@@ -14,7 +14,7 @@ extension UserDefaults {
         case myGenres
         case isAddingSelectableOption
         case defaultUsername
-        case defaultPassword
+//        case defaultPassword
         case autoLoginEnabled
     }
     
@@ -37,14 +37,14 @@ extension UserDefaults {
         }
     }
     
-    public var defaultPassword: String {
-        get {
-            return self.string(forKey: .defaultPassword) ?? ""
-        }
-        set {
-            set(newValue, forKey: .defaultPassword)
-        }
-    }
+//    public var defaultPassword: String {
+//        get {
+//            return self.string(forKey: .defaultPassword) ?? ""
+//        }
+//        set {
+//            set(newValue, forKey: .defaultPassword)
+//        }
+//    }
     
     
     public var isAddingSelectableOption: Bool {

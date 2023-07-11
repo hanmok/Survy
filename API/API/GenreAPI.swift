@@ -71,7 +71,7 @@ extension GenreAPI: BaseAPIType {
         }
     }
 
-    public var headers: [String : String]? {
-        return ["Content-Type": "application/json"]
-    }
+//    public var headers: [String : String]? {
+//        return ["Content-Type": "application/json"]
+//    }
 }

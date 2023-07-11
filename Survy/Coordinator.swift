@@ -20,7 +20,9 @@ protocol Coordinator {
     
     func setIndicatorSpinning(_ shouldSpin: Bool)
     
-    func toastMessage(title: String, message: String)
+    func toastMessage(title: String, message: String?)
+    
+    func handleAPIFailWithMessage(title: String, message: String?)
 }
 
 enum ChildView {
@@ -45,3 +47,11 @@ enum Command {
     case present
     case dismiss(Bool?)
 }
+
+
+//31. Intimacy [ˈɪn.tə.mə.si] - 친밀함
+//32. Trustworthy [ˈtrʌst.wɜr.ði] - 신뢰할 수 있는
+//33. In love [ɪn lʌv] - 사랑에 빠진
+
+
+

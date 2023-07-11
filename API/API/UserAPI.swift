@@ -14,6 +14,8 @@ public enum UserAPI {
     case getPostedSurveyByUser(UserId)
     case create(Username, Password)
     case login(Username, Password)
+    case regenerateAccessToken(Username, RefreshToken)
+    
 }
 
 extension UserAPI: BaseAPIType {
@@ -34,12 +36,15 @@ extension UserAPI: BaseAPIType {
                 return "/users"
             case .login:
                 return "/users/login"
+            case .regenerateAccessToken:
+//                return "/users/auto_login"
+                return "/users/regenerate_access_token"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-            case .connectToSurvey, .create, .login:
+            case .connectToSurvey, .create, .login, .regenerateAccessToken:
                 return .post
             case .getPostedSurveyByUser:
                 return .get
@@ -54,6 +59,8 @@ extension UserAPI: BaseAPIType {
                 return [:]
             case .create(let username, let password), .login(let username, let password):
                 return ["username": username, "password": password]
+            case .regenerateAccessToken(let username, let refreshToken):
+                return ["username": username, "refreshToken": refreshToken]
                 
         }
     }
@@ -61,7 +68,7 @@ extension UserAPI: BaseAPIType {
     public var task: Moya.Task {
         guard let parameters = parameters else { return .requestPlain }
         switch self {
-            case .connectToSurvey, .create, .login:
+            case .connectToSurvey, .create, .login, .regenerateAccessToken:
                 return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
             default:
                 return .requestParameters(parameters: parameters, encoding: parameterEncoding)
@@ -70,7 +77,7 @@ extension UserAPI: BaseAPIType {
     
     public var parameterEncoding: ParameterEncoding {
         switch self {
-            case .connectToSurvey, .create, .login:
+            case .connectToSurvey, .create, .login, .regenerateAccessToken:
                 return URLEncoding.httpBody
             default:
                 return URLEncoding.queryString

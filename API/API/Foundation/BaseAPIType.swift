@@ -7,14 +7,25 @@
 
 import Foundation
 import Moya
+import Model
 
 public protocol BaseAPIType: TargetType {
     var parameters: [String: Any]? { get }
     var parameterEncoding: ParameterEncoding { get }
-//    func result(data: String, code: Int?, message: String?) -> String
+    var accessToken: String { get }
+    var refreshToken: String { get }
 }
 
 extension BaseAPIType {
+    
+    public var accessToken: String {
+        return KeychainManager.shared.loadAccessToken() ?? ""
+    }
+    
+    public var refreshToken: String {
+        return KeychainManager.shared.loadRefreshToken() ?? ""
+    }
+    
     public var baseURL: URL {
         return URL(string: "https://dearsurvy.herokuapp.com")!
     }
@@ -33,7 +44,8 @@ extension BaseAPIType {
     }
     
     public var headers: [String : String]? {
-        return ["Content-Type": "application/json"]
+        return ["Content-Type": "application/json",
+                "Authorization": "Bearer \(accessToken)"]
     }
     
     public var parameters: [String: Any]? {
