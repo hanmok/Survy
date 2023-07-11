@@ -13,6 +13,7 @@ public enum SurveyAPI {
     case create(String, Int, Int) // title, participationGoal, userId
     case fetchAll
     case fetchGenres(Int) // with survey id
+    case participate(SurveyId, UserId)
 }
 
 extension SurveyAPI: BaseAPIType {
@@ -27,6 +28,10 @@ extension SurveyAPI: BaseAPIType {
         switch self {
             case .fetchGenres(let surveyId):
                 return "/surveys/\(surveyId)/genres"
+//            case .participate(let surveyId, let userId):
+            case .participate:
+//                return "/surveys/\(surveyId)/participated-users/\(userId)"
+                return "/surveys/participated-users"
             default:
                 return "/surveys"
         }
@@ -36,7 +41,7 @@ extension SurveyAPI: BaseAPIType {
         switch self {
             case .fetchAll, .fetchGenres:
                 return .get
-            case .create:
+            case .create, .participate:
                 return .post
         }
     }
@@ -45,7 +50,8 @@ extension SurveyAPI: BaseAPIType {
         switch self {
             case .create(let title, let participationGoal, let userId):
                 return ["title": title, "participationGoal": participationGoal, "user_id": userId]
-            
+            case .participate(let surveyId, let userId):
+                return ["survey_id": surveyId, "user_id": userId]
             default: return [:]
         }
     }
@@ -53,7 +59,7 @@ extension SurveyAPI: BaseAPIType {
     public var task: Moya.Task {
         guard let parameters = parameters else { return .requestPlain }
         switch self {
-            case .create :
+            case .create, .participate :
                 return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
             default:
                 return .requestParameters(parameters: parameters, encoding: parameterEncoding)
@@ -62,7 +68,7 @@ extension SurveyAPI: BaseAPIType {
     
     public var parameterEncoding: ParameterEncoding {
         switch self {
-            case .create:
+            case .create, .participate:
                 return URLEncoding.httpBody
             default:
                 return URLEncoding.queryString

@@ -130,7 +130,6 @@ class SurveyTableViewCell: UITableViewCell {
     private let participateButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.black, for: .normal)
-//        button.layer.borderWidth = 1
         button.layer.cornerRadius = 15
         button.layer.borderColor = UIColor(white: 0.7, alpha: 1).cgColor
         button.backgroundColor = .white

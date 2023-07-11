@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import Model
+import API
 
 class HomeViewController: TabController, Coordinating {
 
@@ -391,7 +392,16 @@ extension HomeViewController: SurveyTableViewDelegate {
     func surveyTapped(_ cell: SurveyTableViewCell) {
         guard let selectedSurvey = cell.survey else { fatalError() }
         participationService.currentSurvey = selectedSurvey
-        coordinator?.move(to: .questionController)
+        guard let userId = userService.currentUser?.id else { fatalError() }
+        APIService.shared.participate(surveyId: selectedSurvey.id, userId: userId) { [weak self] result in
+            switch result {
+                case .success(_):
+                    self?.coordinator?.move(to: .questionController)
+                case .failure(let error):
+                    fatalError(error.localizedDescription)
+            }
+        }
+        
     }
 }
 

@@ -318,3 +318,17 @@ extension APIService {
         }
     }
 }
+
+extension APIService {
+    public func participate(surveyId: SurveyId, userId: UserId, completion: @escaping (Result<String, Error>) -> Void ) {
+        surveyProvider.request(.participate(surveyId, userId)) { result in
+            switch result {
+                case .success(let response):
+                    let response = try! JSONDecoder().decode(ParticipateResponse.self, from: response.data)
+                    completion(.success(response.message))
+                case .failure(let error):
+                    completion(.failure(error))
+            }
+        }
+    }
+}

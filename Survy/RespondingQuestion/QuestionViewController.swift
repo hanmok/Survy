@@ -278,7 +278,9 @@ class QuestionViewController: BaseViewController, Coordinating {
             make.width.equalTo(UIScreen.screenWidth - 40)
             make.top.equalTo(myProgressView.snp.bottom).offset(80)
 //            make.height.equalTo(CGFloat(responseOptionStackView.subviews.count * 40) + questionHeight! + 12 + 12) // 12, 12: top, bottom inset
+            
             make.height.equalTo(12 + questionHeight! + 12 + CGFloat(responseOptionStackView.subviews.count * 40) + 12)
+            
 //            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50) // 이거.. 높이 바꿔야함.
         }
         
@@ -417,3 +419,74 @@ extension QuestionViewController: OptionStackViewDelegate {
         self.nextButton.backgroundColor = condition ? .mainColor : .grayProgress
     }
 }
+
+
+//# Table    Create Table
+//Question    CREATE TABLE `question` (
+//  `id` int(11) NOT NULL AUTO_INCREMENT,
+//  `questionType_id` int(11) DEFAULT NULL,
+//  `section_id` int(11) DEFAULT NULL,
+//  `position` int(11) NOT NULL,
+//  `text` text NOT NULL,
+//  `expectedTimeInSec` int(11) DEFAULT '5',
+//  PRIMARY KEY (`id`),
+//  KEY `FK_QuestionType_Question` (`questionType_id`),
+//  KEY `FK_Section_Question` (`section_id`),
+//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
+//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
+//
+//
+//'Question', 'CREATE TABLE `question` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `questionType_id` int(11) DEFAULT NULL,\n  `section_id` int(11) DEFAULT NULL,\n  `position` int(11) NOT NULL,\n  `text` text NOT NULL,\n  `expectedTimeInSec` int(11) DEFAULT \'5\',\n  PRIMARY KEY (`id`),\n  KEY `FK_QuestionType_Question` (`questionType_id`),\n  KEY `FK_Section_Question` (`section_id`),\n  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8'
+//
+//
+//# Table, Create Table
+//'Question', 'CREATE TABLE `question` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `questionType_id` int(11) DEFAULT NULL,\n  `section_id` int(11) DEFAULT NULL,\n  `position` int(11) NOT NULL,\n  `text` text NOT NULL,\n  `expectedTimeInSec` int(11) DEFAULT \'5\',\n  PRIMARY KEY (`id`),\n  KEY `FK_QuestionType_Question` (`questionType_id`),\n  KEY `FK_Section_Question` (`section_id`),\n  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8'
+//
+//
+//Question, CREATE TABLE `question` (
+//  `id` int(11) NOT NULL AUTO_INCREMENT,
+//  `questionType_id` int(11) DEFAULT NULL,
+//  `section_id` int(11) DEFAULT NULL,
+//  `position` int(11) NOT NULL,
+//  `text` text NOT NULL,
+//  `expectedTimeInSec` int(11) DEFAULT '5',
+//  PRIMARY KEY (`id`),
+//  KEY `FK_QuestionType_Question` (`questionType_id`),
+//  KEY `FK_Section_Question` (`section_id`),
+//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
+//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
+//
+//
+//
+//# Table, Create Table
+//Question, CREATE TABLE `question` (
+//  `id` int(11) NOT NULL AUTO_INCREMENT,
+//  `questionType_id` int(11) DEFAULT NULL,
+//  `section_id` int(11) DEFAULT NULL,
+//  `position` int(11) NOT NULL,
+//  `text` text NOT NULL,
+//  `expectedTimeInSec` int(11) DEFAULT '5',
+//  PRIMARY KEY (`id`),
+//  KEY `FK_QuestionType_Question` (`questionType_id`),
+//  KEY `FK_Section_Question` (`section_id`),
+//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
+//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
+//
+//
+//CREATE TABLE `question` (
+//  `id` int(11) NOT NULL AUTO_INCREMENT,
+//  `questionType_id` int(11) DEFAULT NULL,
+//  `section_id` int(11) DEFAULT NULL,
+//  `position` int(11) NOT NULL,
+//  `text` text NOT NULL,
+//  `expectedTimeInSec` int(11) DEFAULT '5',
+//  PRIMARY KEY (`id`),
+//  KEY `FK_QuestionType_Question` (`questionType_id`),
+//  KEY `FK_Section_Question` (`section_id`),
+//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
+//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
+//
+//
+//ALTER TABLE table_name
+//ADD FOREIGN KEY (column_name)
+//REFERENCE table_name(Referencing column_name in table_name);

@@ -41,3 +41,15 @@ public struct MessageResponse: Decodable {
 public struct SelectableOptionResponse: Decodable {
     public var selectableOptions: [SelectableOption]
 }
+
+public struct ParticipateResponse: Decodable {
+    public var message: String
+    public var userId: Int
+    public var surveyId: Int
+    
+    public enum CodingKeys: String, CodingKey {
+        case message
+        case userId = "user_id"
+        case surveyId = "survey_id"
+    }
+}
