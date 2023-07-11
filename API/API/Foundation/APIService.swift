@@ -259,16 +259,17 @@ extension APIService {
 //                    let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
                     if let userResponse = try? JSONDecoder().decode(UserResponse.self, from: response.data) {
                         if let accessToken = userResponse.accessToken {
-                            KeychainManager.shared.saveAccessToken(accessToken)
+                            KeychainManager2.shared.saveAccessToken(accessToken)
+//                            KeychainManager2
                         }
                         if let refreshToken = userResponse.refreshToken {
-                            KeychainManager.shared.saveRefreshToken(refreshToken)
+                            KeychainManager2.shared.saveRefreshToken(refreshToken)
                         }
                         print("result: \(userResponse)")
                         completion(userResponse.user, nil)
                     } else {
                         // 갖고있는 refreshToken 으로 로그인!
-                        if let refreshToken = KeychainManager.shared.loadRefreshToken() {
+                        if let refreshToken = KeychainManager2.shared.loadRefreshToken() {
                             APIService.shared.autoLogin(username: username, refreshToken: refreshToken) { [weak self] user, message in
                                 guard let self = self else { return }
                                 guard let user = user else {
@@ -293,7 +294,7 @@ extension APIService {
                     print("username: \(username), refreshToken: \(refreshToken)")
                     let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
                     if let accessToken = userResponse.accessToken {
-                        KeychainManager.shared.saveAccessToken(accessToken)
+                        KeychainManager2.shared.saveAccessToken(accessToken)
                     }
                     completion(userResponse.user, nil)
                 case .failure(let error):

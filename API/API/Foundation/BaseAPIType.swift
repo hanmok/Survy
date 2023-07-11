@@ -19,11 +19,11 @@ public protocol BaseAPIType: TargetType {
 extension BaseAPIType {
     
     public var accessToken: String {
-        return KeychainManager.shared.loadAccessToken() ?? ""
+        return KeychainManager2.shared.loadAccessToken() ?? ""
     }
     
     public var refreshToken: String {
-        return KeychainManager.shared.loadRefreshToken() ?? ""
+        return KeychainManager2.shared.loadRefreshToken() ?? ""
     }
     
     public var baseURL: URL {

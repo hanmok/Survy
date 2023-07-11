@@ -13,7 +13,7 @@ public class KeychainManager2 {
     }
 
     // AccessToken 검색
-    public func getAccessToken() -> String? {
+    public func loadAccessToken() -> String? {
         return retrieveFromKeychain(forKey: accessTokenKey)
     }
 
@@ -23,7 +23,7 @@ public class KeychainManager2 {
     }
 
     // RefreshToken 검색
-    public func getRefreshToken() -> String? {
+    public func loadRefreshToken() -> String? {
         return retrieveFromKeychain(forKey: refreshTokenKey)
     }
 

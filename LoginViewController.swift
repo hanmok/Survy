@@ -36,27 +36,27 @@ class LoginViewController: UIViewController, Coordinating {
         setupTargets()
         setupDelegates()
         
-//        autoLogin()
+        autoLogin()
         
-        KeychainManager2.shared.saveRefreshToken("myToken")
-        if let fetchedKey = KeychainManager2.shared.getRefreshToken() {
-            print("fetchedRefreshToken: \(fetchedKey)")
-        }
-        KeychainManager2.shared.saveRefreshToken("myToken2")
-        if let fetchedKey2 = KeychainManager2.shared.getRefreshToken() {
-            print("fetchedRefreshToken: \(fetchedKey2)")
-        }
+//        KeychainManager2.shared.saveRefreshToken("myToken")
+//        if let fetchedKey = KeychainManager2.shared.loadRefreshToken() {
+//            print("fetchedRefreshToken: \(fetchedKey)")
+//        }
+//        KeychainManager2.shared.saveRefreshToken("myToken2")
+//        if let fetchedKey2 = KeychainManager2.shared.loadRefreshToken() {
+//            print("fetchedRefreshToken: \(fetchedKey2)")
+//        }
     }
     
     private func autoLogin() {
         usernameTextField.text = UserDefaults.standard.defaultUsername
         username = UserDefaults.standard.defaultUsername
         
-        UserDefaults.standard.autoLoginEnabled = false
+        UserDefaults.standard.autoLoginEnabled = true
         
         if UserDefaults.standard.autoLoginEnabled {
             coordinator?.setIndicatorSpinning(true)
-            if let refreshToken = KeychainManager.shared.loadRefreshToken() {
+            if let refreshToken = KeychainManager2.shared.loadRefreshToken() {
                 APIService.shared.autoLogin(username: username, refreshToken: refreshToken) { [weak self] user, message in
                     guard let self = self else { return }
                     guard let user = user else {
