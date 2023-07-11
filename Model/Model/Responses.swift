@@ -30,6 +30,13 @@ public struct UserResponse: Decodable {
     public var refreshToken: String?
 }
 
+public enum CustomError: Error {
+    case logout(String?)
+}
+
+public struct MessageResponse: Decodable {
+    public var message: String
+}
 
 public struct SelectableOptionResponse: Decodable {
     public var selectableOptions: [SelectableOption]

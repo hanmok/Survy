@@ -4,10 +4,10 @@
 //
 //  Created by Mac mini on 2023/03/31.
 //
-
+import API
 import SnapKit
 import UIKit
-
+import Model
 class MyPageViewController: TabController, Coordinating {
     var coordinator: Coordinator?
     
@@ -49,7 +49,20 @@ class MyPageViewController: TabController, Coordinating {
     
     @objc func logoutAction() {
         UserDefaults.standard.autoLoginEnabled = false
-        coordinator?.move(to: .root)
+        guard let username = userService.currentUser?.username else { fatalError() }
+        coordinator?.setIndicatorSpinning(true)
+        APIService.shared.logout(username: username) { [weak self] result in
+            guard let self = self else { fatalError() }
+            switch result {
+                case .success(let message):
+                    KeychainManager.shared.saveRefreshToken(nil)
+                    self.coordinator?.move(to: .root)
+                case .failure(let customError):
+                    fatalError(customError.localizedDescription)
+            }
+            coordinator?.setIndicatorSpinning(false)
+        }
+        
     }
     
     private func configureTableView() {

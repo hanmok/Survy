@@ -39,15 +39,19 @@ class LoginViewController: UIViewController, Coordinating {
         autoLogin()
     }
     
-    private func autoLogin() {
+    private func configureUsername() {
         usernameTextField.text = UserDefaults.standard.defaultUsername
         username = UserDefaults.standard.defaultUsername
+    }
+    
+    private func autoLogin() {
+        configureUsername()
         
-        UserDefaults.standard.autoLoginEnabled = true
+//        UserDefaults.standard.autoLoginEnabled = true
         
         if UserDefaults.standard.autoLoginEnabled {
             coordinator?.setIndicatorSpinning(true)
-            if let refreshToken = KeychainManager2.shared.loadRefreshToken() {
+            if let refreshToken = KeychainManager.shared.loadRefreshToken() {
                 APIService.shared.autoLogin(username: username, refreshToken: refreshToken) { [weak self] user, message in
                     guard let self = self else { return }
                     guard let user = user else {

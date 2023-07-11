@@ -1,52 +1,72 @@
 import Foundation
 import Security
 
-public class KeychainManager2 {
-    static public let shared = KeychainManager2()
+public class KeychainManager {
+    static public let shared = KeychainManager()
 
     private let accessTokenKey = "AccessToken"
     private let refreshTokenKey = "RefreshToken"
     private let serviceName = "survy"
     
     // AccessToken 저장
-    public func saveAccessToken(_ accessToken: String) {
+    public func saveAccessToken(_ accessToken: String?) {
+        print("accessToken \(accessToken) has been saved")
         saveToKeychain(accessToken, forKey: accessTokenKey)
     }
 
     // AccessToken 검색
     public func loadAccessToken() -> String? {
-        return retrieveFromKeychain(forKey: accessTokenKey)
+        let accessToken = retrieveFromKeychain(forKey: accessTokenKey)
+        print("accessToken \(accessToken) has loaded")
+        return accessToken
     }
 
     // RefreshToken 저장
-    public func saveRefreshToken(_ refreshToken: String) {
+    public func saveRefreshToken(_ refreshToken: String?) {
+        print("refreshToken \(refreshToken) has been saved")
         saveToKeychain(refreshToken, forKey: refreshTokenKey)
     }
 
     // RefreshToken 검색
     public func loadRefreshToken() -> String? {
-        return retrieveFromKeychain(forKey: refreshTokenKey)
+        let refreshToken = retrieveFromKeychain(forKey: refreshTokenKey)
+        print("refreshToken \(refreshToken) has loaded")
+        return refreshToken
     }
 
     // Keychain에 값 저장
-    private func saveToKeychain(_ value: String, forKey key: String) {
-        // service 이름이 없는데 이래도 괜찮은거야?
-        if let data = value.data(using: .utf8) {
+    private func saveToKeychain(_ value: String?, forKey key: String) {
+        if value == nil {
             let query = [
                 kSecClass as String: kSecClassGenericPassword as String,
                 kSecAttrService as String: serviceName,
                 kSecAttrAccount as String: key,
-                kSecValueData as String: data
-            ] as [String: Any]
-
+                kSecValueData as String: nil
+            ] as [String: Any?]
             SecItemDelete(query as CFDictionary)
-
-            let status = SecItemAdd(query as CFDictionary, nil)
-            if status != errSecSuccess {
-                print("Failed to save \(key) to keychain. Status: \(status)")
+            return
+        }
+        
+        if let value = value {
+            if let data = value.data(using: .utf8) {
+                let query = [
+                    kSecClass as String: kSecClassGenericPassword as String,
+                    kSecAttrService as String: serviceName,
+                    kSecAttrAccount as String: key,
+                    kSecValueData as String: data
+                ] as [String: Any]
+                
+                SecItemDelete(query as CFDictionary)
+                
+                let status = SecItemAdd(query as CFDictionary, nil)
+                if status != errSecSuccess {
+                    print("Failed to save \(key) to keychain. Status: \(status)")
+                }
             }
         }
     }
+    
+    
 
     // Keychain에서 값 검색
     private func retrieveFromKeychain(forKey key: String) -> String? {

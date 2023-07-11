@@ -15,7 +15,7 @@ public enum UserAPI {
     case create(Username, Password)
     case login(Username, Password)
     case regenerateAccessToken(Username, RefreshToken)
-    
+    case logout(Username)
 }
 
 extension UserAPI: BaseAPIType {
@@ -39,12 +39,14 @@ extension UserAPI: BaseAPIType {
             case .regenerateAccessToken:
 //                return "/users/auto_login"
                 return "/users/regenerate_access_token"
+            case .logout:
+                return "/users/logout"
         }
     }
     
     public var method: Moya.Method {
         switch self {
-            case .connectToSurvey, .create, .login, .regenerateAccessToken:
+            case .connectToSurvey, .create, .login, .regenerateAccessToken, .logout:
                 return .post
             case .getPostedSurveyByUser:
                 return .get
@@ -61,14 +63,15 @@ extension UserAPI: BaseAPIType {
                 return ["username": username, "password": password]
             case .regenerateAccessToken(let username, let refreshToken):
                 return ["username": username, "refreshToken": refreshToken]
-                
+            case .logout(let username):
+                return ["username": username]
         }
     }
     
     public var task: Moya.Task {
         guard let parameters = parameters else { return .requestPlain }
         switch self {
-            case .connectToSurvey, .create, .login, .regenerateAccessToken:
+            case .connectToSurvey, .create, .login, .regenerateAccessToken, .logout:
                 return .requestParameters(parameters: parameters, encoding: JSONEncoding.default)
             default:
                 return .requestParameters(parameters: parameters, encoding: parameterEncoding)
@@ -77,7 +80,7 @@ extension UserAPI: BaseAPIType {
     
     public var parameterEncoding: ParameterEncoding {
         switch self {
-            case .connectToSurvey, .create, .login, .regenerateAccessToken:
+            case .connectToSurvey, .create, .login, .regenerateAccessToken, .logout:
                 return URLEncoding.httpBody
             default:
                 return URLEncoding.queryString

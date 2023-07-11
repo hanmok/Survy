@@ -256,20 +256,18 @@ extension APIService {
             switch result {
                 case .success(let response):
                     // Error -> Auth Error;
-//                    let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
                     if let userResponse = try? JSONDecoder().decode(UserResponse.self, from: response.data) {
                         if let accessToken = userResponse.accessToken {
-                            KeychainManager2.shared.saveAccessToken(accessToken)
-//                            KeychainManager2
+                            KeychainManager.shared.saveAccessToken(accessToken)
                         }
                         if let refreshToken = userResponse.refreshToken {
-                            KeychainManager2.shared.saveRefreshToken(refreshToken)
+                            KeychainManager.shared.saveRefreshToken(refreshToken)
                         }
                         print("result: \(userResponse)")
                         completion(userResponse.user, nil)
                     } else {
                         // 갖고있는 refreshToken 으로 로그인!
-                        if let refreshToken = KeychainManager2.shared.loadRefreshToken() {
+                        if let refreshToken = KeychainManager.shared.loadRefreshToken() {
                             APIService.shared.autoLogin(username: username, refreshToken: refreshToken) { [weak self] user, message in
                                 guard let self = self else { return }
                                 guard let user = user else {
@@ -287,6 +285,23 @@ extension APIService {
         }
     }
     
+    public func logout(username: Username, completion: @escaping (Result<String, CustomError>) -> Void) {
+        userProvider.request(.logout(username)) { result in
+            switch result {
+                case .success(let response):
+                    let messageResponse = try! JSONDecoder().decode(MessageResponse.self, from: response.data)
+                    if response.statusCode != 200 {
+                        completion(.failure(.logout(nil)))
+                    } else {
+                        KeychainManager.shared.saveRefreshToken(nil)
+                        completion(.success(messageResponse.message))
+                    }
+                case .failure(let error):
+                    completion(.failure(.logout(error.localizedDescription)))
+            }
+        }
+    }
+    
     public func autoLogin(username: Username, refreshToken: RefreshToken, completion: @escaping (User?, String?) -> Void) {
         userProvider.request(.regenerateAccessToken(username, refreshToken)) { result in
             switch result {
@@ -294,7 +309,7 @@ extension APIService {
                     print("username: \(username), refreshToken: \(refreshToken)")
                     let userResponse = try! JSONDecoder().decode(UserResponse.self, from: response.data)
                     if let accessToken = userResponse.accessToken {
-                        KeychainManager2.shared.saveAccessToken(accessToken)
+                        KeychainManager.shared.saveAccessToken(accessToken)
                     }
                     completion(userResponse.user, nil)
                 case .failure(let error):

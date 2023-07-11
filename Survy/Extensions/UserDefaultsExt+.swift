@@ -14,7 +14,6 @@ extension UserDefaults {
         case myGenres
         case isAddingSelectableOption
         case defaultUsername
-//        case defaultPassword
         case autoLoginEnabled
     }
     
