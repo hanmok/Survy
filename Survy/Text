@@ -1,0 +1,12 @@
+
+current Questions: Optional([
+
+Model.Question(id: 4, questionTypeId: 4, sectionId: 14, position: 1, text: "돈을 내고서라도 있으면 쓸 것 같은 서비스가 있으신가요?", expectedTimeInSec: 20, questionType: Optional(Model.BriefQuestionType.singleSelection), selectableOptions: Optional([Model.SelectableOption(id: Optional(4), position: 1, questionId: Optional(4), value: Optional("의견 공유 부탁드려요!"), placeHolder: Optional("null")), Model.SelectableOption(id: Optional(14), position: 0, questionId: Optional(4), value: Optional("test selectableOption"), placeHolder: Optional("null"))]), parentSection: nil),
+
+Model.Question(id: 14, questionTypeId: 4, sectionId: 14, position: 1, text: "돈을 내고서라도 있으면 쓸 것 같은 서비스가 있으신가요?2", expectedTimeInSec: 20, questionType: Optional(Model.BriefQuestionType.singleSelection), selectableOptions: Optional([]), parentSection: nil),
+
+Model.Question(id: 24, questionTypeId: 4, sectionId: 34, position: 1, text: "Test Question Text", expectedTimeInSec: 20, questionType: Optional(Model.BriefQuestionType.singleSelection), selectableOptions: Optional([]), parentSection: nil),
+
+Model.Question(id: 34, questionTypeId: 4, sectionId: 34, position: 1, text: "Test Question Text", expectedTimeInSec: 20, questionType: Optional(Model.BriefQuestionType.singleSelection), selectableOptions: Optional([]), parentSection: nil),
+
+Model.Question(id: 44, questionTypeId: 4, sectionId: 34, position: 1, text: "Test Question Text", expectedTimeInSec: 20, questionType: Optional(Model.BriefQuestionType.singleSelection), selectableOptions: Optional([]), parentSection: nil)])

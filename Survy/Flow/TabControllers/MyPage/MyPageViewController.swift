@@ -56,7 +56,8 @@ class MyPageViewController: TabController, Coordinating {
             switch result {
                 case .success(let message):
                     KeychainManager.shared.saveRefreshToken(nil)
-                    self.coordinator?.move(to: .root)
+//                    self.coordinator?.move(to: .backToMainTab)
+                    self.coordinator?.move(to: .loginPage)
                 case .failure(let customError):
                     fatalError(customError.localizedDescription)
             }

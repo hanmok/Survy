@@ -87,17 +87,19 @@ class QuestionViewController: BaseViewController, Coordinating {
         
         guard let question = participationService.currentQuestion else { return }
 
-        let questionText = "\(question.position + 1). \(question.text)" // position: 0 부터 시작.
-        
-        questionLabel.text = questionText
-        
-        let approximatedWidthOfBioTextView = UIScreen.screenWidth - 20 * 2 - 12 * 2
-        
-        let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
-        
-        let frame = NSString(string: questionText).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: questionLabel.font.pointSize)], context: nil)
-        
-        questionHeight = frame.height
+        configureQuestionBox(question: question)
+//        // FIXME: 두번쨰 Question 의 Index가 2 -> 1 로 바뀜. 왜 ??
+//        let questionText = "\(question.position + 1). \(question.text)" // position: 0 부터 시작.
+//
+//        questionLabel.text = questionText
+//
+//        let approximatedWidthOfBioTextView = UIScreen.screenWidth - 20 * 2 - 12 * 2
+//
+//        let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
+//
+//        let frame = NSString(string: questionText).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: questionLabel.font.pointSize)], context: nil)
+//
+//        questionHeight = frame.height
         
         if participationService.isLastQuestion {
             nextButton.setTitle("완료", for: .normal)
@@ -158,7 +160,7 @@ class QuestionViewController: BaseViewController, Coordinating {
             participationService.resetSurvey()
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
                 // TODO: Give message
-                self?.coordinator?.move(to: .root)
+                self?.coordinator?.move(to: .backToMainTab)
             }
         } else {
             participationService.increaseQuestionIndex()
@@ -180,9 +182,8 @@ class QuestionViewController: BaseViewController, Coordinating {
         }
     }
     
-    private func updateQuestionBoxSize() {
-        guard let question = participationService.currentQuestion else { return }
-        let questionText = "\(question.position). \(question.text)"
+    private func configureQuestionBox(question: Question) {
+        let questionText = "\(question.position + 1). \(question.text)"
         
         questionLabel.text = questionText
         
@@ -193,6 +194,12 @@ class QuestionViewController: BaseViewController, Coordinating {
         let frame = NSString(string: questionText).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: questionLabel.font.pointSize)], context: nil)
         
         questionHeight = frame.height
+    }
+    
+    private func updateQuestionBoxSize() {
+        guard let question = participationService.currentQuestion else { return }
+        
+        configureQuestionBox(question: question)
         
         questionContainerView.snp.updateConstraints { make in
             make.height.equalTo(12 + questionHeight! + 12 + CGFloat(responseOptionStackView.subviews.count * 40) + 12)
@@ -238,7 +245,6 @@ class QuestionViewController: BaseViewController, Coordinating {
                 self.questionContainerView.alpha = 0.0
             }
         }
-        
         notifyConditionChange(to: false)
     }
     
@@ -389,7 +395,7 @@ class QuestionViewController: BaseViewController, Coordinating {
         let quitAction = UIAlertAction(title: "종료", style: .destructive) { _ in
             DispatchQueue.main.async {
                 self.participationService.resetSurvey()
-                self.coordinator?.move(to: .root)
+                self.coordinator?.move(to: .backToMainTab)
             }
         }
         let cancelAction = UIAlertAction(title: "취소", style: UIAlertAction.Style.cancel, handler: {

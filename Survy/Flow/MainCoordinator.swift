@@ -67,6 +67,8 @@ class MainCoordinator: Coordinator {
     public func setupQuestions(completion: @escaping (Void?) -> Void) {
 //        var sectionIds = [SectionId: [QuestionId]]()
         
+        // FIXME: 이게 왜 여기있어?
+        
         setIndicatorSpinning(true)
         APIService.shared.getSections { [weak self] allSections, message in
             guard let allSections = allSections else { fatalError() }
@@ -140,6 +142,7 @@ class MainCoordinator: Coordinator {
             case .loginPage:
 //                self.navigationController?.popViewController(animated: true)
                 self.navigationController?.popToRootViewController(animated: true)
+                
             case .mainTab:
                 let mainTabController = MainTabController(provider: self.provider, coordinator: self)
                 self.navigationController?.pushViewController(mainTabController, animated: true)
@@ -153,8 +156,14 @@ class MainCoordinator: Coordinator {
                     self?.navigationController?.pushViewController(questionController, animated: true)
                 }
                 
-            case .root:
-                navigationController?.popToRootViewController(animated: true)
+            case .backToMainTab:
+                
+//                navigationController?.popToRootViewController(animated: true)
+                
+                guard let viewControllers = navigationController?.viewControllers else { fatalError("no viewControllers") }
+                let mainTabController = viewControllers.filter { type(of: $0) == MainTabController.self }.first!
+                navigationController?.popToViewController(mainTabController, animated: true)
+                
             case .postingController:
                 let postingController = PostingViewController(postingService: self.provider.postingService)
                 postingController.coordinator = self
@@ -226,7 +235,7 @@ class MainCoordinator: Coordinator {
                 
                 if type == .confirmation && isCompleted == true {
                     Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                        self.move(to: .root)
+                        self.move(to: .backToMainTab)
                         self.navigationController?.toastMessage(title: "설문이 요청되었습니다.")
                     }
                 } else {

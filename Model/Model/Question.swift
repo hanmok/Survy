@@ -33,7 +33,7 @@ public struct Question: Decodable {
     }
     
     public mutating func setSelectableOptions(_ selectableOptions: [SelectableOption]) {
-        self.selectableOptions = selectableOptions
+        self.selectableOptions = selectableOptions.sorted { $0.position < $1.position }
     }
     
     public var id: Int

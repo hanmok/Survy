@@ -84,6 +84,7 @@
 		9AE2961629D844CC00387883 /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE2961529D844CC00387883 /* PaddedLabel.swift */; };
 		9AE2961A29D8474A00387883 /* UIButtonExt+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AE2961929D8474A00387883 /* UIButtonExt+.swift */; };
 		9AF4AE2B2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF4AE2A2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift */; };
+		9AF8E7672A5D1AFC00972EAF /* Text in Resources */ = {isa = PBXBuildFile; fileRef = 9AF8E7662A5D1AFC00972EAF /* Text */; };
 		9AF935E92A1916D70002B15B /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 9AF935E82A1916D70002B15B /* IQKeyboardManagerSwift */; };
 		9AF935EB2A1932FE0002B15B /* ConfirmationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935EA2A1932FE0002B15B /* ConfirmationController.swift */; };
 		9AF935EE2A1A6FAE0002B15B /* ScrollViewController6.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF935ED2A1A6FAE0002B15B /* ScrollViewController6.swift */; };
@@ -198,6 +199,7 @@
 		9AE2961529D844CC00387883 /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
 		9AE2961929D8474A00387883 /* UIButtonExt+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButtonExt+.swift"; sourceTree = "<group>"; };
 		9AF4AE2A2A0BEA3F00257CB1 /* DiffableTablePracticeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffableTablePracticeViewController.swift; sourceTree = "<group>"; };
+		9AF8E7662A5D1AFC00972EAF /* Text */ = {isa = PBXFileReference; lastKnownFileType = text; path = Text; sourceTree = "<group>"; };
 		9AF935EA2A1932FE0002B15B /* ConfirmationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmationController.swift; sourceTree = "<group>"; };
 		9AF935ED2A1A6FAE0002B15B /* ScrollViewController6.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController6.swift; sourceTree = "<group>"; };
 		9AF935EF2A1A70100002B15B /* ScrollViewController7.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScrollViewController7.swift; sourceTree = "<group>"; };
@@ -384,6 +386,7 @@
 			isa = PBXGroup;
 			children = (
 				9AE2961129D72B7D00387883 /* Todos */,
+				9AF8E7662A5D1AFC00972EAF /* Text */,
 				9AF4AE292A0BE9B600257CB1 /* Tests */,
 				9AE295EF29D6FB3B00387883 /* Extensions */,
 				9A6113BC29F521E90051FF2B /* HelperClass */,
@@ -589,6 +592,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AE2961229D72B7D00387883 /* Todos in Resources */,
+				9AF8E7672A5D1AFC00972EAF /* Text in Resources */,
 				9AE295DE29D6F81600387883 /* LaunchScreen.storyboard in Resources */,
 				9AE295DB29D6F81600387883 /* Assets.xcassets in Resources */,
 			);
