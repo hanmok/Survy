@@ -37,15 +37,6 @@ class LoginViewController: UIViewController, Coordinating {
         setupDelegates()
         
         autoLogin()
-        
-//        KeychainManager2.shared.saveRefreshToken("myToken")
-//        if let fetchedKey = KeychainManager2.shared.loadRefreshToken() {
-//            print("fetchedRefreshToken: \(fetchedKey)")
-//        }
-//        KeychainManager2.shared.saveRefreshToken("myToken2")
-//        if let fetchedKey2 = KeychainManager2.shared.loadRefreshToken() {
-//            print("fetchedRefreshToken: \(fetchedKey2)")
-//        }
     }
     
     private func autoLogin() {
@@ -75,6 +66,19 @@ class LoginViewController: UIViewController, Coordinating {
     private func setupTargets() {
         loginButton.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         registerButton.addTarget(self, action: #selector(registerTapped), for: .touchUpInside)
+        
+        passwordTextField.keyboardToolbar.doneBarButton.setTarget(self, action: #selector(passwordDoneTapped(_:)))
+        usernameTextField.keyboardToolbar.doneBarButton.setTarget(self, action: #selector(usernameDoneTapped(_:)))
+    }
+    
+    @objc func usernameDoneTapped(_ sender: UITextField) {
+        guard let usernameInput = sender.text else { return }
+        username = usernameInput
+    }
+    
+    @objc func passwordDoneTapped(_ sender: UITextField) {
+        guard let passwordInput = sender.text else { return }
+        password = passwordInput
     }
     
     @objc func loginTapped() {
@@ -121,6 +125,10 @@ class LoginViewController: UIViewController, Coordinating {
     private func setupDelegates() {
         passwordTextField.delegate = self
         usernameTextField.delegate = self
+    }
+    
+    @objc func doneTapped(_ sender: UITextField) {
+        
     }
     
     private func setupLayout() {

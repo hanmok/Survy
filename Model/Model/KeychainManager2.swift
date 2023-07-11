@@ -6,7 +6,8 @@ public class KeychainManager2 {
 
     private let accessTokenKey = "AccessToken"
     private let refreshTokenKey = "RefreshToken"
-
+    private let serviceName = "survy"
+    
     // AccessToken 저장
     public func saveAccessToken(_ accessToken: String) {
         saveToKeychain(accessToken, forKey: accessTokenKey)
@@ -29,9 +30,11 @@ public class KeychainManager2 {
 
     // Keychain에 값 저장
     private func saveToKeychain(_ value: String, forKey key: String) {
+        // service 이름이 없는데 이래도 괜찮은거야?
         if let data = value.data(using: .utf8) {
             let query = [
                 kSecClass as String: kSecClassGenericPassword as String,
+                kSecAttrService as String: serviceName,
                 kSecAttrAccount as String: key,
                 kSecValueData as String: data
             ] as [String: Any]
@@ -49,6 +52,7 @@ public class KeychainManager2 {
     private func retrieveFromKeychain(forKey key: String) -> String? {
         let query = [
             kSecClass as String: kSecClassGenericPassword as String,
+            kSecAttrService as String: serviceName,
             kSecAttrAccount as String: key,
             kSecReturnData as String: kCFBooleanTrue!,
             kSecMatchLimit as String: kSecMatchLimitOne
