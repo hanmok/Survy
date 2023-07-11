@@ -248,6 +248,10 @@ class PostingBlockCollectionViewCell: UICollectionViewCell {
 }
 
 extension PostingBlockCollectionViewCell: OptionStackViewDelegate {
+    func notifySelection(id: Int, type: SelectionButton) {
+        
+    }
+    
     // 바꾸면 여기 호출, 처음에도 여기 호출
     func notifySelectionChange(to index: Int) {
 //        뭐지 ??

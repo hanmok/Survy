@@ -32,6 +32,7 @@ public struct UserResponse: Decodable {
 
 public enum CustomError: Error {
     case logout(String?)
+    case response(String?)
 }
 
 public struct MessageResponse: Decodable {

@@ -8,11 +8,14 @@
 import UIKit
 import SnapKit
 import Model
+import API
+import Dispatch
 
 class QuestionViewController: BaseViewController, Coordinating {
 
     private var previousPercentage: CGFloat = 0
     
+    var selectedOptionIds = Set<Int>()
     @objc func otherViewTapped() {
         view.dismissKeyboard()
     }
@@ -22,9 +25,11 @@ class QuestionViewController: BaseViewController, Coordinating {
     var coordinator: Coordinator?
     
     var participationService: ParticipationService
+    var userService: UserService
     
-    init(participationService: ParticipationServiceType) {
+    init(participationService: ParticipationServiceType, userService: UserServiceType) {
         self.participationService = participationService as! ParticipationService
+        self.userService = userService as! UserService
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -88,18 +93,6 @@ class QuestionViewController: BaseViewController, Coordinating {
         guard let question = participationService.currentQuestion else { return }
 
         configureQuestionBox(question: question)
-//        // FIXME: 두번쨰 Question 의 Index가 2 -> 1 로 바뀜. 왜 ??
-//        let questionText = "\(question.position + 1). \(question.text)" // position: 0 부터 시작.
-//
-//        questionLabel.text = questionText
-//
-//        let approximatedWidthOfBioTextView = UIScreen.screenWidth - 20 * 2 - 12 * 2
-//
-//        let size = CGSize(width: approximatedWidthOfBioTextView, height: 1000)
-//
-//        let frame = NSString(string: questionText).boundingRect(with: size, options: .usesLineFragmentOrigin, attributes: [.font: UIFont.systemFont(ofSize: questionLabel.font.pointSize)], context: nil)
-//
-//        questionHeight = frame.height
         
         if participationService.isLastQuestion {
             nextButton.setTitle("완료", for: .normal)
@@ -113,14 +106,14 @@ class QuestionViewController: BaseViewController, Coordinating {
         switch question.questionType {
             case .singleSelection:
                 for selectableOption in selectableOptions {
-                    guard let value = selectableOption.value else { return }
-                    let singleChoiceButton = SingleChoiceResponseButton(text: value, tag: selectableOption.position)
+                    guard let value = selectableOption.value, let id = selectableOption.id else { return }
+                    let singleChoiceButton = SingleChoiceResponseButton(text: value, tag: selectableOption.position, id: id)
                     responseOptionStackView.addSingleSelectionButton(singleChoiceButton)
                 }
             case .multipleSelection:
                 for selectableOption in selectableOptions {
-                    guard let value = selectableOption.value else { return }
-                    let multipleChoiceButton = MultipleChoiceResponseButton(text: value, tag: selectableOption.position)
+                    guard let value = selectableOption.value, let id = selectableOption.id else { return }
+                    let multipleChoiceButton = MultipleChoiceResponseButton(text: value, tag: selectableOption.position, id: id)
                     responseOptionStackView.addMultipleSelectionButton(multipleChoiceButton)
                 }
             case .short:
@@ -137,35 +130,56 @@ class QuestionViewController: BaseViewController, Coordinating {
     
     @objc func nextButtonTapped() {
         guard let question = participationService.currentQuestion else { fatalError() }
+        guard let userId = userService.currentUser?.id else { fatalError() }
+        guard let currentSurvey = participationService.currentSurvey else { fatalError() }
+        let dispatchGroup = DispatchGroup()
         
-        switch question.questionType {
-            case .singleSelection:
-                // 이거 설정해서 달라지는게 뭐야 ? API 를 나중에 호출해야하는데, 그 전까지는 아무것도 없음.
-                participationService.selectedIndex = responseOptionStackView.selectedIndex
-            case .multipleSelection:
-                participationService.selectedIndexes = responseOptionStackView.selectedIndices
-            case .short:
-                participationService.textAnswer = responseOptionStackView.textAnswer
-            case .essay:
-                participationService.textAnswer = responseOptionStackView.textAnswer
-            case .none:
-                break
-        }
+        print("selectedOptionsId: \(selectedOptionIds)")
         
-        resetResponseOptionStackView()
-        
-        if participationService.isLastQuestion {
-            participationService.increaseQuestionIndex()
-            updateWithNewQuestion(isLast: true)
-            participationService.resetSurvey()
-            Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-                // TODO: Give message
-                self?.coordinator?.move(to: .backToMainTab)
+        for selectedOptionId in selectedOptionIds {
+            
+            dispatchGroup.enter()
+            APIService.shared.createResponse(questionId: question.id, selectableOptionId: selectedOptionId, userId: userId, surveyId: currentSurvey.id) { result in
+                switch result {
+                    case .success(let message):
+                        dispatchGroup.leave()
+                    case .failure(let error):
+                        fatalError(error.localizedDescription)
+                }
             }
-        } else {
-            participationService.increaseQuestionIndex()
-            updateWithNewQuestion(isLast: false)
         }
+        
+        dispatchGroup.notify(queue: .main) {
+            switch question.questionType {
+                case .singleSelection:
+                    // 이거 설정해서 달라지는게 뭐야 ? API 를 나중에 호출해야하는데, 그 전까지는 아무것도 없음.
+                    self.participationService.selectedIndex = self.responseOptionStackView.selectedIndex
+                case .multipleSelection:
+                    self.participationService.selectedIndexes = self.responseOptionStackView.selectedIndices
+                case .short:
+                    self.participationService.textAnswer = self.responseOptionStackView.textAnswer
+                case .essay:
+                    self.participationService.textAnswer = self.responseOptionStackView.textAnswer
+                case .none:
+                    break
+            }
+            
+            self.resetResponseOptionStackView()
+            
+            if self.participationService.isLastQuestion {
+                self.participationService.increaseQuestionIndex()
+                self.updateWithNewQuestion(isLast: true)
+                self.participationService.resetSurvey()
+                Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+                    // TODO: Give message
+                    self?.coordinator?.move(to: .backToMainTab)
+                }
+            } else {
+                self.participationService.increaseQuestionIndex()
+                self.updateWithNewQuestion(isLast: false)
+            }
+        }
+        selectedOptionIds.removeAll()
     }
     
     private func resetResponseOptionStackView() {
@@ -277,11 +291,7 @@ class QuestionViewController: BaseViewController, Coordinating {
             make.leading.equalTo(view.snp.leading).offset(20)
             make.width.equalTo(UIScreen.screenWidth - 40)
             make.top.equalTo(myProgressView.snp.bottom).offset(80)
-//            make.height.equalTo(CGFloat(responseOptionStackView.subviews.count * 40) + questionHeight! + 12 + 12) // 12, 12: top, bottom inset
-            
             make.height.equalTo(12 + questionHeight! + 12 + CGFloat(responseOptionStackView.subviews.count * 40) + 12)
-            
-//            make.height.equalTo(responseOptionStackView.subviews.count * 40 + 50) // 이거.. 높이 바꿔야함.
         }
         
         questionLabel.snp.makeConstraints { make in
@@ -412,6 +422,34 @@ class QuestionViewController: BaseViewController, Coordinating {
 extension QuestionViewController: OptionStackViewDelegate {
     func notifySelectionChange(to index: Int) {
         
+        if let singleSelectionButton = responseOptionStackView.buttons[index] as? SingleChoiceResponseButton {
+            selectedOptionIds.removeAll()
+            selectedOptionIds.insert(singleSelectionButton.id)
+        }
+        if let multipleSelectionButton = responseOptionStackView.buttons[index] as? MultipleChoiceResponseButton {
+            let selectedOptionId = multipleSelectionButton.id
+            if selectedOptionIds.contains(selectedOptionId) {
+                selectedOptionIds.remove(selectedOptionId)
+            } else {
+                selectedOptionIds.insert(selectedOptionId)
+            }
+        }
+    }
+    
+
+    
+    func notifySelection(id: Int, type: SelectionButton) {
+        if let single = type as? SingleChoiceResponseButton {
+            selectedOptionIds.removeAll()
+            selectedOptionIds.insert(id)
+        }
+        if let multiple = type as? MultipleChoiceResponseButton {
+            if selectedOptionIds.contains(id) {
+                selectedOptionIds.remove(id)
+            } else {
+                selectedOptionIds.insert(id)
+            }
+        }
     }
     
     func notifyConditionChange(to condition: Bool) {
@@ -419,74 +457,3 @@ extension QuestionViewController: OptionStackViewDelegate {
         self.nextButton.backgroundColor = condition ? .mainColor : .grayProgress
     }
 }
-
-
-//# Table    Create Table
-//Question    CREATE TABLE `question` (
-//  `id` int(11) NOT NULL AUTO_INCREMENT,
-//  `questionType_id` int(11) DEFAULT NULL,
-//  `section_id` int(11) DEFAULT NULL,
-//  `position` int(11) NOT NULL,
-//  `text` text NOT NULL,
-//  `expectedTimeInSec` int(11) DEFAULT '5',
-//  PRIMARY KEY (`id`),
-//  KEY `FK_QuestionType_Question` (`questionType_id`),
-//  KEY `FK_Section_Question` (`section_id`),
-//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
-//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
-//
-//
-//'Question', 'CREATE TABLE `question` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `questionType_id` int(11) DEFAULT NULL,\n  `section_id` int(11) DEFAULT NULL,\n  `position` int(11) NOT NULL,\n  `text` text NOT NULL,\n  `expectedTimeInSec` int(11) DEFAULT \'5\',\n  PRIMARY KEY (`id`),\n  KEY `FK_QuestionType_Question` (`questionType_id`),\n  KEY `FK_Section_Question` (`section_id`),\n  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8'
-//
-//
-//# Table, Create Table
-//'Question', 'CREATE TABLE `question` (\n  `id` int(11) NOT NULL AUTO_INCREMENT,\n  `questionType_id` int(11) DEFAULT NULL,\n  `section_id` int(11) DEFAULT NULL,\n  `position` int(11) NOT NULL,\n  `text` text NOT NULL,\n  `expectedTimeInSec` int(11) DEFAULT \'5\',\n  PRIMARY KEY (`id`),\n  KEY `FK_QuestionType_Question` (`questionType_id`),\n  KEY `FK_Section_Question` (`section_id`),\n  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8'
-//
-//
-//Question, CREATE TABLE `question` (
-//  `id` int(11) NOT NULL AUTO_INCREMENT,
-//  `questionType_id` int(11) DEFAULT NULL,
-//  `section_id` int(11) DEFAULT NULL,
-//  `position` int(11) NOT NULL,
-//  `text` text NOT NULL,
-//  `expectedTimeInSec` int(11) DEFAULT '5',
-//  PRIMARY KEY (`id`),
-//  KEY `FK_QuestionType_Question` (`questionType_id`),
-//  KEY `FK_Section_Question` (`section_id`),
-//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
-//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
-//
-//
-//
-//# Table, Create Table
-//Question, CREATE TABLE `question` (
-//  `id` int(11) NOT NULL AUTO_INCREMENT,
-//  `questionType_id` int(11) DEFAULT NULL,
-//  `section_id` int(11) DEFAULT NULL,
-//  `position` int(11) NOT NULL,
-//  `text` text NOT NULL,
-//  `expectedTimeInSec` int(11) DEFAULT '5',
-//  PRIMARY KEY (`id`),
-//  KEY `FK_QuestionType_Question` (`questionType_id`),
-//  KEY `FK_Section_Question` (`section_id`),
-//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
-//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
-//
-//
-//CREATE TABLE `question` (
-//  `id` int(11) NOT NULL AUTO_INCREMENT,
-//  `questionType_id` int(11) DEFAULT NULL,
-//  `section_id` int(11) DEFAULT NULL,
-//  `position` int(11) NOT NULL,
-//  `text` text NOT NULL,
-//  `expectedTimeInSec` int(11) DEFAULT '5',
-//  PRIMARY KEY (`id`),
-//  KEY `FK_QuestionType_Question` (`questionType_id`),
-//  KEY `FK_Section_Question` (`section_id`),
-//  CONSTRAINT `FK_Section_Question` FOREIGN KEY (`section_id`) REFERENCES `section` (`id`)
-//) ENGINE=InnoDB AUTO_INCREMENT=234 DEFAULT CHARSET=utf8
-//
-//
-//ALTER TABLE table_name
-//ADD FOREIGN KEY (column_name)
-//REFERENCE table_name(Referencing column_name in table_name);

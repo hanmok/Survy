@@ -10,7 +10,6 @@ import Model
 import SnapKit
 import Toast
 import API
-import Dispatch
 
 
 enum InitialScreen {
@@ -51,7 +50,7 @@ class MainCoordinator: Coordinator {
             case .mainTab:
                 initialController = MainTabController(provider: self.provider, coordinator: self)
             case .responsdingQuestion:
-                initialController = QuestionViewController(participationService: self.provider.participationService)
+                initialController = QuestionViewController(participationService: self.provider.participationService, userService: self.provider.userService)
             case .postingQuestion:
                 initialController = PostingViewController(postingService: self.provider.postingService)
             case .test:
@@ -140,7 +139,6 @@ class MainCoordinator: Coordinator {
     func move(to destination: Destination) {
         switch destination {
             case .loginPage:
-//                self.navigationController?.popViewController(animated: true)
                 self.navigationController?.popToRootViewController(animated: true)
                 
             case .mainTab:
@@ -150,10 +148,11 @@ class MainCoordinator: Coordinator {
             case .questionController:
                 self.setupQuestions { [weak self] result in
                     guard result != nil else { fatalError() }
-                    guard let participationService = self?.provider.participationService else { fatalError() }
-                    let questionController = QuestionViewController(participationService: participationService)
+                    guard let self = self else { fatalError() }
+
+                    let questionController = QuestionViewController(participationService: self.provider.participationService, userService: self.provider.userService)
                     questionController.coordinator = self
-                    self?.navigationController?.pushViewController(questionController, animated: true)
+                    self.navigationController?.pushViewController(questionController, animated: true)
                 }
                 
             case .backToMainTab:

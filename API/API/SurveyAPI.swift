@@ -30,7 +30,6 @@ extension SurveyAPI: BaseAPIType {
                 return "/surveys/\(surveyId)/genres"
 //            case .participate(let surveyId, let userId):
             case .participate:
-//                return "/surveys/\(surveyId)/participated-users/\(userId)"
                 return "/surveys/participated-users"
             default:
                 return "/surveys"

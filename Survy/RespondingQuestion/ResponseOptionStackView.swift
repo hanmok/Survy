@@ -106,7 +106,6 @@ class ResponseOptionStackView: UIStackView {
     }
     
     public func setMultipleSelectionButtons(_ buttons: [MultipleChoiceResponseButton]) {
-        
         addArrangedSubviews(buttons)
         buttons.forEach {
             $0.addTarget(self, action: #selector(multipleSelectionButtonTapped(_:)), for: .touchUpInside)
@@ -137,6 +136,7 @@ class ResponseOptionStackView: UIStackView {
         selectedIndex = sender.tag
         print("selectedIndex changed to \(selectedIndex)")
         isConditionFulfilled = true
+        optionStackViewDelegate?.notifySelection(id: sender.id, type: sender)
     }
     
     // 이미 선택되어 있는 상태면 해제, 안되어 있으면 선택
@@ -149,12 +149,16 @@ class ResponseOptionStackView: UIStackView {
         
         // 아무것도 체크되어있지 않으면 다음으로 넘어갈 수 없음.
         isConditionFulfilled = selectedIndices!.isEmpty == false
+//        optionStackViewDelegate?.notifySelectionChange(to: sender.index)
+//        optionStackViewDelegate?.notifySelection(id: sender.id)
+        optionStackViewDelegate?.notifySelection(id: sender.id, type: sender)
     }
 }
 
 protocol OptionStackViewDelegate: AnyObject {
     func notifyConditionChange(to condition: Bool)
     func notifySelectionChange(to index: Int)
+    func notifySelection(id: Int, type: SelectionButton)
 }
 
 extension ResponseOptionStackView: UITextFieldDelegate {

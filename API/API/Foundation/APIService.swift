@@ -27,6 +27,7 @@ public class APIService {
     private let questionProvider = MoyaProvider<QuestionAPI>()
     private let selectableProvider = MoyaProvider<SelectableOptionAPI>()
     private let userProvider = MoyaProvider<UserAPI>()
+    private let responseProvider = MoyaProvider<ResponseAPI>()
 }
 
 // MARK: - Genre
@@ -322,10 +323,38 @@ extension APIService {
 extension APIService {
     public func participate(surveyId: SurveyId, userId: UserId, completion: @escaping (Result<String, Error>) -> Void ) {
         surveyProvider.request(.participate(surveyId, userId)) { result in
+            print("surveyId: \(surveyId), userId: \(userId)")
             switch result {
                 case .success(let response):
-                    let response = try! JSONDecoder().decode(ParticipateResponse.self, from: response.data)
-                    completion(.success(response.message))
+                    let participateResponse = try! JSONDecoder().decode(ParticipateResponse.self, from: response.data)
+                    if 200 ..< 300 ~= response.statusCode {
+                        completion(.success(participateResponse.message))
+                    } else {
+                        completion(.failure(CustomError.response(participateResponse.message)))
+                    }
+                    
+                    
+                case .failure(let error):
+                    completion(.failure(error))
+            }
+        }
+    }
+}
+
+extension APIService {
+    public func createResponse(questionId: QuestionId, selectableOptionId: SelectableOptionId, userId: UserId, surveyId: SurveyId, completion: @escaping (Result<String, Error>) -> Void) {
+        print("questionId: \(questionId), selectableOptionId: \(selectableOptionId), userId: \(userId), surveyId: \(surveyId) ")
+        responseProvider.request(.create(questionId, selectableOptionId, userId, surveyId)) { result in
+            switch result {
+                case .success(let response):
+                    let responseResponse = try! JSONDecoder().decode(MessageResponse.self, from: response.data)
+                    if 200 ..< 300 ~= response.statusCode {
+                        print("createResponse message: \(responseResponse.message)")
+                        completion(.success(responseResponse.message))
+                    } else {
+                        completion(.failure(CustomError.response(responseResponse.message)))
+                    }
+                    
                 case .failure(let error):
                     completion(.failure(error))
             }

@@ -21,9 +21,10 @@ class MultipleChoiceResponseButton: SelectionButton {
     }
     
     var text: String
-    
-    init(text: String, tag: Int) {
+    var id: Int
+    init(text: String, tag: Int, id: Int) {
         self.text = text
+        self.id = id
         super.init(frame: .zero)
         setupLayout()
         self.tag = tag

@@ -15,6 +15,7 @@ public typealias QuestionText = String
 public typealias QuestionTypeId = Int
 public typealias QuestionPosition = Int
 public typealias SelectableOptionValue = String
+public typealias SelectableOptionId = Int
 public typealias Position = Int
 public typealias UserId = Int
 public typealias QuestionIndex = Int

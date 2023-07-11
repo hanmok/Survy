@@ -27,11 +27,14 @@ class SingleChoiceResponseButton: SelectionButton {
     override func buttonSelected(_ isSelected: Bool) {
         self.isSelected = isSelected
     }
+    var id: Int
     
-    init(text: String, tag: Int) {
+    init(text: String, tag: Int, id: Int) {
         self.text = text
+        self.id = id
         super.init(frame: .zero)
         self.tag = tag
+        
         setupLayout()
     }
 

@@ -28,6 +28,7 @@
 		9AD2BC422A3C3DE6007690B7 /* SectionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC412A3C3DE6007690B7 /* SectionAPI.swift */; };
 		9AD2BC442A3C3E61007690B7 /* QuestionAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */; };
 		9AD647842A36E7F900ED6DC0 /* SurveyAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */; };
+		9AF8E7692A5D447000972EAF /* ResponseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF8E7682A5D447000972EAF /* ResponseAPI.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		9AD2BC412A3C3DE6007690B7 /* SectionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionAPI.swift; sourceTree = "<group>"; };
 		9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionAPI.swift; sourceTree = "<group>"; };
 		9AD647832A36E7F900ED6DC0 /* SurveyAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyAPI.swift; sourceTree = "<group>"; };
+		9AF8E7682A5D447000972EAF /* ResponseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseAPI.swift; sourceTree = "<group>"; };
 		9AFE34D92A358D87009CCE6D /* DecodingArray.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = DecodingArray.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DA2A358DB5009CCE6D /* UsingDictionary.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = UsingDictionary.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = BasicEncodingDecoding.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -123,6 +125,7 @@
 				9A4D5C622A41DC6B00980937 /* UserAPI.swift */,
 				9AD2BC432A3C3E61007690B7 /* QuestionAPI.swift */,
 				9A4D5C602A41A41500980937 /* SelectableOptionAPI.swift */,
+				9AF8E7682A5D447000972EAF /* ResponseAPI.swift */,
 				9AFE34DF2A359EE1009CCE6D /* BasicPosting.playground */,
 				9AFE34DE2A3591BF009CCE6D /* NameDismatches.playground */,
 				9AFE34DB2A358ED6009CCE6D /* BasicEncodingDecoding.playground */,
@@ -290,6 +293,7 @@
 				9A6BC7922A39CA26009CC23B /* CodeTomb.swift in Sources */,
 				9A6BC7942A39CB17009CC23B /* DefaultAlamofireManager.swift in Sources */,
 				9AD2BC422A3C3DE6007690B7 /* SectionAPI.swift in Sources */,
+				9AF8E7692A5D447000972EAF /* ResponseAPI.swift in Sources */,
 				9A6BC7902A39C96E009CC23B /* SurveyTagAPI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
